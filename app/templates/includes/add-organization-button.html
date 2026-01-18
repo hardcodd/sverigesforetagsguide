@@ -1,0 +1,7 @@
+{% load wagtailcore_tags i18n %}
+
+<a href="{% slugurl 'add-organization' %}" class="btn sm btn--add-organization {{ class }}" data-tippy-content="{% trans "Add new organization" %}">
+  <span>{% trans "Add organization" %}</span>
+  <span class="hidden-sm-u">{% include "icons/plus.svg" %}</span>
+  <span class="hidden-sm-u">{% include "icons/store.svg" %}</span>
+</a>

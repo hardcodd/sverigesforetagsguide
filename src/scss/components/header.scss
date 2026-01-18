@@ -1,0 +1,97 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.header {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 99;
+
+	display: flex;
+	gap: rem(20);
+	align-items: center;
+	width: 100%;
+	padding: rem(10) rem(30);
+
+	background-color: rgba(var(--white-color-rgb), 0.98);
+	box-shadow: var(--box-shadow-1);
+	backdrop-filter: blur(rem(3));
+
+	@include lg-d {
+		padding: rem(10) rem(20);
+	}
+
+	@include md-d {
+		padding: rem(5) rem(10);
+
+		.search-form input {
+			border-radius: var(--border-radius-sm);
+		}
+
+		.city-search-form,
+		.btn--add-organization,
+		.login-btn {
+			display: none;
+		}
+	}
+
+	@include md-d {
+		gap: rem(10);
+	}
+
+	&__scroll-indicator {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+
+		height: rem(3);
+
+		background: linear-gradient(90deg, var(--purple-color) 0%, var(--accent-color) 100%);
+
+		pointer-events: none;
+
+		@include transition;
+	}
+}
+
+.bottom-header {
+	position: fixed;
+	right: rem(5);
+	bottom: rem(5);
+	left: rem(5);
+	z-index: 99;
+
+	display: flex;
+	gap: rem(10);
+	align-items: center;
+	justify-content: space-around;
+	padding: rem(5) rem(10);
+
+	background-color: rgba(var(--white-color-rgb), 0.97);
+	border-top: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+	border-radius: var(--border-radius-sm);
+	box-shadow: var(--box-shadow-2);
+	backdrop-filter: blur(rem(3));
+
+	.city-search-form {
+		flex-grow: 1;
+
+		input {
+			border-radius: var(--border-radius-sm);
+		}
+
+		&__list {
+			top: unset;
+			bottom: calc(100% + rem(10));
+		}
+	}
+
+	@include xs {
+		.btn--add-organization {
+			span:first-of-type {
+				@include sr-only;
+			}
+		}
+	}
+}

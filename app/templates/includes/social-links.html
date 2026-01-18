@@ -1,0 +1,17 @@
+{% load wagtailcore_tags core %}
+
+{% spaceless %}
+  {% if settings.core.SiteSettings.social_networks %}
+    <ul class="social-links">
+      {% get_social_networks settings.core.SiteSettings as links %}
+      {% for link in links %}
+        <li>
+          <a href="{{ link }}" target="_blank" rel="nofollow noopener">
+            {{ link|social_network_icon }}
+            <span class="sr-only">{{ link }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endspaceless %}

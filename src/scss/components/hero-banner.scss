@@ -1,0 +1,80 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.hero-banner {
+	display: flex;
+	gap: rem(30);
+	align-items: center;
+	padding: rem(20) rem(30);
+
+	color: var(--white-color);
+
+	background-image: var(--blue-gradient);
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow-1);
+
+	@include lg-u {
+		padding: rem(40) rem(60);
+	}
+
+	&__title {
+		margin: 0;
+
+		font-size: em(24);
+
+		line-height: 1.3;
+
+		@include xxl {
+			font-size: em(45.6);
+		}
+
+		@include xl {
+			font-size: em(40);
+		}
+
+		@include md-u {
+			font-size: em(34);
+		}
+
+		@include sm {
+			font-size: em(28);
+		}
+	}
+
+	&__description {
+		margin: rem(15) 0 0;
+
+		font-size: em(16);
+		line-height: 1.3;
+
+		opacity: 0.9;
+
+		@include xxl {
+			font-size: em(24);
+		}
+
+		@include xl {
+			font-size: em(20);
+		}
+
+		@include sm-u {
+			font-size: em(18);
+		}
+
+		p {
+			margin: 0;
+		}
+	}
+
+	&__image {
+		max-width: rem(247);
+
+		@include lg {
+			max-width: rem(200);
+		}
+
+		@include md-d {
+			display: none;
+		}
+	}
+}

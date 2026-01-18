@@ -1,0 +1,16 @@
+{% load core %}
+
+{% spaceless %}
+  {% if section_title %}
+    <header class="section__header">
+      <div class="row v-gutters align-center">
+        <div class="col">{% section_title section_title %}</div>
+        {% if button_text and pageurl %}
+          <div class="col-auto">
+            <a href="{{ pageurl }}" class="btn sm blue round">{{ button_text }}</a>
+          </div>
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+{% endspaceless %}

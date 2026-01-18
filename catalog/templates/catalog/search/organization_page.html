@@ -1,0 +1,39 @@
+{% load wagtailcore_tags wagtailimages_tags core i18n %}
+
+{% spaceless %}
+  {% with result.specific as result %}
+    <div class="search-item">
+      {% if result.images.count %}
+        {% with result.images.first as img %}
+          {% image img.image max-165x165 as thumb %}
+          <div class="search-item__image">
+            <div class="search-item__thumb">
+              <img src="{{ thumb.url }}" alt="{{ result.title|default:result.h1_title }}">
+            </div>
+            <div class="ratio">{% srcset_image img.image width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+          </div>
+        {% endwith %}
+      {% else %}
+        {% image settings.core.SiteSettings.default_organization_image max-165x165 as thumb %}
+        {% if thumb %}
+          <div class="search-item__image">
+            <div class="search-item__thumb">
+              <img src="{{ thumb.url }}" alt="{{ result.title|default:result.h1_title }}">
+            </div>
+            {% with settings.core.SiteSettings.default_organization_image as default_image %}
+              <div class="ratio">{% srcset_image default_image width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+            {% endwith %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <div class="search-item__content">
+        <h4 class="search-item__title">{{ result }}</h4>
+        {% if result.search_description %}<p class="search-item__description">{{ result.search_description|truncatechars:120 }}</p>{% endif %}
+        <a href="{% pageurl result %}" class="search-item__link">
+          <div class="sr-only">{% trans "Read more" %}</div>
+        </a>
+      </div>
+    </div>
+  {% endwith %}
+{% endspaceless %}

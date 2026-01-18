@@ -1,0 +1,16 @@
+{% load mptt_tags %}
+{% spaceless %}
+	<ul class="comments__list">
+		{% recursetree comments %}
+			{% if node.status == COMMENT_PUBLISHED %}
+				{% include 'comments/comment_published.html' %}
+			{% elif node.status == COMMENT_ON_MODERATION %}
+				{% include 'comments/comment_on_moderation.html' %}
+			{% elif node.status == COMMENT_REJECTED %}
+				{% include 'comments/comment_rejected.html' %}
+			{% elif node.status == COMMENT_DELETED %}
+				{% include 'comments/comment_deleted.html' %}
+			{% endif %}
+		{% endrecursetree %}
+	</ul>
+{% endspaceless %}

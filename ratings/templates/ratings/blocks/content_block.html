@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags core %}
+
+{% spaceless %}
+  <div class="rating-block">
+    <div class="rating-block__description">{{ self.text|richtext }}</div>
+    <div class="swiper rating-gallery">
+      <div class="swiper-wrapper">
+        {% for item in self.images %}
+          <div class="swiper-slide">
+            {% image item original format-webp as img_hd %}
+            <a href="{{ img_hd.url }}" data-fancybox="rating-block-{{ counter }}" data-caption="{{ item.title }}" class="rating-gallery__item ratio">{% srcset_image item original format-{avif,webp} width-720 loading="lazy" %}</a>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+{% endspaceless %}

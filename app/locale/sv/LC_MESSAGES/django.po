@@ -1,0 +1,1342 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-30 12:32+0100\n"
+"PO-Revision-Date: 2025-11-30 12:35+0100\n"
+"Last-Translator: Anonymous User <anonymous@user.tld>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
+
+#: app/templates/includes/add-organization-button.html:3
+msgid "Add new organization"
+msgstr "Lägg till ny organisation"
+
+#: app/templates/includes/add-organization-button.html:4
+msgid "Add organization"
+msgstr "Lägg till organisation"
+
+#: app/templates/includes/breadcrumbs.html:12
+msgid "Home"
+msgstr "Hem"
+
+#: app/templates/includes/city-search-form.html:6
+msgid "City search"
+msgstr "Stadssökning"
+
+#: app/templates/includes/cookie_consent.html:3
+msgid "Cookie notice"
+msgstr "Cookie-meddelande"
+
+#: app/templates/includes/cookie_consent.html:6
+msgid ""
+"We use cookies to improve your experience, analyze traffic, and personalize "
+"content."
+msgstr ""
+"Vi använder cookies för att förbättra din upplevelse, analysera trafik och "
+"anpassa innehåll."
+
+#: app/templates/includes/cookie_consent.html:9
+msgid "Privacy Policy"
+msgstr "Integritetspolicy"
+
+#: app/templates/includes/cookie_consent.html:13
+#: app/templates/includes/cookie_consent.html:72
+msgid "Reject non-essential"
+msgstr "Avvisa icke-nödvändiga"
+
+#: app/templates/includes/cookie_consent.html:14
+msgid "Manage preferences"
+msgstr "Hantera inställningar"
+
+#: app/templates/includes/cookie_consent.html:15
+#: app/templates/includes/cookie_consent.html:74
+msgid "Accept all"
+msgstr "Acceptera alla"
+
+#: app/templates/includes/cookie_consent.html:22
+msgid "Cookie preferences"
+msgstr "Cookie-inställningar"
+
+#: app/templates/includes/cookie_consent.html:23
+msgid "Close"
+msgstr "Nära"
+
+#: app/templates/includes/cookie_consent.html:27
+msgid "Select which categories you want to allow. You can change this later."
+msgstr "Välj vilka kategorier du vill tillåta. Du kan ändra detta senare."
+
+#: app/templates/includes/cookie_consent.html:33
+msgid "Necessary"
+msgstr "Nödvändig"
+
+#: app/templates/includes/cookie_consent.html:34
+msgid "Required for the site to function. Always on."
+msgstr "Krävs för att webbplatsen ska fungera. Alltid på."
+
+#: app/templates/includes/cookie_consent.html:37
+msgid "Necessary cookies"
+msgstr "Nödvändiga cookies"
+
+#: app/templates/includes/cookie_consent.html:46
+msgid "Analytics"
+msgstr "Analys"
+
+#: app/templates/includes/cookie_consent.html:47
+msgid "Helps us understand how our site is used."
+msgstr "Hjälper oss att förstå hur vår webbplats används."
+
+#: app/templates/includes/cookie_consent.html:50
+msgid "Analytics cookies"
+msgstr "Analyskakor"
+
+#: app/templates/includes/cookie_consent.html:59
+msgid "Marketing"
+msgstr "Marknadsföring"
+
+#: app/templates/includes/cookie_consent.html:60
+msgid "Used to show you relevant content and ads."
+msgstr "Används för att visa dig relevant innehåll och annonser."
+
+#: app/templates/includes/cookie_consent.html:63
+msgid "Marketing cookies"
+msgstr "Marknadsföringscookies"
+
+#: app/templates/includes/cookie_consent.html:73
+msgid "Save preferences"
+msgstr "Spara inställningar"
+
+#: app/templates/includes/footer.html:11
+msgid "Find out all the benefits of premium placement in our catalog."
+msgstr "Ta reda på alla fördelar med premiumplacering i vår katalog."
+
+#: app/templates/includes/footer.html:11
+msgid "Advertising on Madloba"
+msgstr ""
+
+#: app/templates/includes/header-search.html:7
+msgid "What're you looking for? Cafe, restaurant, school ..."
+msgstr "Vad letar du efter? Café, restaurang, skola ..."
+
+#: app/templates/includes/hero-banner.html:7
+msgid "Select the city you are interested in"
+msgstr "Välj den stad du är intresserad av"
+
+#: app/templates/includes/hero-banner.html:9
+msgid ""
+"After selecting a city, you will be taken to its page and can start "
+"searching for the establishment or company you need."
+msgstr ""
+"När du har valt en stad kommer du till dess sida och kan börja söka efter "
+"den verksamhet eller det företag du behöver."
+
+#: app/templates/includes/hero-counters.html:13
+msgid "Organizations in catalog"
+msgstr "Organisationer i katalogen"
+
+#: app/templates/includes/hero-counters.html:24
+msgid "Updated in a day"
+msgstr "Uppdaterad på en dag"
+
+#: app/templates/includes/hero-counters.html:35
+msgid "User reviews"
+msgstr "Användarrecensioner"
+
+#: app/templates/includes/login-panel.html:9
+msgid "Sign Out"
+msgstr "Logga ut"
+
+#: app/templates/includes/login-panel.html:17
+#: comments/templates/comments/form.html:37
+msgid "Sign In"
+msgstr "Logga in"
+
+#: app/templates/includes/logo.html:14
+#, python-format
+msgid "All about %(site_name)s"
+msgstr "Allt om %(site_name)s"
+
+#: app/templates/includes/pagination.html:15
+msgid "First page"
+msgstr "Första sidan"
+
+#: app/templates/includes/pagination.html:20
+msgid "Previous page"
+msgstr "Föregående sida"
+
+#: app/templates/includes/pagination.html:80
+msgid "Next page"
+msgstr "Nästa sida"
+
+#: app/templates/includes/pagination.html:85
+msgid "Last page"
+msgstr "Sista sidan"
+
+#: app/templates/includes/star-rating.html:8
+#: reviews/templates/reviews/reviews.html:10
+#, python-format
+msgid "%(counter)s review"
+msgid_plural "%(counter)s reviews"
+msgstr[0] "%(counter)s recension"
+msgstr[1] "%(counter)s recensioner"
+
+#: app/templates/includes/verified.html:3
+#: catalog/templates/catalog/includes/organization-item.html:12
+msgid "Only places that we have checked receive this badge."
+msgstr "Endast platser som vi har kontrollerat får den här märkningen."
+
+#: authors/models.py:14
+msgid "Authors index page"
+msgstr ""
+
+#: authors/models.py:28
+msgid "post"
+msgstr ""
+
+#: authors/models.py:39
+msgid "Author"
+msgstr ""
+
+#: authors/models.py:40
+msgid "Authors"
+msgstr ""
+
+#: authors/templates/authors/author_page.html:21
+msgid "Total publications:"
+msgstr "Totalt antal publikationer:"
+
+#: authors/templates/authors/author_page.html:31
+msgid "View all"
+msgstr "Visa alla"
+
+#: authors/templates/authors/includes/author-item.html:16
+#: authors/templates/authors/includes/author.html:17
+msgid "Visit author"
+msgstr "Besök författaren"
+
+#: authors/templates/authors/includes/author.html:10
+msgid "By:"
+msgstr "Av:"
+
+#: authors/templates/authors/includes/author.html:14
+msgid "Post:"
+msgstr "Post:"
+
+#: blog/models.py:23 blog/models.py:38
+msgid "Subtitle"
+msgstr ""
+
+#: blog/models.py:82 catalog/models.py:145 catalog/models.py:481
+#: catalog/models.py:489 core/blocks.py:94 core/blocks.py:105
+#: core/blocks.py:122 core/blocks.py:133 core/blocks.py:257 home/models.py:20
+#: reviews/models.py:105 reviews/models.py:113
+msgid "Image"
+msgstr "Bild"
+
+#: blog/models.py:87 catalog/models.py:94 catalog/models.py:152
+#: home/models.py:25 home/models.py:58 home/models.py:86
+msgid "Text"
+msgstr ""
+
+#: blog/models.py:94 catalog/models.py:101 catalog/models.py:159
+#: home/models.py:32 home/models.py:65 home/models.py:93 home/models.py:112
+msgid "Content"
+msgstr ""
+
+#: blog/templates/blog/includes/categories_widget.html:11
+#: ratings/templates/ratings/includes/categories_widget.html:10
+msgid "By categories"
+msgstr "Efter kategorier"
+
+#: blog/templates/blog/includes/post-item.html:43
+#: catalog/templates/catalog/search/organization_page.html:34
+#: core/templates/core/blocks/card-style-4.html:12
+#: ratings/templates/ratings/includes/post-item.html:43
+#: search/templates/search/search_item.html:10
+msgid "Read more"
+msgstr "Läs mer"
+
+#: blog/templates/blog/includes/tags_widget.html:11
+msgid "By tags"
+msgstr "Efter taggar"
+
+#: blog/templates/blog/index_page.html:15
+msgid "[[By author]]: "
+msgstr "[[Av författaren]]:"
+
+#: blog/templates/blog/index_page.html:19
+msgid "[[By tag]]: "
+msgstr "[[Efter tagg]]:"
+
+#: blog/templates/blog/post_page.html:17
+msgid "Created at:"
+msgstr "Skapad på:"
+
+#: blog/templates/blog/post_page.html:22
+#: catalog/templates/catalog/organization_page.html:26
+msgid "Updated at:"
+msgstr "Uppdaterad kl.:"
+
+#: catalog/blocks.py:15 catalog/models.py:451 subscription/models.py:18
+msgid "Organization"
+msgstr ""
+
+#: catalog/blocks.py:20 catalog/blocks.py:33 catalog/blocks.py:46
+msgid "Count"
+msgstr ""
+
+#: catalog/blocks.py:23 catalog/models.py:129
+msgid "City"
+msgstr ""
+
+#: catalog/blocks.py:28
+msgid "Latest organizations from city"
+msgstr ""
+
+#: catalog/blocks.py:36 catalog/models.py:218
+msgid "Organization type"
+msgstr ""
+
+#: catalog/blocks.py:41
+msgid "Latest organizations from organization type"
+msgstr ""
+
+#: catalog/blocks.py:49
+msgid "Parent page"
+msgstr ""
+
+#: catalog/blocks.py:55
+msgid "Paginated organizations"
+msgstr ""
+
+#: catalog/models.py:30 catalog/models.py:509
+msgid "Icon"
+msgstr ""
+
+#: catalog/models.py:31 catalog/models.py:527
+msgid "Use 100x100px image."
+msgstr ""
+
+#: catalog/models.py:82
+msgid "Popular"
+msgstr ""
+
+#: catalog/models.py:89 catalog/models.py:324
+msgid "Latitude and longitude"
+msgstr ""
+
+#: catalog/models.py:112
+msgid "Mark this city as popular."
+msgstr ""
+
+#: catalog/models.py:130 catalog/views.py:74
+msgid "Cities"
+msgstr ""
+
+#: catalog/models.py:139
+msgid "Noindex"
+msgstr ""
+
+#: catalog/models.py:219
+msgid "Organization types"
+msgstr ""
+
+#: catalog/models.py:231
+msgid "h1 title"
+msgstr ""
+
+#: catalog/models.py:237
+msgid "TIN"
+msgstr ""
+
+#: catalog/models.py:243
+msgid "Legal name"
+msgstr ""
+
+#: catalog/models.py:247
+msgid "Verified"
+msgstr ""
+
+#: catalog/models.py:254
+msgid "Plus code"
+msgstr ""
+
+#: catalog/models.py:260
+msgid "Email"
+msgstr ""
+
+#: catalog/models.py:266
+msgid "Phones"
+msgstr ""
+
+#: catalog/models.py:267
+msgid "Separate multiple phone numbers with a comma."
+msgstr ""
+
+#: catalog/models.py:272 catalog/templates/catalog/organization_page.html:171
+#: core/models.py:60 home/models.py:125
+msgid "Social networks"
+msgstr "Sociala nätverk"
+
+#: catalog/models.py:273 core/models.py:61 home/models.py:126
+msgid "Enter one social network link per line."
+msgstr ""
+
+#: catalog/models.py:278
+msgid "Website links"
+msgstr ""
+
+#: catalog/models.py:279
+msgid "Enter one website link per line."
+msgstr ""
+
+#: catalog/models.py:283
+msgid "Show website links as text"
+msgstr ""
+
+#: catalog/models.py:285
+msgid "Show website links as plain text instead of clickable links."
+msgstr ""
+
+#: catalog/models.py:289 core/blocks.py:36
+msgid "Day"
+msgstr ""
+
+#: catalog/models.py:291 catalog/templates/catalog/organization_page.html:162
+msgid "Working hours"
+msgstr "Arbetstid"
+
+#: catalog/models.py:295
+msgid "Temporarily closed"
+msgstr "Tillfälligt stängt"
+
+#: catalog/models.py:302 catalog/views.py:125
+msgid "Languages"
+msgstr "Språk"
+
+#: catalog/models.py:307 catalog/models.py:418 catalog/models.py:502
+#: catalog/templates/catalog/organization_page.html:49 core/blocks.py:121
+#: core/blocks.py:132 core/blocks.py:256
+msgid "Description"
+msgstr "Beskrivning"
+
+#: catalog/models.py:313 catalog/templates/catalog/organization_page.html:107
+msgid "Address"
+msgstr "Adress"
+
+#: catalog/models.py:318 catalog/templates/catalog/organization_page.html:52
+msgid "How to arrive"
+msgstr "Hur man anländer"
+
+#: catalog/models.py:328
+msgid "Show on map"
+msgstr ""
+
+#: catalog/models.py:338
+msgid "Located in"
+msgstr ""
+
+#: catalog/models.py:344 catalog/models.py:621
+#: catalog/templates/catalog/organization_page.html:55 catalog/views.py:117
+msgid "Service types"
+msgstr "Tjänstetyper"
+
+#: catalog/models.py:363
+msgid "The languages spoken in the organization."
+msgstr ""
+
+#: catalog/models.py:378
+msgid "Show this organization on the map."
+msgstr ""
+
+#: catalog/models.py:384
+msgid "The organization is located in building of another organization."
+msgstr ""
+
+#: catalog/models.py:391 catalog/models.py:420 catalog/models.py:490
+#: reviews/models.py:70 reviews/models.py:114
+msgid "Images"
+msgstr ""
+
+#: catalog/models.py:401 catalog/models.py:421 catalog/models.py:536
+#: catalog/models.py:557
+msgid "Rewards"
+msgstr ""
+
+#: catalog/models.py:407
+msgid "Mark this organization as verified."
+msgstr ""
+
+#: catalog/models.py:410
+msgid "Mark this organization as temporarily closed."
+msgstr ""
+
+#: catalog/models.py:416 catalog/templates/catalog/organization_page.html:47
+msgid "General"
+msgstr "Allmän"
+
+#: catalog/models.py:417
+msgid "Contacts"
+msgstr ""
+
+#: catalog/models.py:419
+msgid "Location"
+msgstr ""
+
+#: catalog/models.py:422
+msgid "Promote"
+msgstr ""
+
+#: catalog/models.py:452 catalog/templates/catalog/organizations.html:21
+#: catalog/views.py:89
+msgid "Organizations"
+msgstr "Organisationer"
+
+#: catalog/models.py:499 catalog/models.py:535 catalog/models.py:548
+#: catalog/models.py:556
+msgid "Reward"
+msgstr ""
+
+#: catalog/models.py:565 catalog/models.py:583 core/blocks.py:65
+#: core/blocks.py:75 core/blocks.py:93 core/blocks.py:104 core/blocks.py:120
+#: core/blocks.py:131 core/blocks.py:148 core/blocks.py:224 core/blocks.py:253
+#: core/models.py:215 home/models.py:108
+msgid "Title"
+msgstr ""
+
+#: catalog/models.py:572
+msgid "Service type category"
+msgstr ""
+
+#: catalog/models.py:573 catalog/views.py:96
+msgid "Service type categories"
+msgstr ""
+
+#: catalog/models.py:590
+msgid "Category"
+msgstr ""
+
+#: catalog/models.py:616
+msgid "This service type already exists in this category."
+msgstr ""
+
+#: catalog/models.py:620
+msgid "Service type"
+msgstr ""
+
+#: catalog/services.py:26
+msgid "Mon"
+msgstr "Mån"
+
+#: catalog/services.py:27
+msgid "Tue"
+msgstr "Tis"
+
+#: catalog/services.py:28
+msgid "Wed"
+msgstr "Ons"
+
+#: catalog/services.py:29
+msgid "Thu"
+msgstr "Tor"
+
+#: catalog/services.py:30
+msgid "Fri"
+msgstr "Fre"
+
+#: catalog/services.py:31
+msgid "Sat"
+msgstr "Lör"
+
+#: catalog/services.py:32
+msgid "Sun"
+msgstr "Sön"
+
+#: catalog/services.py:48 catalog/services.py:57 core/blocks.py:40
+msgid "Holiday"
+msgstr "Semester"
+
+#: catalog/services.py:87 catalog/services.py:89 core/blocks.py:53
+msgid "Until the last client"
+msgstr "Tills den sista klienten"
+
+#: catalog/services.py:295 catalog/services.py:315
+msgid "Closed"
+msgstr "Stängd"
+
+#: catalog/services.py:303
+msgid "Open 24 hours"
+msgstr "Öppet dygnet runt"
+
+#: catalog/services.py:307
+msgid "Open until the last client"
+msgstr "Öppet dygnet runt Öppet till sista kunden"
+
+#: catalog/services.py:309
+#, python-format
+msgid "Open until %(time)s"
+msgstr "Öppet till %(time)s"
+
+#: catalog/services.py:312
+msgid "Open"
+msgstr "Öppna"
+
+#: catalog/services.py:316
+msgid "Unknown"
+msgstr "Okänd"
+
+#: catalog/templates/catalog/admin/import_example.html:10
+msgid "All possible fields"
+msgstr ""
+
+#: catalog/templates/catalog/admin/import_organizations.html:77
+#: comments/templates/comments/admin/import_comments.html:36
+msgid "Import"
+msgstr ""
+
+#: catalog/templates/catalog/includes/organization-item.html:45
+#: catalog/templates/catalog/organization_page.html:18
+msgid "Temporarily Closed"
+msgstr "Tillfälligt stängt"
+
+#: catalog/templates/catalog/includes/organization-map.html:9
+msgid "Click to load interactive map"
+msgstr "Klicka för att ladda interaktiv karta"
+
+#: catalog/templates/catalog/organization_page.html:58
+msgid "In building"
+msgstr "I byggnaden"
+
+#: catalog/templates/catalog/organization_page.html:74
+msgid "Call"
+msgstr "Samtal"
+
+#: catalog/templates/catalog/organization_page.html:84
+msgid "Build a route"
+msgstr "Bygg en rutt"
+
+#: catalog/templates/catalog/organization_page.html:92
+msgid "E-post"
+msgstr "E-post"
+
+#: catalog/templates/catalog/organization_page.html:99
+msgid "Review"
+msgstr "Recension"
+
+#: catalog/templates/catalog/organization_page.html:116
+msgid "Phone numbers"
+msgstr "Telefonnummer"
+
+#: catalog/templates/catalog/organization_page.html:121
+msgid "Show"
+msgstr "Visa"
+
+#: catalog/templates/catalog/organization_page.html:127
+#, python-format
+msgid ""
+"Tell the company you found their number on %(site_name)s — it motivates them"
+" to work better, knowing you can leave a review."
+msgstr ""
+"Berätta för företaget att du hittade deras nummer på %(site_name)s – det "
+"motiverar dem att arbeta bättre, eftersom de vet att du kan lämna en "
+"recension."
+
+#: catalog/templates/catalog/organization_page.html:133
+msgid "Official website"
+msgstr "Officiell webbplats"
+
+#: catalog/templates/catalog/organization_page.html:154
+msgid "E-mail"
+msgstr "E-post"
+
+#: catalog/templates/catalog/organization_page.html:187
+msgid "Coords and Plus Code"
+msgstr "Koordinater och Plus-kod"
+
+#: catalog/templates/catalog/organization_page.html:191
+msgid "Copy coords"
+msgstr ""
+
+#: catalog/templates/catalog/organization_page.html:204
+msgid "Copy plus code"
+msgstr ""
+
+#: catalog/templates/catalog/organization_page.html:219
+msgid "They speak languages"
+msgstr "De talar språk"
+
+#: catalog/templates/catalog/organization_page.html:265
+msgid ""
+"Source: Brønnøysund Register Centre (NLOD 2.0) / Norwegian Mapping Authority"
+" Address API"
+msgstr ""
+
+#: catalog/templates/catalog/organization_page.html:275
+#: catalog/templates/catalog/organization_type_map.html:6
+#: catalog/templates/catalog/organization_type_map.html:10
+msgid "on map"
+msgstr "på kartan"
+
+#: catalog/templates/catalog/organization_page.html:276
+msgid "Free audit maps"
+msgstr "Gratis revisionskartor"
+
+#: catalog/templates/catalog/organization_type_map.html:17
+msgid "near me in"
+msgstr "nära mig i"
+
+#: catalog/templates/catalog/organization_type_page.html:10
+msgid "By tag:"
+msgstr "Efter tagg:"
+
+#: catalog/templates/catalog/organization_type_page.html:21
+msgid "[[Top]] organizations"
+msgstr "[[Topp]] organisationer"
+
+#: catalog/templates/catalog/organizations.html:6
+msgid "Organizations list"
+msgstr "Lista över organisationer"
+
+#: catalog/templates/catalog/organizations.html:10
+msgid "Organizations list page."
+msgstr "Sida med organisationslista."
+
+#: catalog/templates/catalog/organizations.html:19
+msgid "[[By address]]: "
+msgstr "[[Adress]]:"
+
+#: catalog/views.py:82
+msgid "Organizations types"
+msgstr "Organisationstyper"
+
+#: catalog/views.py:105
+msgid "Choose a category"
+msgstr ""
+
+#: catalog/views.py:106
+msgid "Choose another category"
+msgstr ""
+
+#: catalog/views.py:107
+msgid "Edit this category"
+msgstr ""
+
+#: catalog/views.py:137
+msgid "Catalog"
+msgstr ""
+
+#: catalog/views.py:524
+msgid "Organizations report"
+msgstr ""
+
+#: comments/button.py:19
+msgid "Publish"
+msgstr ""
+
+#: comments/button.py:21
+#, python-format
+msgid "Publish this %s"
+msgstr ""
+
+#: comments/button.py:31
+msgid "Reject"
+msgstr ""
+
+#: comments/button.py:33
+#, python-format
+msgid "Reject this %s"
+msgstr ""
+
+#: comments/button.py:44 comments/templates/comments/comment_published.html:22
+msgid "Delete"
+msgstr "Radera"
+
+#: comments/button.py:46
+#, python-format
+msgid "Delete this %s"
+msgstr ""
+
+#: comments/forms.py:18
+msgid "Add comment ..."
+msgstr ""
+
+#: comments/models.py:20 reviews/models.py:18
+msgid "Published"
+msgstr ""
+
+#: comments/models.py:21
+msgid "On moderation"
+msgstr ""
+
+#: comments/models.py:22 reviews/models.py:19
+msgid "Rejected"
+msgstr ""
+
+#: comments/models.py:23 reviews/models.py:20
+msgid "Deleted"
+msgstr ""
+
+#: comments/models.py:30
+msgid "Parent"
+msgstr ""
+
+#: comments/models.py:38 comments/models.py:85 comments/models.py:102
+#: reviews/views.py:21
+msgid "User"
+msgstr ""
+
+#: comments/models.py:42
+msgid "IP address"
+msgstr ""
+
+#: comments/models.py:46 reviews/models.py:52
+msgid "Created at"
+msgstr ""
+
+#: comments/models.py:49 reviews/views.py:29
+msgid "Status"
+msgstr ""
+
+#: comments/models.py:55 reviews/models.py:47
+msgid "Comment text"
+msgstr ""
+
+#: comments/models.py:61 comments/models.py:76 comments/models.py:101
+#: reviews/models.py:46
+msgid "Comment"
+msgstr ""
+
+#: comments/models.py:62
+msgid "Comments"
+msgstr ""
+
+#: comments/models.py:95 comments/models.py:103
+msgid "Object"
+msgstr ""
+
+#: comments/templates/comments/admin/import_comments.html:12
+msgid "Import Comments"
+msgstr ""
+
+#: comments/templates/comments/admin/import_comments.html:16
+msgid "It takes a several minutes do not reload the page!"
+msgstr ""
+
+#: comments/templates/comments/admin/import_comments.html:27
+msgid "CSV File"
+msgstr ""
+
+#: comments/templates/comments/admin/import_example.html:13
+msgid "Content types"
+msgstr ""
+
+#: comments/templates/comments/admin/import_example.html:18
+msgid "Name"
+msgstr ""
+
+#: comments/templates/comments/admin/import_example.html:33
+msgid "CSV File (Minimal example)"
+msgstr ""
+
+#: comments/templates/comments/comment_deleted.html:12
+#: comments/templates/comments/comment_on_moderation.html:12
+#: comments/templates/comments/comment_rejected.html:12
+msgid "ago"
+msgstr "sedan"
+
+#: comments/templates/comments/comment_deleted.html:14
+msgid "Comment was deleted by moderator"
+msgstr "Kommentaren raderades av moderatorn"
+
+#: comments/templates/comments/comment_on_moderation.html:14
+msgid "The comment is under moderation"
+msgstr "Kommentaren är under moderering"
+
+#: comments/templates/comments/comment_published.html:19
+msgid "Reply"
+msgstr "Svar"
+
+#: comments/templates/comments/comment_rejected.html:14
+msgid "The comment was rejected by the moderator"
+msgstr "Kommentaren avvisades av moderatorn"
+
+#: comments/templates/comments/form.html:23
+msgid "Cancel"
+msgstr "Avboka"
+
+#: comments/templates/comments/form.html:24
+#: reviews/templates/reviews/reviews-form.html:33
+msgid "Send"
+msgstr "Skicka"
+
+#: comments/templates/comments/form.html:31
+msgid "Log in to leave a comment"
+msgstr "Logga in för att lämna en kommentar"
+
+#: comments/templates/comments/header.html:6
+#, python-format
+msgid "%(counter)s comment"
+msgid_plural "%(counter)s comments"
+msgstr[0] "%(counter)s kommentar"
+msgstr[1] "%(counter)s kommentarer"
+
+#: comments/views.py:38 comments/views.py:44 comments/views.py:49
+#: comments/views.py:71
+msgid "Hacker?"
+msgstr "Hacker?"
+
+#: comments/views.py:60
+msgid "Comment is too short!"
+msgstr "Kommentaren är för kort!"
+
+#: core/blocks.py:28
+msgid "Monday"
+msgstr "Måndag"
+
+#: core/blocks.py:29
+msgid "Tuesday"
+msgstr "Tisdag"
+
+#: core/blocks.py:30
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#: core/blocks.py:31
+msgid "Thursday"
+msgstr "Torsdag"
+
+#: core/blocks.py:32
+msgid "Friday"
+msgstr "Fredag"
+
+#: core/blocks.py:33
+msgid "Saturday"
+msgstr "Lördag"
+
+#: core/blocks.py:34
+msgid "Sunday"
+msgstr ""
+
+#: core/blocks.py:44
+msgid "Start"
+msgstr ""
+
+#: core/blocks.py:48
+msgid "End"
+msgstr ""
+
+#: core/blocks.py:64
+msgid "Public"
+msgstr ""
+
+#: core/blocks.py:66
+msgid "Code"
+msgstr ""
+
+#: core/blocks.py:79 core/blocks.py:95 core/blocks.py:106 core/blocks.py:123
+#: core/blocks.py:134 core/blocks.py:258
+msgid "Page"
+msgstr ""
+
+#: core/blocks.py:83 core/blocks.py:135 core/blocks.py:261
+msgid "URL"
+msgstr ""
+
+#: core/blocks.py:96 core/blocks.py:137 core/blocks.py:154 core/blocks.py:266
+msgid "Button text"
+msgstr ""
+
+#: core/blocks.py:100
+msgid "Card (Style 1)"
+msgstr ""
+
+#: core/blocks.py:110
+msgid "Card (Style 2)"
+msgstr ""
+
+#: core/blocks.py:116
+msgid "Card (Style 3)"
+msgstr ""
+
+#: core/blocks.py:127
+msgid "Card (Style 4)"
+msgstr ""
+
+#: core/blocks.py:141
+msgid "Card (Style 5)"
+msgstr ""
+
+#: core/blocks.py:151
+msgid "Page URL"
+msgstr ""
+
+#: core/blocks.py:165
+msgid "Cards in row"
+msgstr ""
+
+#: core/blocks.py:170
+msgid "Not working for <code>Paginated organizations</code>"
+msgstr ""
+
+#: core/blocks.py:212
+msgid "Cards"
+msgstr ""
+
+#: core/blocks.py:217
+msgid "Section with cards"
+msgstr ""
+
+#: core/blocks.py:233
+msgid "Question"
+msgstr ""
+
+#: core/blocks.py:234
+msgid "Answer"
+msgstr ""
+
+#: core/blocks.py:236
+msgid "Q&A Item"
+msgstr ""
+
+#: core/blocks.py:241
+msgid "Q&A items"
+msgstr ""
+
+#: core/blocks.py:246
+msgid "Question and Answer"
+msgstr ""
+
+#: core/blocks.py:271
+msgid "Purple-Red"
+msgstr ""
+
+#: core/blocks.py:272
+msgid "Blue-Green"
+msgstr ""
+
+#: core/blocks.py:273
+msgid "Light Blue"
+msgstr ""
+
+#: core/blocks.py:275
+msgid "Color"
+msgstr ""
+
+#: core/blocks.py:281
+msgid "Banner"
+msgstr ""
+
+#: core/models.py:24
+msgid "Site logo"
+msgstr ""
+
+#: core/models.py:25
+msgid "The logo of the site."
+msgstr ""
+
+#: core/models.py:34
+msgid "Mobile logo"
+msgstr ""
+
+#: core/models.py:35
+msgid "The logo of the site for mobile devices."
+msgstr ""
+
+#: core/models.py:44
+msgid "Default organization image"
+msgstr ""
+
+#: core/models.py:45
+msgid "The default image for organizations."
+msgstr ""
+
+#: core/models.py:54
+msgid "Flag"
+msgstr ""
+
+#: core/models.py:55
+msgid "Flag for hero banner on home page."
+msgstr ""
+
+#: core/models.py:73
+msgid "Site settings"
+msgstr ""
+
+#: core/models.py:90
+msgid "Robots.txt content"
+msgstr ""
+
+#: core/models.py:91
+msgid "Content of the robots.txt file."
+msgstr ""
+
+#: core/models.py:99
+msgid "Robots.txt"
+msgstr ""
+
+#: core/models.py:112
+msgid ""
+"Add external code snippets e.g. Google Analytics, Facebook Pixel, etc... to "
+"the header, body, or footer of your site."
+msgstr ""
+
+#: core/models.py:119
+msgid "Header code"
+msgstr ""
+
+#: core/models.py:125
+msgid "Body code"
+msgstr ""
+
+#: core/models.py:131
+msgid "Footer code"
+msgstr ""
+
+#: core/models.py:146
+msgid "External code"
+msgstr ""
+
+#: core/models.py:162
+msgid "404 Page Title"
+msgstr ""
+
+#: core/models.py:163
+msgid "Title displayed on the 404 Not Found page."
+msgstr ""
+
+#: core/models.py:167
+msgid "404 Page Description"
+msgstr ""
+
+#: core/models.py:168
+msgid "Description displayed on the 404 Not Found page."
+msgstr ""
+
+#: core/models.py:176
+msgid "404 Page Image"
+msgstr ""
+
+#: core/models.py:177
+msgid "Image displayed on the 404 Not Found page."
+msgstr ""
+
+#: core/models.py:185
+msgid "404 Page Cards"
+msgstr ""
+
+#: core/models.py:192
+msgid "404 Page Banner"
+msgstr ""
+
+#: core/models.py:205
+msgid "Page 404"
+msgstr ""
+
+#: core/models.py:216
+msgid "Links"
+msgstr ""
+
+#: core/models.py:223
+msgid "Navigations"
+msgstr ""
+
+#: core/models.py:233
+msgid "Navigation"
+msgstr ""
+
+#: core/models.py:238 core/models.py:239
+msgid "Footer"
+msgstr ""
+
+#: core/models.py:247
+msgid "There can be only one footer instance."
+msgstr ""
+
+#: core/wagtail_hooks.py:56
+msgid "Full width"
+msgstr ""
+
+#: core/wagtail_hooks.py:60
+msgid "Left-aligned"
+msgstr ""
+
+#: core/wagtail_hooks.py:63
+msgid "Right-aligned"
+msgstr ""
+
+#: home/models.py:46
+msgid "Home page"
+msgstr ""
+
+#: home/models.py:47
+msgid "Home pages"
+msgstr ""
+
+#: home/models.py:73
+msgid "Flat page"
+msgstr ""
+
+#: home/models.py:74
+msgid "Flat pages"
+msgstr ""
+
+#: home/models.py:98
+msgid "Form code"
+msgstr ""
+
+#: home/models.py:99
+msgid "HTML code for the contact form."
+msgstr ""
+
+#: home/models.py:120
+msgid "Tabs"
+msgstr ""
+
+#: home/models.py:137
+msgid "Contact page"
+msgstr ""
+
+#: home/models.py:138
+msgid "Contact pages"
+msgstr ""
+
+#: ratings/templates/ratings/blocks/rating_block.html:7
+msgid "of"
+msgstr "av"
+
+#: ratings/templates/ratings/rating_page.html:42
+msgid "Organization in catalog"
+msgstr "Organisation i katalogen"
+
+#: reviews/models.py:17
+msgid "Moderation"
+msgstr ""
+
+#: reviews/models.py:41
+msgid "Rating"
+msgstr ""
+
+#: reviews/models.py:42
+msgid "Rating value"
+msgstr ""
+
+#: reviews/models.py:53
+msgid "Creation date and time"
+msgstr ""
+
+#: reviews/models.py:58
+msgid "Go live at"
+msgstr ""
+
+#: reviews/models.py:59
+msgid "Date and time when the review will be published"
+msgstr ""
+
+#: reviews/templates/reviews/reviews-form.html:11
+msgid "Give a rating"
+msgstr "Ge ett betyg"
+
+#: reviews/templates/reviews/reviews-form.html:29
+msgid "What do you think?"
+msgstr "Vad tycker du?"
+
+#: reviews/templates/reviews/reviews-form.html:38
+msgid "Upload photos"
+msgstr "Ladda upp foton"
+
+#: reviews/templates/reviews/reviews-form.html:43
+msgid "Drag and drop images here or"
+msgstr "Dra och släpp bilder här eller"
+
+#: reviews/templates/reviews/reviews-form.html:44
+msgid "click to upload"
+msgstr "klicka för att ladda upp"
+
+#: reviews/templates/reviews/reviews.html:8
+msgid "Be the first to leave a review"
+msgstr "Bli först med att lämna en recension"
+
+#: reviews/views.py:16
+msgid "Reviews"
+msgstr ""
+
+#: reviews/views.py:52
+msgid "Invalid content type."
+msgstr ""
+
+#: reviews/views.py:67
+#, python-format
+msgid "Error saving review: %s"
+msgstr "Fel vid sparning av recension: %s"
+
+#: reviews/views.py:75
+msgid "Only .jpg and .jpeg files are allowed."
+msgstr "Endast .jpg- och .jpeg-filer är tillåtna."
+
+#: reviews/views.py:80
+msgid "File size must be less than 2MB."
+msgstr ""
+
+#: reviews/views.py:98
+msgid ""
+"Review submitted successfully. It will be published after admin approval."
+msgstr ""
+
+#: search/templates/search/search.html:30
+msgid "No results found"
+msgstr "Inga resultat hittades"
+
+#: subscription/models.py:9
+msgid "Competitor"
+msgstr ""
+
+#: subscription/models.py:10
+msgid "Basic"
+msgstr ""
+
+#: subscription/models.py:11
+msgid "Standard"
+msgstr ""
+
+#: subscription/models.py:12
+msgid "Premium"
+msgstr ""
+
+#: subscription/models.py:23
+msgid "Subscription Level"
+msgstr ""
+
+#: subscription/models.py:27 subscription/views.py:12
+msgid "Start Date"
+msgstr ""
+
+#: subscription/models.py:30 subscription/views.py:17
+msgid "End Date"
+msgstr ""
+
+#: subscription/models.py:34
+msgid "Is Active"
+msgstr ""
+
+#: subscription/models.py:90
+msgid "Premium Subscription"
+msgstr ""
+
+#: subscription/models.py:91
+msgid "Premium Subscriptions"
+msgstr ""
+
+#: subscription/views.py:33
+msgid "Subscriptions"
+msgstr "Prenumerationer"

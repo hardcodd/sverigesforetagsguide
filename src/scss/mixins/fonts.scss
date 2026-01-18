@@ -1,0 +1,33 @@
+@use "sass:string";
+@use "sass:map";
+@use "sass:list";
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+	$src: null;
+	$ext-mods: (
+		eot: "?",
+		svg: "#" + string.replace($name, " ", "_"),
+	);
+	$formats: (
+		otf: "opentype",
+		ttf: "truetype",
+		woff: "woff",
+		woff2: "woff2",
+		eot: "embedded-opentype",
+		svg: "svg",
+	);
+
+	@each $ext in $exts {
+		$ext-mod: if(map.has-key($ext-mods, $ext), $ext + map.get($ext-mods, $ext), $ext);
+		$format: if(map.has-key($formats, $ext), map.get($formats, $ext), $ext);
+		$src: list.append($src, url(string.quote($path + "." + $ext-mod)) format(string.quote($format)), comma);
+	}
+
+	@font-face {
+		font-weight: $weight;
+		font-family: string.unquote($name);
+		font-style: $style;
+		src: $src;
+		font-display: swap;
+	}
+}

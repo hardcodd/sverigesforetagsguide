@@ -1,0 +1,73 @@
+@use "sass:map";
+@use "../vars" as *;
+@use "../mixins/mixins" as *;
+
+@mixin spacing {
+	.justify-start {
+		justify-content: flex-start;
+	}
+
+	.justify-center {
+		justify-content: center;
+	}
+
+	.justify-end {
+		justify-content: flex-end;
+	}
+
+	.space-between {
+		justify-content: space-between;
+	}
+
+	.space-around {
+		justify-content: space-around;
+	}
+
+	.align-start {
+		align-items: flex-start;
+	}
+
+	.align-center {
+		align-items: center;
+	}
+
+	.align-end {
+		align-items: flex-end;
+	}
+
+	@each $bp in map.keys($breakpoints) {
+		@include breakpoint-up($bp) {
+			.justify-#{$bp}-start {
+				justify-content: flex-start;
+			}
+
+			.justify-#{$bp}-center {
+				justify-content: center;
+			}
+
+			.justify-#{$bp}-end {
+				justify-content: flex-end;
+			}
+
+			.space-#{$bp}-between {
+				justify-content: space-between;
+			}
+
+			.space-#{$bp}-around {
+				justify-content: space-around;
+			}
+
+			.align-#{$bp}-start {
+				align-items: flex-start;
+			}
+
+			.align-#{$bp}-center {
+				align-items: center;
+			}
+
+			.align-#{$bp}-end {
+				align-items: flex-end;
+			}
+		}
+	}
+}

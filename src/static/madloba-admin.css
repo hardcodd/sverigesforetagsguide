@@ -1,0 +1,13 @@
+.Draftail-block--ALIGN_CENTER {
+	text-align: center !important;
+}
+.Draftail-block--ALIGN_CENTER > * {
+	text-align: center !important;
+}
+
+.Draftail-block--ALIGN_RIGHT {
+	text-align: right !important;
+}
+.Draftail-block--ALIGN_RIGHT > * {
+	text-align: right !important;
+}

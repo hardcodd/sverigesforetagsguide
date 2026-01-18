@@ -1,0 +1,33 @@
+@use "sass:map";
+@use "../vars" as *;
+@use "../mixins/mixins" as *;
+
+.text {
+	&-left {
+		text-align: left;
+	}
+
+	&-center {
+		text-align: center;
+	}
+
+	&-right {
+		text-align: right;
+	}
+
+	@each $bp in map.keys($breakpoints) {
+		@include breakpoint-up($bp) {
+			&-#{$bp}-left {
+				text-align: left;
+			}
+
+			&-#{$bp}-center {
+				text-align: center;
+			}
+
+			&-#{$bp}-right {
+				text-align: right;
+			}
+		}
+	}
+}

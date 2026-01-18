@@ -1,0 +1,65 @@
+@use "sass:list";
+@use "sass:map";
+@use "vars" as *;
+@use "mixins/mixins" as *;
+
+// @include font-face("Font Name", "../static/fonts/fontname", 400, normal, woff2);
+@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap';
+
+// Paragraph Typography
+$font-size-min: 14;
+$font-size-max: 16;
+
+// Heading Typography
+// prettier-ignore
+$heading-sizes: (
+	1: (38, 28, 30),
+	// max, min, margin
+	2: (27, 22, 24),
+	3: (22, 18, 20),
+	4: (18, 16, 18),
+	5: (16, 14, 16),
+	6: (14, 12, 14),
+);
+
+:root {
+	// Common Typography
+	--font-family: "Roboto", "Noto Sans Georgian", sans-serif;
+
+	// --font-family: -apple-system, blinkmacsystemfont, "Segoe UI", system-ui, roboto, "Helvetica Neue", arial, sans-serif, apple color emoji, "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--line-height: 1.7;
+
+	// Heading Typography
+	--heading-color: currentcolor;
+	--heading-font-family: var(--font-family);
+	--heading-font-weight: var(--medium);
+	--heading-line-height: 1.3;
+}
+
+@each $level, $sizes in $heading-sizes {
+
+	h#{$level},
+	.h#{$level} {
+		display: block;
+
+		color: var(--heading-color);
+		font-weight: var(--heading-font-weight);
+		font-family: var(--font-family-heading);
+		line-height: var(--heading-line-height);
+
+		@include font-size(list.nth($sizes, 1),
+			list.nth($sizes, 2),
+			list.nth($sizes, 3),
+			rem);
+	}
+}
+
+// Paragraph styles
+p,
+.p {
+	margin: 0 0 1em;
+}
+
+body {
+	@include font-size($font-size-max, $font-size-min);
+}

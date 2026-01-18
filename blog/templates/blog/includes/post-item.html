@@ -1,0 +1,48 @@
+{% load wagtailimages_tags i18n cache %}
+
+{% get_current_language as current_lang %}
+
+{% spaceless %}
+  {% cache 604800 blog_post_item post.pk current_lang %}
+  <article class="blog-post" id="blog-post-{{ post.pk }}">
+    <header class="blog-post__header">
+      <a href="{{ post.url }}" class="blog-post__image">
+        <div class="ratio">
+          {% if post.get_image %}
+            {% srcset_image post.get_image width-720 format-{avif,webp,jpeg} loading="lazy" %}
+          {% else %}
+            {% srcset_image settings.core.SiteSettings.default_organization_image width-720 format-{avif,webp,jpeg} loading="lazy" %}
+          {% endif %}
+        </div>
+      </a>
+      <a href="{{ post.url }}" class="blog-post__title-link">
+        <h2 class="h4 blog-post__title">{{ post.title }}</h2>
+      </a>
+      <div class="blog-post__meta">
+        <div class="blog-post__meta-item">
+          <span class="blog-post__meta-icon">{% include "wagtailadmin/icons/calendar-alt.svg" %}</span>
+          <span class="blog-post__meta-value">
+            <a href="{{ post.url }}">
+              <time datetime="{{ post.first_published_at|date:'c' }}">{{ post.first_published_at|date:'M d, Y' }}</time>
+            </a>
+          </span>
+        </div>
+
+        <div class="blog-post__meta-item">
+          <span class="blog-post__meta-icon">{% include "wagtailadmin/icons/folder-open-1.svg" %}</span>
+          <span class="blog-post__meta-value">
+            <a href="{{ post.get_parent.specific.url }}">{{ post.get_parent.title }}</a>
+          </span>
+        </div>
+      </div>
+    </header>
+    <p class="blog-post__excerpt">{{ post.search_description|truncatechars:80|default:post.content|striptags|truncatechars:80 }}</p>
+    <footer class="blog-post__footer">
+      <a href="{{ post.url }}" class="btn sm adaptive text-icon">
+        {% include "icons/chevron-right.svg" %}
+        <span>{% trans "Read more" %}</span>
+      </a>
+    </footer>
+  </article>
+{% endcache %}
+{% endspaceless %}

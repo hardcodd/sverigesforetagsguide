@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags catalog %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="page__title">{{page.title}}</h1>
+	</div>
+  {% for block in page.content %}
+    {% include_block block %}
+  {% empty %}
+    <section class="section section--latest-organizations">
+      <div class="container">
+        <div class="row v-gutters">
+          {% get_paginated_organizations page as organizations %}
+          {% for organization in organizations %}
+            <div class="col-lg-3 col-sm-6 col-12">{% include "catalog/includes/organization-item.html" %}</div>
+          {% endfor %}
+        </div>
+        {% include "includes/pagination.html" with page_obj=organizations %}
+      </div>
+    </section>
+  {% endfor %}
+{% endblock content %}

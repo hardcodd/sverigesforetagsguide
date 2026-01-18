@@ -1,0 +1,7 @@
+{% load blog %}
+
+{% get_latest_blog_posts self.page self.count as posts %}
+
+{% for post in posts %}
+  <div class="{% if as_carousel %}swiper-slide{% else %}grid-col{% endif %}">{% include "blog/includes/post-item.html" %}</div>
+{% endfor %}

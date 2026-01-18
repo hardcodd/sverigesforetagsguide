@@ -1,0 +1,81 @@
+@use "sass:math";
+@use "sass:map";
+@use "../vars" as *;
+@use "../mixins/mixins" as *;
+
+@mixin cols {
+	.col,
+	[class*="col-"] {
+		flex: 1 0 0%;
+		width: 100%;
+		max-width: 100%;
+		padding-right: calc(var(--gutter-x) * 0.5);
+		padding-left: calc(var(--gutter-x) * 0.5);
+	}
+
+	.col-auto {
+		flex: 0 0 auto;
+		width: auto;
+		max-width: 100%;
+	}
+
+	.offset-auto {
+		margin-left: auto;
+	}
+
+	.offset-0 {
+		margin-left: 0;
+	}
+
+	@for $i from 1 through $columns {
+		.col-#{$i} {
+			flex: 0 0 math.percentage(calc($i / $columns));
+			width: math.percentage(calc($i / $columns));
+			max-width: math.percentage(calc($i / $columns));
+		}
+
+		.order-#{$i} {
+			order: $i;
+		}
+
+		.offset-#{$i} {
+			$num: calc($i / $columns);
+
+			margin-left: if($num == 0, 0, math.percentage($num));
+		}
+
+		@each $bp in map.keys($breakpoints) {
+			@include breakpoint-up($bp) {
+				.col-#{$bp}-#{$i} {
+					flex: 0 0 math.percentage(calc($i / $columns));
+					width: math.percentage(calc($i / $columns));
+					max-width: math.percentage(calc($i / $columns));
+				}
+
+				.col-#{$bp}-auto {
+					flex: 0 0 auto;
+					width: auto;
+					max-width: 100%;
+				}
+
+				.offset-#{$bp}-0 {
+					margin-left: 0;
+				}
+
+				.offset-#{$bp}-auto {
+					margin-left: auto;
+				}
+
+				.order-#{$bp}-#{$i} {
+					order: $i;
+				}
+
+				.offset-#{$bp}-#{$i} {
+					$num: calc($i / $columns);
+
+					margin-left: if($num == 0, 0, math.percentage($num));
+				}
+			}
+		}
+	}
+}

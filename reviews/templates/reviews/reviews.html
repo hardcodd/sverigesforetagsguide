@@ -1,0 +1,17 @@
+{% load i18n reviews %}
+
+{% get_reviews_count page as reviews_count %}
+
+{% spaceless %}
+  <div id="reviews" class="reviews">
+    {% if not reviews_count %}
+      <div class=" h3 reviews__title">{% trans "Be the first to leave a review" %}</div>
+    {% else %}
+      <div class=" h3 reviews__title">{% blocktrans count counter=reviews_count %}{{ counter }} review{% plural %}{{ counter }} reviews{% endblocktrans %}</div>
+    {% endif %}
+
+    {% include "reviews/reviews-form.html" %}
+
+    {% include "reviews/reviews-list.html" %}
+  </div>
+{% endspaceless %}

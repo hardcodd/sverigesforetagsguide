@@ -1,0 +1,95 @@
+{% extends "wagtailadmin/base.html" %}
+
+{% load i18n %}
+
+{% block titletag %}Import Organizations{% endblock %}
+{% block extra_js %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+{% endblock extra_js %}
+
+{% block extra_css %}
+  <style>
+    table.listing th {
+      font-weight: bold;
+    }
+
+    table.listing td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    table.listing td.status-message {
+      font-weight: bold;
+      font-style: italic;
+      white-space: normal;
+      max-width: none;
+      width: 250px;
+      display: block;
+    }
+
+    table.listing tr.success {
+      color: #007d7e;
+    }
+
+    table.listing tr.error {
+      color: #ca3b3b;
+      fweight: bold;
+    }
+
+    table.listing tr.warning {
+      color: #e6a700;
+    }
+
+    .table-listing-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+  </style>
+{% endblock extra_css %}
+
+{% block content %}
+  {% with "Import Organizations" as title %}
+    {% include "wagtailadmin/shared/header.html" with title=title icon="briefcase-solid" %}
+  {% endwith %}
+
+  <div class="nice-padding">
+    <form id="import-organizations-form" action="/en/catalog/import-organization/" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset>
+        <ul class="fields">
+          <li>
+            <div class="w-field__wrapper " data-field-wrapper="">
+              <label class="w-field__label" for="id_file" id="id_file-label">
+                CSV File<span class="w-required-mark">*</span>
+              </label>
+              <div class="w-field w-field--file_field w-field--file_input" data-field="" data-contentpath="file">
+                <div class="w-field__errors" data-field-errors=""></div>
+                <div class="w-field__help" data-field-help=""></div>
+                <div class="w-field__input" data-field-input="">
+                  <input type="file" name="file" id="id_file" accept=".csv" required>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <button type="submit" class="button">{% trans "Import" %}</button>
+        </fieldset>
+      </form>
+    </div>
+
+    <div class="nice-padding">
+      <div id="import-progress" class="progress">
+        <div class="bar" style="width: 0%">0%</div>
+      </div>
+    </div>
+
+    <div class="nice-padding">
+      <div class="table-listing-wrapper">
+        <table class="listing csv-table">
+        </table>
+        {% include "catalog/admin/import_example.html" %}
+      </div>
+    </div>
+  {% endblock %}

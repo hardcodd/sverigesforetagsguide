@@ -1,0 +1,164 @@
+@use "sass:map";
+@use "../vars" as *;
+@use "../functions" as *;
+
+// Mobile first
+
+@mixin sm-u {
+	@media (min-width: map.get($breakpoints, sm)) {
+		@content;
+	}
+}
+
+@mixin md-u {
+	@media (min-width: map.get($breakpoints, md)) {
+		@content;
+	}
+}
+
+@mixin lg-u {
+	@media (min-width: map.get($breakpoints, lg)) {
+		@content;
+	}
+}
+
+@mixin xl-u {
+	@media (min-width: map.get($breakpoints, xl)) {
+		@content;
+	}
+}
+
+// Only
+
+@mixin xs {
+	@media (max-width: (map.get($breakpoints, sm) - rem(0.2))) {
+		@content;
+	}
+}
+
+@mixin sm {
+	@media (max-width: (map.get($breakpoints, md) - rem(0.2))) and (min-width: map.get($breakpoints, sm)) {
+		@content;
+	}
+}
+
+@mixin md {
+	@media (max-width: (map.get($breakpoints, lg) - rem(0.2))) and (min-width: map.get($breakpoints, md)) {
+		@content;
+	}
+}
+
+@mixin lg {
+	@media (max-width: (map.get($breakpoints, xl) - rem(0.2))) and (min-width: map.get($breakpoints, lg)) {
+		@content;
+	}
+}
+
+@mixin xl {
+	@media (max-width: (map.get($breakpoints, xxl) - rem(0.2))) and (min-width: map.get($breakpoints, xl)) {
+		@content;
+	}
+}
+
+@mixin xxl {
+	@media (min-width: map.get($breakpoints, xxl)) {
+		@content;
+	}
+}
+
+// Desktop first
+@mixin xl-d {
+	@media (max-width: (map.get($breakpoints, xxl) - rem(0.2))) {
+		@content;
+	}
+}
+
+@mixin lg-d {
+	@media (max-width: (map.get($breakpoints, xl) - rem(0.2))) {
+		@content;
+	}
+}
+
+@mixin md-d {
+	@media (max-width: (map.get($breakpoints, lg) - rem(0.2))) {
+		@content;
+	}
+}
+
+@mixin sm-d {
+	@media (max-width: (map.get($breakpoints, md) - rem(0.2))) {
+		@content;
+	}
+}
+
+@mixin breakpoint-down($breakpoint) {
+	@if $breakpoint == "sm" {
+		@include sm-d {
+			@content;
+		}
+	} @else if $breakpoint == "md" {
+		@include md-d {
+			@content;
+		}
+	} @else if $breakpoint == "lg" {
+		@include lg-d {
+			@content;
+		}
+	} @else if $breakpoint == "xl" {
+		@include xl-d {
+			@content;
+		}
+	}
+}
+
+@mixin breakpoint-only($breakpoint) {
+	@if $breakpoint == "xs" {
+		@include xs {
+			@content;
+		}
+	} @else if $breakpoint == "sm" {
+		@include sm {
+			@content;
+		}
+	} @else if $breakpoint == "md" {
+		@include md {
+			@content;
+		}
+	} @else if $breakpoint == "lg" {
+		@include lg {
+			@content;
+		}
+	} @else if $breakpoint == "xl" {
+		@include xl {
+			@content;
+		}
+	} @else if $breakpoint == "xxl" {
+		@include xxl {
+			@content;
+		}
+	}
+}
+
+@mixin breakpoint-up($breakpoint) {
+	@if $breakpoint == "sm" {
+		@include sm-u {
+			@content;
+		}
+	} @else if $breakpoint == "md" {
+		@include md-u {
+			@content;
+		}
+	} @else if $breakpoint == "lg" {
+		@include lg-u {
+			@content;
+		}
+	} @else if $breakpoint == "xl" {
+		@include xl-u {
+			@content;
+		}
+	} @else if $breakpoint == "xxl" {
+		@include xxl {
+			@content;
+		}
+	}
+}

@@ -1,0 +1,131 @@
+{% load i18n %}
+
+<section id="listings">
+  <style>
+    sup {
+      color: red;
+      font-size: larger;
+    }
+  </style>
+  <h2>{% trans "All possible fields" %}</h2>
+  <table class="listing">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <sup>*</sup> parent_id
+        </td>
+        <td>Id of parent page.</td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> legal_name
+        </td>
+        <td>Used to check uniqueness.</td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> ll
+        </td>
+        <td>59.90821529999999,10.7593551</td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> address_[lang]
+        </td>
+        <td>
+          <code>address_en</code> used to check uniqueness.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> h1_title_[lang]
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> title_[lang]
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>description_[lang]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>how_to_arrive_[lang]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>seo_title_[lang]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>search_description_[lang]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>slug</td>
+        <td>If not provided, it will be auto-generated from the title.</td>
+      </tr>
+      <tr>
+        <td>working_hours</td>
+        <td>{"Monday": "Open 24 hours", "Tuesday": "10am-4pm", "Wednesday": "10am-4pm", "Thursday": "10am-4pm", "Friday": "10am-4pm", "Saturday": "Closed", "Sunday": "Closed"}</td>
+      </tr>
+      <tr>
+        <td>phones</td>
+        <td>Separate multiple phone numbers with a comma.</td>
+      </tr>
+      <tr>
+        <td>website_links</td>
+        <td>Each link on a new line.</td>
+      </tr>
+      <tr>
+        <td>social_networks</td>
+        <td>Each link on a new line.</td>
+      </tr>
+      <tr>
+        <td>plus_code</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>tin</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verified</td>
+        <td>True | 1 | Yes | On</td>
+      </tr>
+      <tr>
+        <td>temporarily_closed</td>
+        <td>True | 1 | Yes | On</td>
+      </tr>
+      <tr>
+        <td>languages</td>
+        <td>
+          <code>(English, Norsk, Georgian ...)</code> You can find all awailable languages or add new ones <a href="{% url 'wagtailadmin_home' %}catalog_languages/" target="_blank">here</a>.
+        </td>
+      </tr>
+      <tr>
+        <td>show_on_map</td>
+        <td>True | 1 | Yes | On</td>
+      </tr>
+      <tr>
+        <td>located_in</td>
+        <td>Organizations ID</td>
+      </tr>
+      <tr>
+        <td>service_types</td>
+        <td>
+          <code>(Service type 1, Service type 2 ...)</code> Tey must be created <a href="{% url 'wagtailadmin_home' %}catalog_service_types/" target="_blank">here</a>. You may use any language in your CSV.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

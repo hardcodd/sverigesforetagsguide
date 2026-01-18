@@ -1,0 +1,18 @@
+{% load i18n wagtailcore_tags wagtailimages_tags core %}
+
+{% spaceless %}
+  {% image settings.core.SiteSettings.logo width-120 as logo %}
+  {% image settings.core.SiteSettings.logo_mobile width-40 as logo_mobile %}
+  {% if logo %}
+    <a href="{% localize_url '/' %}" class="logo">
+      <div class="logo__img">
+        <img class="hidden-lg-d" src="{{ logo.url }}" alt="Madloba">
+        <img class="hidden-xl-u logo--mobile" src="{{ logo_mobile.url|default:logo.url }}" alt="Madloba">
+      </div>
+      <p class="logo__text hidden-lg-d">
+        {% wagtail_site as current_site %}
+        {% blocktrans with site_name=current_site.site_name %}All about {{ site_name }}{% endblocktrans %}
+      </p>
+    </a>
+  {% endif %}
+{% endspaceless %}

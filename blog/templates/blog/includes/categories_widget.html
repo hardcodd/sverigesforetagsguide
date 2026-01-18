@@ -1,0 +1,19 @@
+{% load i18n cache blog %}
+
+{% get_blog_index_page as blog %}
+{% get_current_language as lang %}
+
+{% cache 604800 blog_categories_list lang blog.pk %}
+{% get_blog_categories_list as categories %}
+
+{% if categories %}
+  <aside class="widget widget--categories-list">
+    <div class="h3 widget__title">{% trans "By categories" %}</div>
+    <ul>
+      {% for category in categories|dictsort:'title' %}
+        {% include "blog/includes/category-item.html" %}
+      {% endfor %}
+    </ul>
+  </aside>
+{% endif %}
+{% endcache %}

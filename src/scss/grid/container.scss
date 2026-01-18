@@ -1,0 +1,60 @@
+@use "sass:map";
+@use "../mixins/mixins" as *;
+@use "../vars" as *;
+
+@mixin set-container-width($size) {
+	max-width: calc(map.get($container, $size) + var(--gutter-x));
+
+	@each $side in ("left", "right") {
+		&.#{$side} {
+			margin-#{$side}: calc((100vw - map.get($container, $size)) / 2 - calc(var(--gutter-x) / 2));
+		}
+	}
+}
+
+.container {
+	display: block;
+	width: 100%;
+	margin: 0 auto;
+	padding-right: calc(var(--gutter-x) * 0.5);
+	padding-left: calc(var(--gutter-x) * 0.5);
+
+	&.left {
+		margin-left: 0;
+	}
+
+	&.right {
+		margin-right: 0;
+	}
+
+	&.no-padding-x {
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	@include sm {
+		@include set-container-width(sm);
+	}
+
+	@include md {
+		@include set-container-width(md);
+	}
+
+	@include lg {
+		@include set-container-width(lg);
+	}
+
+	@include xl {
+		@include set-container-width(xl);
+	}
+
+	@include xxl {
+		@include set-container-width(xxl);
+	}
+
+	&.fluid,
+	&.left,
+	&.right {
+		max-width: 100%;
+	}
+}

@@ -1,0 +1,26 @@
+root = true
+
+[*]
+indent_style = tab
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+[*.{html,md}]
+max_line_length = 999999
+
+[*.md]
+indent_style = space
+
+[*.{css,scss}]
+max_line_length = 120
+
+[*.js]
+max_line_length = 120
+
+[*.py]
+max_line_length = 120
+indent_style = space
+indent_size = 4

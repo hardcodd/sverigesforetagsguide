@@ -1,0 +1,29 @@
+{% load wagtailcore_tags cache %}
+
+{% spaceless %}
+  {% if place == "head" %}
+    {% cache 604800 external_code "header" %}
+    {% with header_code=settings.core.ExternalCodeSettings.header_code %}
+      {% for block in header_code %}
+        {% include_block block %}
+      {% endfor %}
+    {% endwith %}
+  {% endcache %}
+{% elif place == "body" %}
+  {% cache 604800 external_code "body" %}
+  {% with body_code=settings.core.ExternalCodeSettings.body_code %}
+    {% for block in body_code %}
+      {% include_block block %}
+    {% endfor %}
+  {% endwith %}
+{% endcache %}
+{% elif place == "footer" %}
+{% cache 604800 external_code "footer" %}
+{% with footer_code=settings.core.ExternalCodeSettings.footer_code %}
+  {% for block in footer_code %}
+    {% include_block block %}
+  {% endfor %}
+{% endwith %}
+{% endcache %}
+{% endif %}
+{% endspaceless %}

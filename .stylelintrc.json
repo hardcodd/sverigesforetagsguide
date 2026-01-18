@@ -1,0 +1,90 @@
+{
+	"overrides": [
+		{
+			"files": [
+				"*.scss",
+				"**/*.scss"
+			],
+			"extends": [
+				"stylelint-config-standard",
+				"stylelint-config-standard-scss",
+				"stylelint-config-rational-order"
+			],
+			"rules": {
+				"plugin/rational-order": [
+					true,
+					{
+						"border-in-box-model": false,
+						"empty-line-between-groups": true
+					}
+				],
+				"import-notation": "string",
+				"selector-pseudo-element-colon-notation": "single",
+				"no-descending-specificity": null,
+				"selector-class-pattern": "^[a-z]+(?:[a-z0-9-]+)*(?:__[a-z]+(?:-[a-z]+)*)?(?:--[a-z]+(?:-[a-z]+)*)?$",
+				"color-function-notation": "legacy",
+				"declaration-property-value-no-unknown": [
+					true,
+					{
+						"ignoreProperties": [
+							"composes"
+						]
+					}
+				],
+				"rule-empty-line-before": [
+					"always-multi-line",
+					{
+						"except": [
+							"first-nested"
+						],
+						"ignore": [
+							"after-comment"
+						]
+					}
+				],
+				"at-rule-empty-line-before": [
+					"always",
+					{
+						"except": [
+							"blockless-after-blockless",
+							"first-nested"
+						],
+						"ignore": [
+							"after-comment",
+							"first-nested"
+						],
+						"ignoreAtRules": [
+							"else"
+						]
+					}
+				],
+				"declaration-empty-line-before": [
+					"always",
+					{
+						"except": [
+							"first-nested",
+							"after-comment"
+						],
+						"ignore": [
+							"inside-single-line-block",
+							"after-declaration"
+						]
+					}
+				],
+				"custom-property-empty-line-before": [
+					"always",
+					{
+						"except": [
+							"after-custom-property",
+							"first-nested"
+						],
+						"ignore": [
+							"after-comment",
+							"inside-single-line-block"
+						]
+					}
+				]
+			}
+		}
+	]
+}

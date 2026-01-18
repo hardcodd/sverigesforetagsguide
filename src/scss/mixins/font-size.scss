@@ -1,0 +1,79 @@
+@use "sass:list";
+@use "sass:map";
+@use "../vars" as *;
+@use "../functions" as *;
+@use "../mixins/breakpoints" as *;
+
+$breakpoints-list: map.keys($breakpoints);
+
+@mixin font-size($xxl, $xs, $margin: 0, $function: em) {
+	$sizes: range($xs, $xxl, list.length($breakpoints-list));
+
+	@if $function == em {
+		@if $margin > 0 {
+			margin: em($margin * 2, $xxl) 0 em($margin, $xxl);
+		}
+
+		@each $bp in $breakpoints-list {
+			$index: list.index($breakpoints-list, $bp);
+			$size: list.nth($sizes, $index);
+
+			@if $bp == xs {
+				font-size: em($size);
+			} @else if $bp == sm {
+				@include sm {
+					font-size: em($size);
+				}
+			} @else if $bp == md {
+				@include md {
+					font-size: em($size);
+				}
+			} @else if $bp == lg {
+				@include lg {
+					font-size: em($size);
+				}
+			} @else if $bp == xl {
+				@include xl {
+					font-size: em($size);
+				}
+			} @else if $bp == xxl {
+				@include xxl {
+					font-size: em($size);
+				}
+			}
+		}
+	} @else if $function == rem {
+		@if $margin > 0 {
+			margin: rem($margin * 2,) 0 rem($margin);
+		}
+
+		@each $bp in $breakpoints-list {
+			$index: list.index($breakpoints-list, $bp);
+			$size: list.nth($sizes, $index);
+
+			@if $bp == xs {
+				font-size: rem($size);
+			} @else if $bp == sm {
+				@include sm {
+					font-size: rem($size);
+				}
+			} @else if $bp == md {
+				@include md {
+					font-size: rem($size);
+				}
+			} @else if $bp == lg {
+				@include lg {
+					font-size: rem($size);
+				}
+			} @else if $bp == xl {
+				@include xl {
+					font-size: rem($size);
+				}
+			} @else if $bp == xxl {
+				@include xxl {
+					font-size: rem($size);
+				}
+			}
+		}
+	}
+}

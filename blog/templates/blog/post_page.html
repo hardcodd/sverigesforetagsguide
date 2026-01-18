@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block body_class %}template-blog-post-page has-sidebar{% endblock %}
+
+{% load i18n wagtailcore_tags wagtailimages_tags core comments %}
+
+{% block content %}
+  <div class="container">
+    <div class="row v-gutters">
+      <div class="col-lg-9 col-12">
+        <article class="blog-post blog-post--detail">
+
+          <h1 class="page__title">{{ page.title|mark|safe }}</h1>
+
+          <div class="blog-post__meta">
+            <div class="blog-post__meta-item">
+              <span>{% trans "Created at:" %}</span>
+              <time datetime="{{ page.first_published_at|date:'c' }}">{{ page.first_published_at|date:'M d, Y' }}</time>
+            </div>
+            {% if not page.first_published_at == page.last_published_at %}
+              <div class="blog-post__meta-item">
+                <span>{% trans "Updated at:" %}</span>
+                <time datetime="{{ page.last_published_at|date:'c' }}">{{ page.last_published_at|date:'M d, Y' }}</time>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="blog-post__content">
+            {% for block in page.content %}
+              {% include_block block %}
+            {% endfor %}
+          </div>
+
+          {% if page.author %}
+            {% with page.author.specific as author %}
+              {% include "authors/includes/author.html" %}
+            {% endwith %}
+          {% endif %}
+
+          <div id="comments">
+            <div class="container">
+              {% render_comment_form page %}
+              {% render_comments_list page %}
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-lg-3 col-12">
+        <div class="sidebar">{% include "blog/includes/sidebar.html" %}</div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

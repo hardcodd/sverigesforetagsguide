@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-30 08:58+0100\n"
+"PO-Revision-Date: 2025-11-30 08:59+0100\n"
+"Last-Translator: Alex Hardcodd <shubenkin.alexander@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
+
+#: src/js/components/blog-post.js:24
+msgid "Table of Contents"
+msgstr "Содержание статьи"
+
+#: src/js/components/cookie-consent.js:102
+#: src/js/components/cookie-consent.js:220
+#: src/js/components/cookie-consent.js:259
+msgid "Cookie preferences saved."
+msgstr "Настройки файлов cookie сохранены."
+
+#: src/js/components/cookie-consent.js:208
+msgid "All cookies accepted."
+msgstr "Принимаются все файлы cookie."
+
+#: src/js/components/cookie-consent.js:211
+msgid "Only necessary cookies allowed."
+msgstr "Разрешены только необходимые файлы cookie."
+
+#: src/js/components/header-search.js:58
+msgid "No results found"
+msgstr "Результатов не найдено"
+
+#: src/js/components/header-search.js:61
+msgid "Error while fetching data"
+msgstr "Ошибка при получении данных"
+
+#: src/js/components/images-upload-field.js:170
+msgid "is already uploaded."
+msgstr "уже загружено."
+
+#: src/js/components/images-upload-field.js:178
+msgid "You can upload a maximum of 10 images."
+msgstr "Вы можете загрузить максимум 10 изображений."
+
+#: src/js/components/images-upload-field.js:186
+msgid "is too large. Max size is 10MB."
+msgstr "слишком большое. Максимальный размер — 10 МБ."
+
+#: src/js/components/images-upload-field.js:194
+msgid "is not an image."
+msgstr "не является изображением."
+
+#: src/js/components/images-upload-field.js:197
+msgid "is not a valid image type."
+msgstr "недопустимый тип изображения."
+
+#: src/js/components/organization.js:42
+msgid "Link copied!"
+msgstr "Ссылка скопирована!"
+
+#: src/js/components/organization.js:43
+msgid "Failed to copy the link!"
+msgstr "Не удалось скопировать ссылку!"
+
+#: src/js/components/organization.js:51
+msgid "Coordinates copied!"
+msgstr "Координаты скопированы!"
+
+#: src/js/components/organization.js:52
+msgid "Failed to copy coordinates!"
+msgstr "Ошибка при копировании координат!"
+
+#: src/js/components/organization.js:60
+msgid "Plus code copied!"
+msgstr "Plus code скопирован!"
+
+#: src/js/components/organization.js:61
+msgid "Failed to copy plus code!"
+msgstr "Ошибка при копировании plus code."
+
+#: src/js/components/reviews.js:26
+msgid "Success"
+msgstr "Успешно"
+
+#: src/js/components/reviews.js:38
+msgid "Error"
+msgstr "Ошибка"

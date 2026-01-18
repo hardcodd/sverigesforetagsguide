@@ -1,0 +1,40 @@
+{% load i18n cache wagtailcore_tags %}
+
+{% spaceless %}
+  {% cache 86400 footer request.LANGUAGE_CODE %}
+  <footer id="footer" class="footer">
+    <div class="footer__topline">
+      <div class="row align-center v-gutters justify-center">
+        <div class="col-lg-4 col-auto hidden-sm-d">{% include "includes/logo.html" %}</div>
+
+        <div class="col-lg-4 col-auto text-center">
+          <a href="#" class="offers__link" data-tippy-content="{% trans 'Find out all the benefits of premium placement in our catalog.' %}">{% trans "Advertising on Madloba" %}</a>
+        </div>
+
+        <div class="col hidden-sm-d"></div>
+
+        <div class="col-auto">{% include "includes/social-links.html" %}</div>
+      </div>
+    </div>
+
+    {% if footer.navigations %}
+      <div class="footer__content">
+        <div class="row v-gutters">
+          {% for block in footer.navigations %}
+            <div class="col-xl-3 col-md-6 col-12">{% include_block block %}</div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="footer__bottomline">
+      <div class="row align-center justify-center">
+        <div class="col-auto">
+          {% wagtail_site as current_site %}
+          <p class="footer__copy">© 2020 - {% now "Y" %} {{ current_site.site_name }}</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endcache %}
+{% endspaceless %}

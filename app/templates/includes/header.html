@@ -1,0 +1,17 @@
+{% load i18n %}
+
+{% spaceless %}
+  <header id="header" class="header">
+    {% include "includes/logo.html" %}
+    {% include "includes/header-search.html" %}
+    {% include "includes/lang-switcher.html" %}
+    {% include "includes/add-organization-button.html" %}
+    {% include "includes/login-panel.html" %}
+  </header>
+
+  <div class="bottom-header hidden-lg-u">
+    {% include "includes/city-search-form.html" %}
+    {% include "includes/add-organization-button.html" with class="light" %}
+    {% include "includes/login-panel.html" %}
+  </div>
+{% endspaceless %}

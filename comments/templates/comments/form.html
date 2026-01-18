@@ -1,0 +1,45 @@
+{% load comments i18n socialaccount %}
+
+{% spaceless %}
+  {% include 'comments/header.html' %}
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'comments:add_comment' %}" class="comments__form" method="post">
+      {% csrf_token %}
+
+      <input type="hidden" name="next" value="{{ request.path }}">
+
+      {% for field in form %}
+        {% if field.is_hidden %}
+          {{ field }}
+        {% else %}
+          <div class="fields__group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <div class="form__actions">
+        <a href="{{ request.path }}" class="cancel">{% trans 'Cancel' %}</a>
+        <input type="submit" value="{% trans 'Send' %}" class="btn orange round">
+      </div>
+
+    </form>
+  {% else %}
+    <div class="text-center">
+      <hr>
+      <h4>{% trans 'Log in to leave a comment' %}</h4>
+
+      {% with request.build_absolute_uri as next %}
+        <form action="{% provider_login_url "google" openid="https://www.google.com/accounts/o8/id" next=next %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn text-icon">
+            {% trans "Sign In" %}
+            {% include "icons/login.svg" %}
+          </button>
+        </form>
+      {% endwith %}
+      <hr>
+    </div>
+  {% endif %}
+{% endspaceless %}

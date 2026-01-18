@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% load i18n static wagtailcore_tags core %}
+
+{% block body_class %}template-searchresults{% endblock %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Search</h1>
+
+    <form action="{% url 'search' %}" method="get" hidden>
+      <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
+      <input type="submit" value="Search" class="button">
+    </form>
+
+    {% if search_results %}
+      <div class="search-results">
+        <div class="row v-gutters">
+          {% for result in search_results %}
+            {% get_search_result_item_template result as template %}
+            <div class="col-md-6 col-12">{% include template %}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% include "includes/pagination.html" with page_obj=search_results %}
+    {% elif search_query %}
+      <h2>{% trans "No results found" %}</h2>
+    {% endif %}
+  </div>
+{% endblock %}

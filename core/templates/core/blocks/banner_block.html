@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+
+<section class="section section-banner">
+  <div class="container">
+    <div class="banner {{ self.style }}">
+      <div class="banner__content">
+        <h2 class="{% if self.description %}h2{% else %}h3{% endif %} banner__title">{{ self.title }}</h2>
+        {% if self.description %}<p class="banner__description">{{ self.description }}</p>{% endif %}
+        {% if self.get_url and self.button_text %}<a href="{{ self.get_url }}" class="btn orange round">{{ self.button_text }}</a>{% endif %}
+      </div>
+      {% srcset_image self.image fill-600x573 format-{avif,webp,png} loading="lazy" class="banner__image" %}
+    </div>
+  </div>
+</section>

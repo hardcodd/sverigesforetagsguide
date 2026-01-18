@@ -1,0 +1,9 @@
+{% load wagtailimages_tags %}
+
+<div class="{% if as_carousel %}swiper-slide{% else %}grid-col{% endif %}">
+  <div class="card card--style-1">
+    <div class="card__image">{% srcset_image self.image fill-92x92 format-{avif,webp,png} loading="lazy" %}</div>
+    <h3 class="card__title">{{ self.title }}</h3>
+    <a href="{{ self.page.url }}" class="btn round orange stretch">{{ self.button_text }}</a>
+  </div>
+</div>

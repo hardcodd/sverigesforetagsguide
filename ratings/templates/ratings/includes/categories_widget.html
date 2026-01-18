@@ -1,0 +1,18 @@
+{% load i18n cache ratings %}
+
+{% get_current_language as lang %}
+
+{% cache 604800 ratings_categories_list lang %}
+{% get_ratings_categories_list as categories %}
+
+{% if categories %}
+  <aside class="widget widget--categories-list">
+    <div class="h3 widget__title">{% trans "By categories" %}</div>
+    <ul>
+      {% for category in categories|dictsort:'title' %}
+        {% include "ratings/includes/category-item.html" %}
+      {% endfor %}
+    </ul>
+  </aside>
+{% endif %}
+{% endcache %}

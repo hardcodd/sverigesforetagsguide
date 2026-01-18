@@ -1,0 +1,80 @@
+{% load i18n static %}
+
+<div id="cookie-consent" class="cc-banner" hidden aria-live="polite" aria-label="{% trans 'Cookie notice' %}">
+  <div class="cc-container">
+    <p class="cc-text">
+      {% blocktrans trimmed %}
+        We use cookies to improve your experience, analyze traffic, and personalize content.
+      {% endblocktrans %}
+      <a href="{{ privacy_policy_url|default:'#' }}" class="cc-link">{% trans 'Privacy Policy' %}</a>.
+    </p>
+
+    <div class="cc-actions">
+      <button type="button" class="cc-btn cc-btn-secondary" data-cc="reject">{% trans 'Reject non-essential' %}</button>
+      <button type="button" class="cc-btn cc-btn-outline" data-cc="preferences">{% trans 'Manage preferences' %}</button>
+      <button type="button" class="cc-btn cc-btn-primary" data-cc="accept">{% trans 'Accept all' %}</button>
+    </div>
+  </div>
+
+  <div class="cc-modal" role="dialog" aria-modal="true" aria-labelledby="cc-modal-title" aria-describedby="cc-modal-desc" hidden>
+    <div class="cc-modal__dialog" role="document" tabindex="-1">
+      <header class="cc-modal__header">
+        <h2 id="cc-modal-title">{% trans 'Cookie preferences' %}</h2>
+        <button type="button" class="cc-modal__close" data-cc="close" aria-label="{% trans 'Close' %}">×</button>
+      </header>
+
+      <div class="cc-modal__content">
+        <p id="cc-modal-desc">{% trans 'Select which categories you want to allow. You can change this later.' %}</p>
+
+        <ul class="cc-categories" role="list">
+          <li class="cc-cat">
+            <div class="cc-cat__row">
+              <div class="cc-cat__meta">
+                <strong class="cc-cat__title">{% trans 'Necessary' %}</strong>
+                <p class="cc-cat__desc">{% trans 'Required for the site to function. Always on.' %}</p>
+              </div>
+              <label class="cc-switch">
+                <input type="checkbox" checked disabled aria-label="{% trans 'Necessary cookies' %}" />
+                <span class="cc-slider"></span>
+              </label>
+            </div>
+          </li>
+
+          <li class="cc-cat">
+            <div class="cc-cat__row">
+              <div class="cc-cat__meta">
+                <strong class="cc-cat__title">{% trans 'Analytics' %}</strong>
+                <p class="cc-cat__desc">{% trans 'Helps us understand how our site is used.' %}</p>
+              </div>
+              <label class="cc-switch">
+                <input type="checkbox" data-cc-cat="analytics" aria-label="{% trans 'Analytics cookies' %}" />
+                <span class="cc-slider"></span>
+              </label>
+            </div>
+          </li>
+
+          <li class="cc-cat">
+            <div class="cc-cat__row">
+              <div class="cc-cat__meta">
+                <strong class="cc-cat__title">{% trans 'Marketing' %}</strong>
+                <p class="cc-cat__desc">{% trans 'Used to show you relevant content and ads.' %}</p>
+              </div>
+              <label class="cc-switch">
+                <input type="checkbox" data-cc-cat="marketing" aria-label="{% trans 'Marketing cookies' %}" />
+                <span class="cc-slider"></span>
+              </label>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <footer class="cc-modal__footer">
+        <button type="button" class="cc-btn cc-btn-secondary" data-cc="reject">{% trans 'Reject non-essential' %}</button>
+        <button type="button" class="cc-btn cc-btn-primary" data-cc="save">{% trans 'Save preferences' %}</button>
+        <button type="button" class="cc-btn cc-btn-ghost" data-cc="accept">{% trans 'Accept all' %}</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="cc-sr" aria-live="polite" aria-atomic="true" hidden></div>
+</div>

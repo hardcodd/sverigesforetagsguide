@@ -1,0 +1,59 @@
+{% load i18n wagtailimages_tags core cache reviews %}
+
+{% get_current_language as current_lang %}
+
+{% spaceless %}
+  {% cache 604800 organization_item organization.pk current_lang %}
+  {% with organization.specific as o %}
+    <article id="organization-{{ o.pk }}"{% if o.temporarily_closed %} class="temporarily-closed"{% endif %}>
+      <a class="organization-item{% if o.premium_subscription %} {{ o.premium_subscription.classname }}{% endif %}" href="{{ o.url }}">
+        <div class="organization-item__images">
+          {% if o.verified %}
+            <div class="organization-item__verified-bage" data-tippy-content="{% trans "Only places that we have checked receive this badge." %}">{% include "icons/verified.svg" %}</div>
+          {% endif %}
+          {% if o.premium_subscription %}
+            <div class="organization-item__premium-bage {{ o.premium_subscription.classname }}" data-tippy-content="{{ o.premium_subscription }}">{% include "icons/crown.svg" %}</div>
+          {% endif %}
+          {% if o.images.count %}
+            {% with o.images.first as img %}
+              {% image img.image max-165x165 as thumb %}
+              <div class="organization-item__thumb">
+                <img src="{{ thumb.url }}" alt="{{ o.title|default:o.h1_title }}">
+              </div>
+              <div class="ratio">{% srcset_image img.image width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+            {% endwith %}
+          {% else %}
+            {% image settings.core.SiteSettings.default_organization_image max-165x165 as thumb %}
+            {% if thumb %}
+              <div class="organization-item__thumb">
+                <img src="{{ thumb.url }}" alt="{{ o.title|default:o.h1_title }}">
+              </div>
+              {% with settings.core.SiteSettings.default_organization_image as default_image %}
+                <div class="ratio">{% srcset_image default_image width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+              {% endwith %}
+            {% endif %}
+          {% endif %}
+        </div>
+        <div class="organization-item__content">
+          <div class="organization-item__heading">
+            {% if organization.avg_rating %}
+              <div class="organization-item__rating">{% include "includes/star-rating-mini.html" with rating=organization.avg_rating|floatformat:"1u" %}</div>
+            {% endif %}
+            <h3 class="organization-item__title">{{ o.title|default:o.h1_title }}</h3>
+          </div>
+          {% if o.temporarily_closed %}
+            <div class="organization-item__closed-bage">{% trans "Temporarily Closed" %}</div>
+          {% endif %}
+          {% if o.rewards %}
+            <div class="organization-item__rewards">{% include "includes/rewards.html" with rewards=o.rewards.all class='rewards--small' %}</div>
+          {% endif %}
+          <address class="organization-item__address">{{ o.address }}</address>
+          <div class="organization-item__description">
+            <p>{{ o.search_description|truncatechars:120 }}</p>
+          </div>
+        </div>
+      </a>
+    </article>
+  {% endwith %}
+{% endcache %}
+{% endspaceless %}

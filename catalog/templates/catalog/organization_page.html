@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% load static i18n wagtailimages_tags wagtailcore_tags catalog core reviews %}
+
+{% block body_class %}template-catalog-organization{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <article class="organization" id="organization-{{ page.pk }}">
+      <header class="organization__header">
+        <div class="organization__heading">
+          {% if page.verified %}
+            {% include "includes/verified.html" %}
+          {% endif %}
+          <h1 class="h2 organization__title">{{ page.h1_title|mark|safe }}</h1>
+        </div>
+        {% if page.temporarily_closed %}
+          <div class="organization__closed-bage">{% trans "Temporarily Closed" %}</div>
+        {% endif %}
+        <div class="organization__meta">
+          {% get_organization_status page as status %}
+          <div class="organization__status{% if "open" in status|lower %} open{% elif "closed" in status|lower %} closed{% else %} unknown{% endif %}">{{ status }}</div>
+
+          {% if not page.first_published_at == page.last_published_at %}
+            <div class="organization__updated">
+              <span>{% trans "Updated at:" %}</span>
+              <time datetime="{{ page.last_published_at|date:'c' }}">{{ page.last_published_at|date:'M d, Y' }}</time>
+            </div>
+          {% endif %}
+
+          {% get_reviews_count page as reviews_count %}
+          {% include "includes/star-rating.html" with reviews_count=reviews_count rating=page.avg_rating|floatformat:"1u" %}
+        </div>
+        {% if page.rewards.count %}
+          {% include "includes/rewards.html" with rewards=page.rewards.all %}
+        {% endif %}
+      </header>
+      <div class="organization__content">
+        <div class="organization__content--left">
+          {% include "catalog/includes/organization-images.html" %}
+          <div class="tabs">
+            {% get_located_in page as in_building %}
+            <div class="tabs__nav">
+              <div class="tabs__arrow tabs__arrow--left">{% include "icons/chevron-left.svg" %}</div>
+              <div class="tabs__arrow tabs__arrow--right">{% include "icons/chevron-right.svg" %}</div>
+              <ul class="tabs__list">
+                <li data-target="#tab-general">{% trans "General" %}</li>
+                {% if page.description %}
+                  <li data-target="#tab-description">{% trans "Description" %}</li>
+                {% endif %}
+                {% if page.how_to_arrive %}
+                  <li data-target="#tab-how-to-arrive">{% trans "How to arrive" %}</li>
+                {% endif %}
+                {% if page.service_types.count %}
+                  <li data-target="#tab-service-types">{% trans "Service types" %}</li>
+                {% endif %}
+                {% if in_building %}
+                  <li data-target="#tab-in-building">{% trans "In building" %} ({{ in_building.count }})</li>
+                {% endif %}
+              </ul>
+            </div>
+            <div class="tabs__content">
+              <div id="tab-general">
+                <div class="organization__general-info">
+                  <div class="organization-block">
+                    <div class="row v-gutters" style="--gutter-x:calc(10 / 16 * 1rem);--gutter-y:calc(10 / 16 * 1rem);">
+                      {% if page.phones %}
+                        {% get_phones page as phones %}
+                        {% for phone in phones %}
+                          {% if forloop.counter == 1 %}
+                            <div class="col-auto">
+                              <a href="tel:{{ phone }}" class="btn sm light round icon-text">
+                                {% include "icons/phone.svg" %}
+                                {% trans "Call" %}
+                              </a>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                      {% if page.ll %}
+                        <div class="col-auto">
+                          <a href="https://www.google.com/maps/dir/?api=1&destination={{ page.ll }}&travelmode=driving&dir_action=navigate" target="_blank" rel="noopener" class="btn sm light round icon-text">
+                            {% include "icons/route.svg" %}
+                            {% trans "Build a route" %}
+                          </a>
+                        </div>
+                      {% endif %}
+                      {% if page.email %}
+                        <div class="col-auto">
+                          <a href="mailto:{{ page.email }}" class="btn sm light round icon-text">
+                            {% include "icons/mail.svg" %}
+                            {% trans "E-post" %}
+                          </a>
+                        </div>
+                      {% endif %}
+                      <div class="col-auto">
+                        <a href="#reviews" class="btn sm light round icon-text" onclick="return focusReviews(event)">
+                          {% include "icons/edit.svg" %}
+                          {% trans "Review" %}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {% if page.address %}
+                    <div class="organization-block">
+                      <div class="organization-block__title">📌 {% trans "Address" %}</div>
+                      <a href="{% url 'catalog:organizations' %}?address={{ page.address|urlencode }}&organization_type={{ page.get_parent.pk }}">
+                        <address class="organization__address">{{ page.address }}</address>
+                      </a>
+                    </div>
+                  {% endif %}
+
+                  {% if page.phones %}
+                    <div class="organization-block">
+                      <div class="organization-block__title">📞 {% trans "Phone numbers" %}</div>
+                      <ul class="organization__phones-list">
+                        {% get_phones page as phones %}
+                        {% for phone in phones %}
+                          <li>
+                            <span class="phone-number__excerpt" data-tippy-placement="right" data-tippy-content="{% trans 'Show' %}">{{ phone|phone_excerpt }}</span>
+                            <a href="tel:{{ phone }}" class="phone-number hidden">{{ phone }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                      {% wagtail_site as current_site %}
+                      <div class="phones__cta hidden">{% blocktrans with site_name=current_site.site_name %}Tell the company you found their number on {{ site_name }} — it motivates them to work better, knowing you can leave a review.{% endblocktrans %}</div>
+                    </div>
+                  {% endif %}
+
+                  {% if page.website_links %}
+                    <div class="organization-block">
+                      <div class="organization-block__title">🌐 {% trans "Official website" %}</div>
+                      <ul class="organization__website-links">
+                        {% get_website_links page as links %}
+                        {% for link in links %}
+                          <li>
+                            {% if page.website_links_as_text %}
+                              <input type="text" name="link" value="{{ link }}" id="website-link-{{ forloop.counter }}" readonly class="sr-only">
+                              <div class="copy-link__btn" data-clipboard-target="#website-link-{{ forloop.counter }}">
+                                <noindex><span>{{ link }}</span></noindex>
+                              </div>
+                            {% else %}
+                              <a href="{{ link }}" target="_blank" rel="nofollow noopener">{{ link|website_name }}</a>
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+
+                  {% if page.email %}
+                    <div class="organization-block">
+                      <div class="organization-block__title">✉️ {% trans "E-mail" %}</div>
+                      <a href="mailto:{{ page.email }}" class="organization__email">{{ page.email }}</a>
+                    </div>
+                  {% endif %}
+
+                  {% get_working_hours page as wh %}
+                  {% if wh %}
+                    <div class="organization-block">
+                      <div class="organization-block__title" target=".organization__working-hours">⏰ {% trans "Working hours" %}</div>
+                      <ul class="organization__working-hours hidden">
+                        {% for item in wh|split:',' %}<li>{{ item }}</li>{% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+
+                  {% if page.social_networks %}
+                    <div class="organization-block">
+                      <div class="organization-block__title">🌐 {% trans "Social networks" %}</div>
+                      <ul class="organization__social-networks">
+                        {% get_social_networks page as socials %}
+                        {% for link in socials %}
+                          <li>
+                            <a href="{{ link }}" target="_blank" rel="nofollow noopener">
+                              {{ link|social_network_icon }}
+                              <span class="sr-only">{{ link }}</span>
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+
+                  <div class="organization-block">
+                    <div class="organization-block__title" target=".block-content">📍 {% trans "Coords and Plus Code" %}</div>
+                    <div class="block-content hidden">
+                      {% if page.ll %}
+                        <div class="organization-block">
+                          <div class="organization-block__title">{% trans "Copy coords" %}</div>
+                          <div class="organization__coords">
+                            <input type="text" name="coords" value="{{ page.ll }}" id="coords" readonly class="sr-only">
+                            <div class="copy-coords__btn" data-clipboard-target="#coords">
+                              <div class="copy-coords__text">{{ page.ll|coords }}</div>
+                              <div class="copy-coords__icon">{% include "icons/clone.svg" %}</div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+
+                      {% if page.plus_code %}
+                        <div class="organization-block">
+                          <div class="organization-block__title">{% trans "Copy plus code" %}</div>
+                          <div class="organization__plus-code">
+                            <input type="text" name="plus-code" value="{{ page.plus_code }}" id="plus-code" readonly class="sr-only">
+                            <div class="copy-plus-code__btn" data-clipboard-target="#plus-code">
+                              <div class="copy-plus-code__text">{{ page.plus_code }}</div>
+                              <div class="copy-plus-code__icon">{% include "icons/clone.svg" %}</div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  {% if page.languages.count %}
+                    <div class="organization-block">
+                      <div class="organization-block__title">{% trans "They speak languages" %}</div>
+                      <ul class="organization__speak-langs">
+                        {% for lang in page.languages.all %}
+                          <li>
+                            <a href="{{ page.get_parent.url }}?speak-lang={{ lang.id }}">
+                              {% if lang.icon %}
+                                <span class="flag">{% image lang.icon width-20 %}</span>
+                              {% endif %}
+                              <span class="lang">{{ lang.language_name }}</span>
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if page.description %}
+                <div id="tab-description">
+                  <div class="richtext-content">{{ page.description|richtext }}</div>
+                </div>
+              {% endif %}
+
+              {% if in_building %}
+                <div id="tab-in-building">
+                  <ul class="in-building-list">
+                    {% for org in in_building %}
+                      <li>
+                        <a href="{{ org.url }}">
+                          {% include "includes/star-rating-mini.html" with object=org %}
+                          <strong>{{ org.title }}</strong>
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              {% if page.how_to_arrive %}<div id="tab-how-to-arrive">{{ page.how_to_arrive|richtext }}</div>{% endif %}
+              {% if page.service_types.count %}
+                <div id="tab-service-types">{% include "catalog/includes/service-types.html" %}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div style="color:var(--gray-color)">
+            <p>
+              <small>{% trans "Source: Brønnøysund Register Centre (NLOD 2.0) / Norwegian Mapping Authority Address API" %}</small>
+            </p>
+          </div>
+        </div>
+        <div class="organization__content--right">
+          {% if page.show_on_map %}
+            <div class="organization__general-info">
+              {% include "catalog/includes/organization-map.html" %}
+
+              <div class="organization-block">
+                <a href="{{ page.get_parent.url }}map/" class="btn sm orange">{{ page.get_parent.title }} {% trans "on map" %}</a>
+                <a href="https://firma.ge/google_maps_business_profile_en" class="btn sm outline">{% trans "Free audit maps"|title %}</a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% include "reviews/reviews.html" %}
+    </article>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+
+  <script>
+		function focusReviews(e){
+			e.preventDefault();
+
+			const root = document.querySelector('#reviews');
+			if (!root) return false;
+
+			const ta = root.querySelector('textarea');
+
+			root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+			setTimeout(() => {
+				ta?.focus({ preventScroll: true });
+			}, 250);
+
+			return false;
+		}
+  </script>
+{% endblock extra_js %}

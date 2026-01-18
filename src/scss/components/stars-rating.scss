@@ -1,0 +1,30 @@
+@use "../functions" as *;
+
+.stars-rating {
+	&__stars {
+		position: relative;
+
+		width: rem(98);
+	}
+
+	&__placeholder {
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		width: 100%;
+	}
+
+	&__fill {
+		position: relative;
+		z-index: 1;
+
+		overflow: hidden;
+	}
+
+	img {
+		display: block;
+		width: rem(98);
+		max-width: none;
+	}
+}

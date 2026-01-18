@@ -1,0 +1,67 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.lang-switcher {
+	position: relative;
+	z-index: 1;
+
+	display: inline-flex;
+
+	flex-direction: column;
+	height: rem(31);
+
+	padding: rem(1) rem(5) 0;
+	overflow: visible;
+
+	&:not(.show) {
+		overflow: hidden;
+
+		a {
+			pointer-events: none;
+		}
+	}
+
+	li {
+		display: block;
+		order: 1;
+		margin-top: rem(-1);
+		margin-bottom: rem(2);
+		padding: rem(2) rem(5);
+
+		background-color: var(--white-color);
+		border: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+		border-radius: var(--border-radius-sm);
+
+		cursor: pointer;
+
+		&.active {
+			order: 0;
+
+			a {
+				opacity: 1;
+			}
+		}
+	}
+
+
+	a {
+		display: block;
+		width: rem(25);
+
+		text-decoration: none;
+
+		opacity: .5;
+
+		&.active {
+			opacity: 1;
+		}
+
+		@include hover {
+			opacity: 1;
+		}
+	}
+
+	img {
+		width: rem(25);
+	}
+}

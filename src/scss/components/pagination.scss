@@ -1,0 +1,54 @@
+@use "../mixins/mixins" as *;
+@use "../functions" as *;
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	margin: rem(30);
+
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0;
+		padding: 0;
+
+		list-style-type: none;
+	}
+
+	&__item {
+		display: block;
+	}
+
+	&__link {
+		display: block;
+		margin: rem(5);
+		padding: em(5, 14) em(10, 14);
+
+		color: currentcolor;
+		font-size: em(14);
+		text-decoration: none;
+
+		border: rem(1) solid rgba(#000, 0.1);
+		border-radius: rem(3);
+
+		user-select: none;
+
+		@include transition;
+
+		&.active {
+			color: #fff;
+			font-weight: 600;
+
+			background-color: var(--theme-color);
+
+			pointer-events: none;
+		}
+
+		@include hover {
+			color: var(--theme-color);
+			text-decoration: none;
+
+			border-color: var(--theme-color);
+		}
+	}
+}

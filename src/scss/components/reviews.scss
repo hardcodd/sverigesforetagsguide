@@ -1,0 +1,127 @@
+@use "sass:map";
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+@use "../vars" as *;
+
+.reviews {
+	margin-top: rem(30);
+
+	&__title {
+		margin: 0;
+	}
+}
+
+.reviews-list {
+	display: flex;
+	flex-direction: column;
+	gap: rem(10);
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+
+	&__item {
+		display: block;
+	}
+}
+
+.review {
+	padding: rem(20);
+
+	border: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+	border-radius: var(--border-radius);
+
+	&__header {
+		display: flex;
+		gap: rem(10);
+	}
+
+	&__meta {
+		display: flex;
+		gap: rem(5);
+
+		font-size: em(14);
+	}
+
+	&__date {
+		display: flex;
+		gap: rem(5);
+		align-items: center;
+
+		color: var(--gray-color);
+
+		&:after {
+			display: block;
+			margin: 0 rem(2);
+
+			content: "•";
+		}
+	}
+
+	&__avatar {
+		position: relative;
+
+		width: rem(36);
+		height: rem(36);
+
+		span {
+			position: absolute;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			color: rgba(var(--black-color-rgb), 0.5);
+
+			font-weight: bold;
+
+			font-size: rem(20);
+
+			line-height: 1;
+			text-transform: uppercase;
+
+			background-color: var(--avatar-bg, var(--light-color));
+			border-radius: 50%;
+			inset: 0;
+
+			@each $symbol in map.keys($char-bg-map) {
+				&[data-char="#{$symbol}"] {
+					color: map.get($char-fg-map, $symbol);
+
+					background: map.get($char-bg-map, $symbol);
+				}
+			}
+		}
+	}
+
+	&__content {
+		margin-top: rem(10);
+
+		font-size: em(14);
+		line-height: 1.4;
+
+		p {
+			margin: 0;
+		}
+	}
+
+	&__images {
+		display: flex;
+		flex-wrap: wrap;
+		gap: rem(5);
+		margin-top: rem(10);
+
+		img {
+			width: rem(80);
+			height: rem(80);
+
+			border-radius: var(--border-radius-sm);
+
+			@include transition;
+
+			@include hover {
+				transform: scale(1.05);
+			}
+		}
+	}
+}

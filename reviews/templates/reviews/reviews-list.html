@@ -1,0 +1,11 @@
+{% load reviews %}
+
+{% get_reviews page as reviews %}
+
+{% if reviews %}
+  <ul class="reviews-list">
+    {% for review in reviews %}
+      <li class="reviews-list__item">{% include "reviews/review.html" %}</li>
+    {% endfor %}
+  </div>
+{% endif %}

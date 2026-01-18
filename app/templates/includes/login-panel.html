@@ -1,0 +1,21 @@
+{% load account socialaccount i18n %}
+
+{% with request.build_absolute_uri as next %}
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'account_logout' %}?next={{ next }}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="login-btn">
+        <div class="login-btn__icon">{% include "icons/login.svg" %}</div>
+        <span class="login-btn__text">{% trans "Sign Out" %}</span>
+      </button>
+    </form>
+  {% else %}
+    <form action="{% provider_login_url "google" openid="https://www.google.com/accounts/o8/id" next=next %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="login-btn">
+        <div class="login-btn__icon">{% include "icons/login.svg" %}</div>
+        <span class="login-btn__text">{% trans "Sign In" %}</span>
+      </button>
+    </form>
+  {% endif %}
+{% endwith %}

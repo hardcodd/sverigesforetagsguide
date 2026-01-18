@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-30 08:58+0100\n"
+"PO-Revision-Date: 2025-11-30 09:00+0100\n"
+"Last-Translator: Alex Hardcodd <shubenkin.alexander@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
+
+#: src/js/components/blog-post.js:24
+msgid "Table of Contents"
+msgstr "Sisällysluettelo"
+
+#: src/js/components/cookie-consent.js:102
+#: src/js/components/cookie-consent.js:220
+#: src/js/components/cookie-consent.js:259
+msgid "Cookie preferences saved."
+msgstr "Evästeasetukset tallennettu."
+
+#: src/js/components/cookie-consent.js:208
+msgid "All cookies accepted."
+msgstr "Kaikki evästeet hyväksytään."
+
+#: src/js/components/cookie-consent.js:211
+msgid "Only necessary cookies allowed."
+msgstr "Vain välttämättömät evästeet sallittu."
+
+#: src/js/components/header-search.js:58
+msgid "No results found"
+msgstr "Ei tuloksia"
+
+#: src/js/components/header-search.js:61
+msgid "Error while fetching data"
+msgstr "Virhe tietoja noudettaessa"
+
+#: src/js/components/images-upload-field.js:170
+msgid "is already uploaded."
+msgstr "on jo ladattu."
+
+#: src/js/components/images-upload-field.js:178
+msgid "You can upload a maximum of 10 images."
+msgstr "Voit ladata enintään 10 kuvaa."
+
+#: src/js/components/images-upload-field.js:186
+msgid "is too large. Max size is 10MB."
+msgstr "on liian suuri. Enimmäiskoko on 10 Mt."
+
+#: src/js/components/images-upload-field.js:194
+msgid "is not an image."
+msgstr "ei ole kuva."
+
+#: src/js/components/images-upload-field.js:197
+msgid "is not a valid image type."
+msgstr "ei ole kelvollinen kuvatyyppi."
+
+#: src/js/components/organization.js:42
+msgid "Link copied!"
+msgstr "Linkki kopioitu!"
+
+#: src/js/components/organization.js:43
+msgid "Failed to copy the link!"
+msgstr "Linkin kopiointi epäonnistui!"
+
+#: src/js/components/organization.js:51
+msgid "Coordinates copied!"
+msgstr "Koordinaatit kopioitu!"
+
+#: src/js/components/organization.js:52
+msgid "Failed to copy coordinates!"
+msgstr "Koordinaattien kopiointi epäonnistui!"
+
+#: src/js/components/organization.js:60
+msgid "Plus code copied!"
+msgstr "Plus-koodi kopioitu!"
+
+#: src/js/components/organization.js:61
+msgid "Failed to copy plus code!"
+msgstr "Plus-koodin kopiointi epäonnistui!"
+
+#: src/js/components/reviews.js:26
+msgid "Success"
+msgstr "Menestys"
+
+#: src/js/components/reviews.js:38
+msgid "Error"
+msgstr "Virhe"

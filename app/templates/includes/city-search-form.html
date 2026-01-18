@@ -1,0 +1,17 @@
+{% load i18n catalog %}
+
+<form action="{% url "catalog:search_cities" %}" class="city-search-form" method="get">
+  <fieldset>
+    <div class="city-search-form__icon">{% include "icons/building.svg" %}</div>
+    <input type="text" autocomplete="off" name="q" value="{% get_current_city %}" placeholder="{% trans "City search" %}">
+  </fieldset>
+  <ul class="city-search-form__list">
+    {% if popular_cities %}
+      {% for city in popular_cities %}
+        <li>
+          <a href="{{ city.url }}">{{ city.title }}</a>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+</form>

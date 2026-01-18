@@ -1,0 +1,65 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.social-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: rem(5);
+	margin: 0;
+	padding: 0;
+	padding: rem(3);
+
+	list-style-type: none;
+
+	li {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: rem(30);
+		height: rem(30);
+		padding: rem(5);
+
+		color: var(--text-color);
+		line-height: 1;
+		text-decoration: none;
+
+		@include transition;
+
+		@include hover {
+			color: var(--accent-color);
+		}
+	}
+
+	svg {
+		max-width: 100%;
+		max-height: 100%;
+
+		fill: currentcolor;
+	}
+
+	&--large {
+		flex-wrap: wrap;
+
+		a {
+			gap: rem(10);
+			width: auto;
+			height: auto;
+			padding: rem(10) rem(20);
+
+			background-color: var(--light-color);
+			border-radius: var(--border-radius-sm);
+		}
+
+		svg {
+			flex: 0 0 rem(24);
+			width: rem(24);
+			height: rem(24);
+		}
+	}
+}

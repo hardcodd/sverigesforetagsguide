@@ -1,0 +1,85 @@
+@use "sass:math";
+@use "sass:string";
+@use "sass:list";
+@use "sass:color";
+
+@function str-replace($string, $search, $replace: "") {
+	$index: string.index($string, $search);
+
+	@if $index {
+		@return string.slice($string, 1, $index - 1) + $replace + str-replace(string.slice($string, $index + string.length($search)), $search, $replace);
+	}
+
+	@return $string;
+}
+
+@function hex-to-rgb($hex) {
+	@return color.channel($hex, "red", $space: rgb), color.channel($hex, "green", $space: rgb), color.channel($hex,
+	"blue", $space: rgb);
+}
+
+@function strip-unit($value) {
+	@return math.div($value, ($value * 0 + 1));
+}
+
+@function pow($base, $exponent) {
+	@if $exponent == 0 {
+		@return 1; // Any number to the power of 0 is 1
+	}
+
+	$is-negative-exponent: $exponent < 0;
+
+	@if $is-negative-exponent {
+		$exponent: -$exponent;
+	}
+
+	$result: 1;
+
+	// Exponentiation by squaring
+	@while $exponent > 0 {
+		@if $exponent % 2 == 1 {
+			$result: $result * $base;
+		}
+
+		$exponent: math.div($exponent, 2);
+		$base: $base * $base;
+	}
+
+	@if $is-negative-exponent {
+		@return math.div(1, $result);
+	}
+
+	@return $result;
+}
+
+// reverse list funstion
+@function reverse-list($list) {
+	$reversed-list: ();
+
+	@for $i from list.length($list) through 1 {
+		$reversed-list: list.append($reversed-list, list.nth($list, $i), comma);
+	}
+
+	@return $reversed-list;
+}
+
+@function range($start, $end, $steps) {
+  $step-value: calc(($end - $start) / ($steps - 1));
+  $range-list: ();
+
+  @for $i from 0 through $steps - 1 {
+    $range-list: list.append($range-list, $start + $i * $step-value);
+  }
+
+  @return $range-list;
+}
+
+// px to em
+@function em($size, $context: 16) {
+	@return math.div(strip-unit($size), strip-unit($context)) * 1em;
+}
+
+// px to rem
+@function rem($size) {
+	@return math.div(strip-unit($size), 16) * 1rem;
+}

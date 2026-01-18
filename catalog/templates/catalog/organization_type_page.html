@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% load i18n wagtailcore_tags core catalog %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="page__title">{{ page.title|mark|safe }}</h1>
+    {% if active_service_type %}
+      <p>
+        <big><strong>{% trans "By tag:" %}</strong></big> <mark>{{ active_service_type }}</mark>
+      </p>
+    {% endif %}
+    <div class="page__description">{{ page.description|richtext }}</div>
+  </div>
+
+  <!-- TODO: rename `_top_organizations` to `top_organizations` -->
+  {% get_top_organizations page as _top_organizations %}
+  {% if top_organizations %}
+    <section class="section section--top-organizations">
+      <div class="container">
+        {% trans "[[Top]] organizations" as section_title %}
+        {% include "includes/section-header.html" %}
+
+        <div class="row">
+          <div class="swiper organizations-carousel">
+            <div class="swiper-wrapper">
+              {% for organization in top_organizations %}
+                <div class="swiper-slide">{% include "catalog/includes/organization-item.html" %}</div>
+              {% endfor %}
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% for block in page.content %}
+    {% include_block block %}
+  {% empty %}
+    <section class="section section--latest-organizations">
+      <div class="container">
+        <div class="row v-gutters">
+          {% get_paginated_organizations page as organizations %}
+          {% for organization in organizations %}
+            <div class="col-lg-3 col-sm-6 col-12">{% include "catalog/includes/organization-item.html" %}</div>
+          {% endfor %}
+        </div>
+        {% include "includes/pagination.html" with page_obj=organizations %}
+      </div>
+    </section>
+  {% endfor %}
+{% endblock content %}

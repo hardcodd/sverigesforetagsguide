@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+  {{ page.title }} {% trans "on map" %}
+{% endblock %}
+
+{% block extrahead %}
+  <meta name="description" content="{{ page.seo_title }} {% trans 'on map' %}">
+{% endblock extrahead %}
+
+{% block body_class %}template-organizations-map{% endblock %}
+
+{% block content %}
+  <div class="container fluid">
+    <h1 class="page__title h2">{{ page.title }} {% trans "near me in" %} {{ page.get_parent.title }}</h1>
+  </div>
+
+  <div class="map-page">
+    <div class="map-page__sidebar"></div>
+    {% get_current_language as lang %}
+    <div class="map-page__map" id="organizations-map" data-url="{% url 'catalog:get_organizations_data' %}" data-org-type-id="{{ page.id }}" data-ll="{{ page.get_parent.specific.ll|default:DEFAULT_LAT_LNG }}"></div>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+  <script async src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=marker&region=GE&callback=initMap"></script>
+{% endblock extra_js %}

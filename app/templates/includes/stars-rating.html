@@ -1,0 +1,12 @@
+{% load static core %}
+
+<div class="stars-rating">
+  <div class="stars-rating__stars">
+    <div class="stars-rating__placeholder">
+      <img src="{% static 'gray-stars.svg' %}" alt="gray stars" loading="lazy" />
+    </div>
+    <div class="stars-rating__fill" style="width:{% rating_percent stars %}%">
+      <img src="{% static 'red-stars.svg' %}" alt="red stars" loading="lazy" />
+    </div>
+  </div>
+</div>

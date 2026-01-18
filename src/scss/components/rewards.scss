@@ -1,0 +1,46 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.rewards {
+	display: flex;
+	flex-wrap: wrap;
+	gap: rem(10);
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+
+	&__title {
+		margin: rem(10) 0 rem(5);
+
+		font-size: em(16);
+	}
+
+	&__description {
+		margin: 0 0 rem(5);
+
+		font-size: em(13);
+	}
+
+	&__item {
+		width: rem(40);
+	}
+
+	&--small {
+		gap: rem(5);
+		min-height: rem(34);
+
+		.rewards__item {
+			width: rem(34);
+		}
+	}
+
+	@include md-d {
+		gap: rem(5);
+		min-height: rem(34);
+
+		.rewards__item {
+			width: rem(34);
+		}
+	}
+}

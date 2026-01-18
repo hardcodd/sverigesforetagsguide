@@ -1,0 +1,11 @@
+{% load cache %}
+
+{% spaceless %}
+  {% if request.is_preview %}
+    {% include "catalog/includes/organization-images-template.html" %}
+  {% else %}
+    {% cache 604800 organization_images page.pk %}
+    {% include "catalog/includes/organization-images-template.html" %}
+  {% endcache %}
+{% endif %}
+{% endspaceless %}

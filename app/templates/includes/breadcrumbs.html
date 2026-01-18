@@ -1,0 +1,35 @@
+{% load i18n core %}
+
+{% spaceless %}
+  {% if self.get_ancestors|length > 1 %}
+    <nav class="breadcrumbs">
+      <ol class="breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+
+        {% for page in self.get_ancestors %}
+          {% if page.slug == 'home' %}
+            <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a class="breadcrumbs__link" itemprop="item" href="{{ page.url }}">
+                <span itemprop="name">{% trans 'Home' %}</span>
+              </a>
+              <meta itemprop="position" content="{{ forloop.counter0 }}">
+            </li>
+          {% elif not page.is_root %}
+            <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <a class="breadcrumbs__link" itemprop="item" href="{{ page.url }}">
+                <span itemprop="name">{{ page.title|mark|safe }}</span>
+              </a>
+              <meta itemprop="position" content="{{ forloop.counter0 }}">
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="breadcrumbs__link breadcrumbs__link--current" itemprop="item" href="{{ self.url }}">
+            <span itemprop="name">{{ self.title|mark|safe }}</span>
+          </a>
+          <meta itemprop="position" content="{{ self.get_ancestors|length }}">
+        </li>
+      </ol>
+    </nav>
+  {% endif %}
+{% endspaceless %}

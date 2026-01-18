@@ -1,0 +1,10 @@
+{% load i18n %}
+
+{% spaceless %}
+  <div class="star-rating">
+    {% include "icons/star.svg" %}
+    <span class="star-rating__score">{{ rating }}</span>
+    <span class="star-rating__separator">/</span>
+    <span class="star-rating__reviews">{% blocktranslate count counter=reviews_count %}{{ counter }} review{% plural %}{{ counter }} reviews{% endblocktranslate %}</span>
+  </div>
+{% endspaceless %}

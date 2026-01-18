@@ -1,0 +1,202 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+$adaptive: true;
+
+@mixin button-base {
+	position: relative;
+	z-index: 1;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: var(--padding);
+
+	color: var(--color);
+	font-weight: 400;
+	font-size: var(--font-size);
+	font-family: var(--font-family);
+	line-height: 1;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	text-align: center;
+	text-transform: none;
+	text-decoration: none;
+	vertical-align: center;
+
+	background: var(--background);
+	border: rem(1) solid var(--border-color);
+	border-radius: var(--border-radius);
+	cursor: pointer;
+
+	appearance: none;
+	user-select: none;
+
+	@include transition;
+
+	&[href^="http"] {
+		text-decoration: none;
+	}
+
+	svg {
+		flex: 0 0 auto;
+		height: 1.2em;
+		margin-top: -0.1em;
+		margin-bottom: -0.1em;
+	}
+
+	&[class*="icon"] svg {
+		display: block;
+	}
+
+	&.icon {
+		padding-inline: 1em;
+
+		svg {
+			margin-inline: 0;
+		}
+
+		> *:not(svg) {
+			@include sr-only;
+		}
+	}
+
+	&.icon-text {
+		svg {
+			order: 0;
+			margin: -0.1em 0.5em -0.1em -0.5em;
+		}
+	}
+
+	&.text-icon {
+		svg {
+			order: 1;
+			margin: -0.1em -0.5em -0.1em 0.5em;
+		}
+	}
+
+	&.text {
+		svg {
+			display: none;
+		}
+	}
+
+	&:after {
+		position: absolute;
+
+		background: rgba(black, 0.03);
+		border-radius: inherit;
+		opacity: 0;
+
+		content: "";
+		pointer-events: none;
+		inset: 0;
+
+		@media (hover: hover) {
+			@include transition(opacity);
+		}
+	}
+
+	@include hover {
+		text-decoration: none;
+
+		&:after {
+			opacity: 1;
+		}
+	}
+
+	&:active:after {
+		box-shadow: var(--box-shadow-inset-1);
+		opacity: 0;
+	}
+}
+
+.btn {
+	--color: white;
+	--background: var(--theme-color);
+	--border-color: var(--background);
+	--border-radius: #{rem(3)};
+	--padding: #{em(14)} #{em(24)};
+	--font-size: 1em;
+
+	// Primary
+	@include button-base;
+
+	&.round {
+		--border-radius: 10em;
+	}
+
+	&.adaptive {
+		--background: var(--highlight-color);
+		--color: currentcolor;
+	}
+
+	&.orange {
+		--background: linear-gradient(235.39deg, rgba(255, 217, 83, 100%) 0%, rgba(247, 148, 56, 100%) 100%);
+		--color: var(--text-color);
+	}
+
+	&.blue {
+		--background: linear-gradient(235.39deg, rgba(83, 216, 255, 100%) 0%, rgba(56, 64, 247, 100%) 100%);
+		--color: white;
+	}
+
+	// Light
+	&.light {
+		--color: var(--text-color);
+		--background: var(--light-color);
+	}
+
+	// Outline
+	&.outline {
+		--color: var(--text-color);
+		--background: transparent;
+		--border-color: var(--text-color);
+	}
+
+	// Ghost
+	&.ghost {
+		--color: var(--text-color);
+		--background: transparent;
+		--border-color: transparent;
+	}
+
+	// Small
+	&.sm {
+		--padding: #{em(8)} #{em(16)};
+		--font-size: #{em(14)};
+	}
+
+	// Large
+	&.lg {
+		--padding: #{em(16)} #{em(32)};
+		--font-size: #{em(18)};
+	}
+
+	@if $adaptive {
+		&:not(.fix, .sm) {
+			@include sm {
+				--padding: #{em(13)} #{em(20)};
+				--font-size: #{em(15)};
+			}
+
+			@include xs {
+				--padding: #{em(10)} #{em(16)};
+				--font-size: #{em(14)};
+			}
+		}
+
+		&:not(.fix).lg {
+			@include sm {
+				--padding: #{em(15)} #{em(30)};
+				--font-size: #{em(17)};
+			}
+
+			@include xs {
+				--padding: #{em(12)} #{em(24)};
+				--font-size: #{em(16)};
+			}
+		}
+	}
+}

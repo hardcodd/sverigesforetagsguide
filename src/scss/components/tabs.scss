@@ -1,0 +1,161 @@
+@use "../mixins/mixins" as *;
+@use "../functions" as *;
+@use "sass:color";
+
+.tabs {
+	display: flex;
+	flex-direction: column;
+	gap: rem(10);
+
+	&__nav {
+		position: relative;
+
+		display: block;
+		overflow: hidden;
+
+		background-color: var(--white-color);
+		border: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+		border-radius: var(--border-radius);
+	}
+
+	&__arrow {
+		position: absolute;
+		top: 0;
+		z-index: 1;
+
+		display: none;
+		align-items: center;
+
+		width: rem(70);
+		height: 100%;
+		padding: 0 rem(5);
+
+		pointer-events: none;
+
+		&.active {
+			display: flex;
+		}
+
+		&--left {
+			background: linear-gradient(to right, var(--white-color) 50%, transparent);
+		}
+
+		&--right {
+			right: 0;
+
+			justify-content: flex-end;
+
+			background: linear-gradient(to left, var(--white-color) 50%, transparent);
+		}
+
+		svg {
+			width: rem(34);
+			height: rem(34);
+			padding: rem(5);
+
+			border-radius: 50%;
+			cursor: pointer;
+
+			pointer-events: auto;
+
+			@include transition;
+
+			@include hover {
+				background-color: rgba(var(--black-color-rgb), 0.1);
+			}
+		}
+	}
+
+	&__list {
+		display: flex;
+		gap: rem(5);
+		padding: rem(5);
+		overflow-x: scroll;
+
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		scroll-behavior: smooth;
+
+		@include transition;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
+		&.dragging {
+			cursor: grabbing;
+			scroll-behavior: auto;
+
+			li {
+				pointer-events: none;
+			}
+		}
+
+		li {
+			position: relative;
+
+			display: block;
+			padding: rem(3) rem(20);
+
+			white-space: nowrap;
+
+			background-color: var(--light-color);
+			border: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+			border-radius: var(--border-radius-sm);
+			cursor: pointer;
+
+			user-select: none;
+
+			&:before {
+				position: absolute;
+
+				background-color: rgba(var(--black-color-rgb), 0.1);
+				border-radius: inherit;
+				opacity: 0;
+
+				content: "";
+				inset: 0;
+
+				@include transition;
+			}
+
+			@include hover {
+				&:before {
+					opacity: 0.5;
+				}
+			}
+
+			&.active {
+				color: var(--white-color);
+
+				background-color: var(--black-color);
+
+				&:before {
+					display: none;
+				}
+			}
+		}
+	}
+
+	&__content {
+		padding: rem(20);
+
+		background-color: var(--white-color);
+		border: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+		border-radius: var(--border-radius);
+
+		[id^="tab-"] {
+			display: none;
+
+			&.active {
+				display: flex;
+				flex-direction: column;
+			}
+		}
+
+		@include sm-d {
+			padding-inline: rem(10);
+		}
+	}
+
+}

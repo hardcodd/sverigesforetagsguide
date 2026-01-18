@@ -1,0 +1,29 @@
+@use "sass:map";
+@use "../vars" as *;
+@use "../mixins/mixins" as *;
+
+.hidden {
+	display: none !important;
+
+	@each $bp in map.keys($breakpoints) {
+		@if $bp != "xxl" {
+			@include breakpoint-down($bp) {
+				&-#{$bp}-d {
+					display: none !important;
+				}
+			}
+		}
+
+		@include breakpoint-only($bp) {
+			&-#{$bp} {
+				display: none !important;
+			}
+		}
+
+		@include breakpoint-up($bp) {
+			&-#{$bp}-u {
+				display: none !important;
+			}
+		}
+	}
+}

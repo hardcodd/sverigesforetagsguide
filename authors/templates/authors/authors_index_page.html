@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block body_class %}template-authors-index-page{% endblock %}
+
+{% load core authors %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="page__title">{{ page.title|mark|safe }}</h1>
+
+    <div class="authors-list">
+      <div class="row v-gutters">
+        {% get_paginated_authors as authors %}
+        {% for author in authors %}
+          <div class="col-xl-3 col-md-4 col-sm-6 col-12">{% include "authors/includes/author-item.html" %}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% include "includes/pagination.html" with page_obj=posts %}
+  </div>
+{% endblock content %}

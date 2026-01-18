@@ -1,0 +1,9 @@
+{% load catalog %}
+
+{% get_paginated_organizations self.page self.count as organizations %}
+
+{% for organization in organizations %}
+  <div class="grid-col">{% include "catalog/includes/organization-item.html" %}</div>
+{% endfor %}
+
+<div class="grid-col--wide">{% include "includes/pagination.html" with page_obj=organizations %}</div>

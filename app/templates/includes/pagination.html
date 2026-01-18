@@ -1,0 +1,94 @@
+{% load core i18n %}
+
+{% spaceless %}
+  {% if page_obj.paginator.num_pages > 1 %}
+
+    {% with request.get_full_path as path %}
+
+      <nav class="pagination">
+        <ul class="pagination__list">
+
+          {% if page_obj.has_previous %}
+            {# First Page #}
+            {% if page_obj.number|add:-3 > 1 %}
+              <li class="pagination__item">
+                <a href="{{ path|remove_page }}" title="{% trans 'First page' %}" class="pagination__link">«</a>
+              </li>
+            {% endif %}
+            {# Prev Page #}
+            <li class="pagination__item">
+              <a href="{% if page_obj.previous_page_number == 1 %}{{ path|remove_page }}{% else %}{{ path|set_page:page_obj.previous_page_number }}{% endif %}" class="pagination__link" title="{% trans 'Previous page' %}">‹</a>
+            </li>
+          {% endif %}
+
+
+          {% if page_obj.number|add:-3 > 1 %}
+            {% for num in page_obj.paginator.page_range %}
+              {# Prev Every 10th Page #}
+              {% if page_obj.number|add:-3 > num and num|divisibleby:10 and forloop.counter|add:30|add:3 >= page_obj.number %}
+                <li class="pagination__item">
+                  <a href="{{ path|set_page:num }}" class="pagination__link">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            {# Dots Separator #}
+            <li class="pagination__item">
+              <span class="pagination__link pagination__link_dots">...</span>
+            </li>
+          {% endif %}
+
+
+          {% for num in page_obj.paginator.page_range %}
+            {# Current Page #}
+            {% if num == page_obj.number %}
+              <li class="pagination__item">
+                <a href="{{ request.get_full_path }}" class="pagination__link active">{{ num }}/{{ page_obj.paginator.num_pages }}</a>
+              </li>
+              {# A couple of prev Pages #}
+            {% elif num < page_obj.number and page_obj.number|add:-3 <= num %}
+              <li class="pagination__item">
+                <a href="{% if num == 1 %}{{ path|remove_page }}{% else %}{{ path|set_page:num }}{% endif %}" class="pagination__link">{{ num }}</a>
+              </li>
+              {# A couple of next Pages #}
+            {% elif num > page_obj.number and page_obj.number|add:3 >= num %}
+              <li class="pagination__item">
+                <a href="{{ path|set_page:num }}" class="pagination__link">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+
+          {% if page_obj.number|add:3 < page_obj.paginator.num_pages %}
+            {# Dots Separator #}
+            <li class="pagination__item">
+              <span class="pagination__link pagination__link_dots">...</span>
+            </li>
+            {% for num in page_obj.paginator.page_range %}
+              {# Next Every 10th Pages #}
+              {% if page_obj.number|add:3 < num and num|divisibleby:10 and forloop.counter|add:-30|add:-3 <= page_obj.number %}
+                <li class="pagination__item">
+                  <a href="{{ path|set_page:num }}" class="pagination__link">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+
+          {% if page_obj.has_next %}
+            {# Next Page #}
+            <li class="pagination__item">
+              <a href="{{ path|set_page:page_obj.next_page_number }}" class="pagination__link" title="{% trans 'Next page' %}">›</a>
+            </li>
+            {# Last Page #}
+            {% if page_obj.number|add:3 < page_obj.paginator.num_pages %}
+              <li class="pagination__item">
+                <a href="{{ path|set_page:page_obj.paginator.num_pages }}" class="pagination__link" title="{% trans 'Last page' %}">»</a>
+              </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </nav>
+
+    {% endwith %}
+  {% endif %}
+{% endspaceless %}

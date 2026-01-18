@@ -1,0 +1,33 @@
+{% load wagtailadmin_tags i18n comments wagtailcore_tags core %}
+
+{% spaceless %}
+  <li class="comments__comment comment" id="comment-{{ node.id }}"{% if node.parent %} data-parent="comment-{{ node.parent.id }}"{% endif %}>
+    <div class="comment__avatar">
+      {% with node.user.get_short_name|default:node.user|make_list|first as char %}<span data-char="{{ char|lower }}">{{ char }}</span>{% endwith %}
+    </div>
+    <div class="comment__body">
+      <div class="comment__info">
+        <strong class="comment__user{% if request.user == node.user %} current{% endif %}{% if node.user.is_staff %} moderator-badge{% endif %}">{{ node.user.get_short_name|default:node.user }}</strong>
+        <time class="comment__created_at">{{ node.created_at|date:'F, d l' }}</time>
+      </div>
+      <div class="comment__content">
+        {{ node.comment|striptags|regex_replace:'\n|<br>'|richtext }}
+      </div>
+      <div class="comment__actions">
+        <div class="comment__links">
+          {% if request.user.is_authenticated and request.user != node.user %}
+            <a href="?reply={{ node.id }}" class="comment__reply">{% trans 'Reply' %}</a>
+          {% endif %}
+          {% if perms.comments.can_edit %}
+            <a href="{% url 'comments:delete_comment' comment_id=node.id %}" class="comment__delete">{% trans 'Delete' %}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% if not node.is_leaf_node %}
+      <ul class="comments__list--children">
+        {{ children }}
+      </ul>
+    {% endif %}
+  </li>
+{% endspaceless %}

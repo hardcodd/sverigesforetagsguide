@@ -1,0 +1,38 @@
+{% load i18n wagtailimages_tags core %}
+
+<div class="review" id="review-{{ review.pk }}">
+  <div class="review__header">
+    <div class="review__avatar">
+      {% with review.user.get_full_name|make_list|first|default:review.user|make_list|first as char %}<span data-char="{{ char|lower }}">{{ char }}</span>{% endwith %}
+    </div>
+    <div class="review__info">
+      <div class="review__rating">{% include "includes/stars-rating.html" with stars=review.rating %}</div>
+      <div class="review__meta">
+        <div class="review__date">
+          {% now "Y" as current_year %}
+          <time datetime="{{ review.created_at|date:'c' }}">
+            {% if review.created_at|date:'Y' == current_year %}
+              {{ review.created_at|date:'j E' }}
+            {% else %}
+              {{ review.created_at|date:'j E, Y' }}
+            {% endif %}
+          </time>
+        </div>
+        <div class="review__author">{{ review.user.get_full_name|default:review.user }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="review__content">
+    <p>
+      {{ review.comment|striptags|replace:"\n|<br>" }}
+    </p>
+  </div>
+  {% if review.images %}
+    <div class="review__images">
+      {% for review_image in review.images.all %}
+        {% image review_image.image original as full_image %}
+        <a href="{{ full_image.url }}" class="review__image" data-fancybox="review-{{ review.pk }}">{% picture review_image.image fill-100x100 loading="lazy" format-{avif,webp,jpeg} %}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

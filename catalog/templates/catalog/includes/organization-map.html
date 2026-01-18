@@ -1,0 +1,96 @@
+{% load i18n %}
+
+<div id="org-map-wrapper" class="map-wrapper ratio">
+  <!-- Static map preview -->
+  <img id="org-map-static" class="map-static" src="https://maps.googleapis.com/maps/api/staticmap?center={{ page.ll }}&zoom=15&size=800x400&markers={{ page.ll }}&key={{ GOOGLE_MAPS_API_KEY }}" alt="Location map" />
+
+  <!-- Overlay with text -->
+  <div class="map-overlay">
+    <span>{% trans "Click to load interactive map" %}</span>
+  </div>
+
+  <!-- Spinner -->
+  <div id="org-map-spinner" class="map-spinner" style="display: none"></div>
+
+  <!-- Interactive map container -->
+  <div id="org-map" class="organization__map map-interactive ratio" data-ll="{{ page.ll }}"></div>
+</div>
+
+<script>
+	(function () {
+		function parseLatLng(raw) {
+			if (!raw) return null;
+			const s = String(raw).trim().replace(/\s+/g, "");
+			const m = s.match(/^(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)$/);
+			if (!m) return null;
+			const lat = parseFloat(m[1]),
+				lng = parseFloat(m[3]);
+			if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+			return { lat, lng };
+		}
+
+		let googleMapsLoaded = false;
+		let mapAlreadyCreated = false;
+
+		function loadGoogleMaps(callback) {
+			if (googleMapsLoaded) return callback();
+			googleMapsLoaded = true;
+
+			const script = document.createElement("script");
+			script.src = "https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}";
+			script.async = true;
+			script.onload = callback;
+			document.body.appendChild(script);
+		}
+
+		function initInteractiveMap() {
+			if (mapAlreadyCreated) return;
+			mapAlreadyCreated = true;
+
+			const el = document.getElementById("org-map");
+			const ll = parseLatLng(el.getAttribute("data-ll"));
+
+			const map = new google.maps.Map(el, {
+				center: ll,
+				zoom: 15,
+				fullscreenControl: false,
+				streetViewControl: false,
+				mapTypeControl: false,
+			});
+
+			new google.maps.Marker({
+				position: ll,
+				map: map,
+				title: "{{ page.title | escape }}",
+			});
+
+			// Fade in
+			requestAnimationFrame(() => {
+				el.style.opacity = "1";
+			});
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+			const wrapper = document.getElementById("org-map-wrapper");
+			const staticImg = document.getElementById("org-map-static");
+			const mapDiv = document.getElementById("org-map");
+			const spinner = document.getElementById("org-map-spinner");
+
+			wrapper.addEventListener("click", function () {
+				if (mapDiv.style.display === "block") return;
+
+				spinner.style.display = "block";
+
+				loadGoogleMaps(() => {
+					staticImg.style.display = "none";
+					mapDiv.style.display = "block";
+
+					setTimeout(() => {
+						spinner.style.display = "none";
+						initInteractiveMap();
+					}, 150);
+				});
+			});
+		});
+	})();
+</script>

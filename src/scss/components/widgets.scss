@@ -1,0 +1,146 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.widget {
+	&:not(:last-child) {
+		margin-bottom: rem(30);
+	}
+
+	&__title {
+		margin-top: 0;
+	}
+
+	&--categories-list {
+		ul {
+			display: flex;
+			flex-direction: column;
+			margin: 0;
+			padding: 0 0 0 rem(10);
+
+			list-style: none;
+
+			ul {
+				font-size: em(14);
+
+				li {
+					&:not(.has-children) {
+						a:before {
+							position: relative;
+							top: rem(-6);
+
+							display: block;
+							width: em(8);
+							height: em(14);
+
+							border-bottom: rem(2) dotted gray;
+							border-left: rem(2) dotted gray;
+
+							content: "";
+						}
+					}
+				}
+			}
+		}
+
+		li {
+			display: block;
+			order: 1;
+
+			&.has-children {
+				order: 0;
+			}
+		}
+
+		a {
+			display: flex;
+			flex: 0 0 100%;
+			gap: rem(5);
+			align-items: center;
+			padding: rem(5) 0;
+
+			color: currentcolor;
+			line-height: 1;
+
+			text-decoration: none;
+
+			.icon {
+				display: block;
+				flex: 0 0 rem(18);
+				width: rem(18);
+				height: rem(18);
+			}
+
+			h2 {
+				display: block;
+				margin: 0;
+				padding: rem(4) 0;
+				overflow: hidden;
+
+				font-weight: 400;
+				font-size: inherit;
+
+				white-space: nowrap;
+				text-overflow: ellipsis;
+
+				border: rem(1) solid transparent;
+				border-radius: var(--border-radius);
+
+				@include transition;
+			}
+
+			@include hover {
+				color: var(--theme-color);
+				text-decoration: underline;
+			}
+
+			&.active {
+				color: var(--theme-color);
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&--tags-list {
+		ul {
+			display: flex;
+			flex-wrap: wrap;
+			gap: rem(5);
+			margin: 0;
+			padding: 0;
+
+			list-style: none;
+		}
+
+		li {
+			display: block;
+			align-items: center;
+		}
+
+		a {
+			display: flex;
+			gap: rem(3);
+			align-items: center;
+			padding: em(5, 14) em(10, 14);
+
+			color: currentcolor;
+			font-size: em(14);
+			line-height: 1;
+			text-decoration: none;
+
+			border: var(--border);
+			border-radius: var(--border-radius);
+
+			&:before {
+				display: block;
+
+				opacity: 0.5;
+
+				content: "#";
+			}
+
+			@include hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}

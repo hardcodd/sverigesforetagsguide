@@ -1,0 +1,95 @@
+{
+	"name": "sverigesforetagsguide.se",
+	"version": "1.0.0",
+	"description": "sverigesforetagsguide.se",
+	"private": true,
+	"scripts": {
+		"dev": "webpack serve --mode development",
+		"build": "webpack --mode production",
+		"preview": "webpack --mode production && npx http-server ./dist/ -a localhost -o /"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.26.9",
+		"@babel/plugin-transform-runtime": "^7.26.9",
+		"@babel/preset-env": "^7.26.9",
+		"@fsouza/prettierd": "^0.26.1",
+		"autoprefixer": "^10.4.20",
+		"babel-loader": "^10.0.0",
+		"clean-webpack-plugin": "^4.0.0",
+		"copy-webpack-plugin": "^13.0.0",
+		"css-loader": "^7.1.2",
+		"css-minimizer-webpack-plugin": "^7.0.0",
+		"eslint": "^9.21.0",
+		"html-loader": "^5.1.0",
+		"html-webpack-plugin": "^5.6.3",
+		"http-server": "^14.1.1",
+		"mini-css-extract-plugin": "^2.9.2",
+		"postcss": "^8.5.3",
+		"postcss-loader": "^8.1.1",
+		"postcss-merge-rules": "^7.0.4",
+		"postcss-preset-env": "^10.1.5",
+		"postcss-scss": "^4.0.9",
+		"postcss-sort-media-queries": "^5.2.0",
+		"prettier": "^3.5.2",
+		"sass": "^1.85.1",
+		"sass-lint": "^1.13.1",
+		"sass-loader": "^16.0.5",
+		"stylelint": "^16.14.1",
+		"stylelint-config-rational-order": "^0.1.2",
+		"stylelint-config-standard": "^37.0.0",
+		"stylelint-config-standard-scss": "^14.0.0",
+		"webpack": "^5.98.0",
+		"webpack-bundle-tracker": "^3.1.1",
+		"webpack-cli": "^6.0.1",
+		"webpack-dev-server": "^5.2.0"
+	},
+	"dependencies": {
+		"@babel/runtime-corejs3": "^7.26.9",
+		"@fancyapps/ui": "^5.0.36",
+		"@googlemaps/markerclusterer": "^2.6.2",
+		"autosize": "^6.0.1",
+		"clipboard": "^2.0.11",
+		"jquery": "^3.7.1",
+		"mburger-webcomponent": "^3.1.4",
+		"mmenu-light": "^3.2.2",
+		"normalize.css": "^8.0.1",
+		"sweetalert2": "^11.21.2",
+		"swiper": "^11.2.4",
+		"tippy.js": "^6.3.7"
+	},
+	"browserslist": [
+		"defaults and fully supports es6-module",
+		"maintained node versions"
+	],
+	"options": {
+		"port": 3000,
+		"host": "0.0.0.0",
+		"proxy": "http://localhost:8000",
+		"src": "./src",
+		"icons": "./app/templates/icons",
+		"output": "app/static",
+		"publicPath": "/static/",
+		"entry": {
+			"main": [
+				"/js/main.js",
+				"/scss/main.scss"
+			]
+		},
+		"watch": [
+			"app",
+			"core",
+			"home",
+			"search",
+			"catalog",
+			"blog",
+			"authors",
+			"ratings"
+		],
+		"copy": [
+			{
+				"from": "./src/static",
+				"to": "./app/static"
+			}
+		]
+	}
+}

@@ -1,0 +1,20 @@
+{% load wagtailimages_tags wagtailcore_tags i18n %}
+
+{% spaceless %}
+  <article class="author">
+    {% if author.image %}
+      {% srcset_image author.image fill-375x500 format-{avif,webp,jpeg} alt=author.title loading="lazy" class="author__image" %}
+    {% endif %}
+    <div class="author__content">
+      <div class="author__heading">
+        <div class="author__by">{% trans "By:" %}</div>
+        <h2 class="author__title">{{ author.title|title }}</h2>
+      </div>
+      <div class="author__post">
+        <em>{% trans "Post:" %}</em>&nbsp;<strong>{{ author.post }}</strong>
+      </div>
+      <p class="author__excerpt">{{ author.bio|striptags|truncatechars:160 }}</p>
+      <a href="{{ author.url }}" class="btn sm">{% trans "Visit author" %}</a>
+    </div>
+  </article>
+{% endspaceless %}

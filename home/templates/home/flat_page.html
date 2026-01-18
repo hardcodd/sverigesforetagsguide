@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% load i18n wagtailcore_tags core %}
+
+{% block body_class %}template-flatpage{% endblock %}
+
+
+{% block content %}
+  <div class="container">
+    <h1 class="page__title">{{ page.seo_title|default:page.title|clear }}</h1>
+    {% include_block page.content %}
+  </div>
+{% endblock content %}

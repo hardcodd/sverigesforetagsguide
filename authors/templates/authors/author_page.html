@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body_class %}template-author-page author-page{% endblock %}
+
+{% load wagtailcore_tags i18n wagtailimages_tags core blog authors %}
+
+{% block content %}
+  <div class="container">
+    <article>
+      <h1 class="page__title">{{ page.title }}</h1>
+
+      <div class="author-page__content clearfix">
+        {% if page.image %}
+          {% srcset_image page.image fill-768x1024 format-{avif,webp,jpeg} alt=page.title loading="lazy" class="author-page__image" %}
+        {% endif %}
+
+        <div class="author-page__bio">
+          {{ page.bio|richtext }}
+
+          <div class="author-page__total-publications">
+            <strong>{% trans "Total publications:" %}</strong>
+            {% get_total_publications_by_author page as pub_count %}
+            <span>{{ pub_count }}</span>
+          </div>
+        </div>
+      </div>
+
+      {% get_authors_blogs page as blogs %}
+      {% for blog in blogs %}
+        <section class="section section--blog-posts">
+          {% trans "View all" as button_text %}
+          {% pageurl blog as pageurl %}
+          <div class="container">{% include "includes/section-header.html" with section_title=blog.title pageurl=pageurl|add:'?author='|add:page.slug %}</div>
+          <div class="posts-list">
+            <div class="row v-gutters">
+              {% get_latest_authors_posts page blog as posts %}
+              {% for post in posts %}
+                <div class="col-xl-3 col-sm-6 col-12">{% include "blog/includes/post-item.html" %}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+      {% endfor %}
+    </article>
+  </div>
+{% endblock content %}

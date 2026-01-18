@@ -1,0 +1,50 @@
+{% load i18n %}
+
+<form class="review-form" action="{% url 'reviews:add_review' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="hidden" name="object_id" value="{{ page.pk }}">
+  <input type="hidden" name="content_type" value="{{ page.content_type.pk }}">
+
+  <div class="review-form--left">
+    <div class="review-form__field">
+      <div class="review-form__rating-container">
+        <div class="review-form__field-title">{% trans "Give a rating" %}</div>
+        <div class="review-form__rating">
+          <input type="radio" id="rating-5" name="rating" value="5" required class="sr-only">
+          <label for="rating-5">{% include "icons/star.svg" %}</label>
+          <input type="radio" id="rating-4" name="rating" value="4" class="sr-only">
+          <label for="rating-4">{% include "icons/star.svg" %}</label>
+          <input type="radio" id="rating-3" name="rating" value="3" class="sr-only">
+          <label for="rating-3">{% include "icons/star.svg" %}</label>
+          <input type="radio" id="rating-2" name="rating" value="2" class="sr-only">
+          <label for="rating-2">{% include "icons/star.svg" %}</label>
+          <input type="radio" id="rating-1" name="rating" value="1" class="sr-only">
+          <label for="rating-1">{% include "icons/star.svg" %}</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-form__field">
+      <div class="review-form__comment">
+        <textarea cols="40" rows="10" maxlength="1000" name="comment" placeholder="{% trans "What do you think?" %}" required></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="btn sm">{% trans "Send" %}</button>
+  </div>
+
+  <div class="review-form--right">
+    <div class="review-form__field">
+      <div class="review-form__field-title">{% trans "Upload photos" %}</div>
+      <div class="review-form__images-upload images-upload">
+        <div class="images-upload__errors"></div>
+        <label class="images-upload__info" for="images-input">
+          <input type="file" name="images" id="images-input" accept="image/jpeg" multiple>
+          <span>{% trans "Drag and drop images here or" %}&nbsp;</span>
+          <span class="images-upload__info--browse">{% trans "click to upload" %}</span>
+        </label>
+        <div class="images-upload__preview"></div>
+      </div>
+    </div>
+  </div>
+</form>

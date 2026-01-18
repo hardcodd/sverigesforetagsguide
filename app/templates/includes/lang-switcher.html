@@ -1,0 +1,16 @@
+{% load wagtailcore_tags i18n static core %}
+
+{% spaceless %}
+  {% get_current_language as current_lang %}
+  <ul class="lang-switcher">
+    {% for language_code, language_name in LANGUAGES %}
+      {% get_language_info for language_code as lang %}
+      <li class="{% if language_code == current_lang %}active{% endif %}">
+        <a href="{% localize_url request.get_full_path language_code %}" rel="alternate" hreflang="{{ language_code }}" data-tippy-content="{{ language_name }}" data-tippy-placement="left">
+          <img src="{% static "flags/"|add:language_code|add:'.png' %}"  alt="{{ language_code }}">
+          <div class="sr-only">{{ locale }}</div>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endspaceless %}

@@ -1,0 +1,89 @@
+@use "../mixins/mixins" as *;
+@use "../functions" as *;
+
+.search-item {
+	position: relative;
+
+	display: flex;
+	gap: rem(15);
+	align-items: center;
+
+	height: 100%;
+	padding: rem(20);
+
+	background-color: var(--white-color);
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow-1);
+
+	@include transition;
+
+	@include lg-d {
+		flex-direction: column;
+	}
+
+	&:before {
+		position: absolute;
+		z-index: 0;
+
+		display: block;
+
+		background-color: var(--highlight-color, --white-color);
+		border-radius: inherit;
+		opacity: 0.3;
+
+		content: "";
+		inset: 0;
+	}
+
+	&__title {
+		margin: 0 0 rem(10);
+
+		color: var(--text-color);
+	}
+
+	&__description {
+		margin: 0;
+
+		color: var(--gray-color);
+		font-size: em(14);
+	}
+
+	&__link {
+		position: absolute;
+
+		z-index: 2;
+		inset: 0;
+	}
+
+	&__image {
+		position: relative;
+		z-index: 1;
+
+		display: flex;
+		flex: 0 0 rem(200);
+
+		overflow: hidden;
+
+		background-color: var(--placeholder-color);
+		border-radius: var(--border-radius);
+
+		@include lg-d {
+			flex: none;
+			width: 100%;
+		}
+	}
+
+	&__thumb {
+		position: absolute;
+		z-index: -1;
+
+		visibility: hidden;
+		opacity: 0;
+
+		pointer-events: none;
+	}
+
+	@include hover {
+		box-shadow: var(--box-shadow-3);
+	}
+}

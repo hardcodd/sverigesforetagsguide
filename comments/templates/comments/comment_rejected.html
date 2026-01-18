@@ -1,0 +1,18 @@
+{% load wagtailadmin_tags i18n comments %}
+
+{% spaceless %}
+  {% if request.user == node.user %}
+    <li class="comments__comment comment rejected" id="comment-{{ node.id }}"{% if node.parent %} data-parent="comment-{{ node.parent.id }}"{% endif %}>
+      <div class="comment__avatar">
+        {% with node.user.get_short_name|default:node.user|make_list|first as char %}<span data-char="{{ char|lower }}">{{ char }}</span>{% endwith %}
+      </div>
+      <div class="comment__body">
+        <div class="comment__info">
+          <strong class="comment__user{% if request.user == node.user %} current{% endif %}{% if node.user.is_staff %} moderator-badge{% endif %}">{{ node.user.get_short_name|default:node.user }}</strong>
+          <time class="comment__created_at">{{ node.created_at|timesince }} {% trans 'ago' %}</time>
+        </div>
+        <div class="comment__content">{% trans 'The comment was rejected by the moderator' %}</div>
+      </div>
+    </li>
+  {% endif %}
+{% endspaceless %}

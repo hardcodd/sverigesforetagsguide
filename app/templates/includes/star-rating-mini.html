@@ -1,0 +1,8 @@
+{% load i18n %}
+
+{% spaceless %}
+  <div class="star-rating star-rating--mini">
+    {% include "icons/star.svg" %}
+    <span class="star-rating__score">{{ rating }}</span>
+  </div>
+{% endspaceless %}

@@ -1,0 +1,42 @@
+@use "../functions" as *;
+
+.star-rating {
+	display: flex;
+	gap: rem(3);
+	align-items: center;
+	margin-right: rem(5);
+
+	font-size: em(16);
+
+	svg {
+		width: rem(18);
+
+		color: var(--accent-color);
+	}
+
+	span {
+		display: block;
+
+		font-size: inherit;
+	}
+
+	&__score {
+		color: var(--accent-color);
+	}
+
+	&__separator {
+		color: var(--gray-color);
+	}
+
+	&__reviews {
+		color: var(--gray-color);
+	}
+
+	&--mini {
+		font-size: em(14);
+
+		svg {
+			width: rem(16);
+		}
+	}
+}

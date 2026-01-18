@@ -1,0 +1,79 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.contact-tabs {
+	p {
+		display: flex;
+		gap: rem(10);
+		justify-content: space-between;
+		padding: rem(10) rem(15);
+
+		line-height: 1.3;
+
+		&:nth-child(even) {
+			background-color: var(--light-color);
+		}
+	}
+
+	b {
+		display: block;
+	}
+}
+
+.contact-tabs-filter {
+	display: flex;
+	gap: rem(10);
+	margin: rem(20) 0 rem(30);
+
+	li {
+		position: relative;
+
+		display: block;
+		padding: rem(10) rem(20);
+
+		background-color: var(--white-color);
+		border: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+		border-radius: 10em;
+		cursor: pointer;
+
+		@include transition;
+
+		span {
+			position: relative;
+			z-index: 1;
+		}
+
+		&:before {
+			position: absolute;
+			top: 0;
+			left: 0;
+
+			width: 100%;
+			height: 100%;
+
+			background: linear-gradient(235.39deg, rgb(83, 216, 255) 0%, rgb(56, 64, 247) 100%);
+			border-radius: inherit;
+			opacity: 0;
+
+			content: "";
+
+			@include transition;
+		}
+
+		&.active {
+			color: var(--white-color);
+
+			&:before {
+				opacity: 1;
+			}
+		}
+
+		@include hover {
+			color: var(--white-color);
+
+			&:before {
+				opacity: 1;
+			}
+		}
+	}
+}

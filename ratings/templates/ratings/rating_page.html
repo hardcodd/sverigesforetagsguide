@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load i18n wagtailimages_tags wagtailcore_tags core ratings comments %}
+
+{% block body_class %}template-rating{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <article class="rating-page">
+      <h1 class="h2 page__title">{{ page.title|mark|safe }}</h1>
+
+      <div class="content">
+        <div class="left">
+          <div class="sticky">
+            {% for block in page.content %}
+              {% include_block block with counter=forloop.counter %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="right">
+          <div class="sticky">
+            {% get_average_rating page as average_rating %}
+            {% if average_rating %}
+              <div class="rating-block">
+                <div class="rating-ratings">
+                  <div class="rating-circle">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                      <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="2"></path>
+                      <path class="circle" stroke-dasharray="{{ average_rating|format_number:'1,20' }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--orange-color)" stroke-width="2" stroke-linecap="round"></path>
+                    </svg>
+                    <div class="rating-number">{{ average_rating|format_number:'1' }}</div>
+                  </div>
+
+                  {% for block in page.ratings %}
+                    {% include_block block %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="rating-block">
+              <div class="h3 rating-block__title">{% trans "Organization in catalog" %}</div>
+              <div class="horizontal-organization-item">{% include "catalog/includes/organization-item.html" with organization=page.to_organization %}</div>
+            </div>
+
+            {% if page.blockquote %}
+              <blockquote class="rating-blockquote">
+                <p>{{ page.blockquote }}</p>
+              </blockquote>
+            {% endif %}
+
+            {% if page.author %}
+              {% with page.author.specific as author %}
+                {% include "authors/includes/author.html" %}
+              {% endwith %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div id="comments">
+        <div class="container">
+          {% render_comment_form page %}
+          {% render_comments_list page %}
+        </div>
+      </div>
+    </article>
+  </div>
+{% endblock content %}

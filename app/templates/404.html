@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load i18n wagtailcore_tags wagtailimages_tags core home %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block body_class %}template-404{% endblock %}
+
+{% block content %}
+  <div class="container">
+    {% with settings.core.NotFoundPageSettings as page %}
+
+      <div class="nf-banner">
+        <div class="nf-banner__text">
+          <h1 class="nf-banner__title">{{ settings.core.NotFoundPageSettings.title }}</h1>
+          <p class="nf-banner__description">{{ settings.core.NotFoundPageSettings.description }}</p>
+        </div>
+        {% srcset_image settings.core.NotFoundPageSettings.image width-400 format-{avif,webp} loading="lazy" class="nf-banner__image" %}
+      </div>
+
+      {% if page.cards %}
+        <section class="section section-cards">
+          <div class="container">
+            <div class="grid-row row-items-3">
+              {% for c in page.cards %}
+                {% include_block c %}
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
+      {% include_block page.banner %}
+
+      {% get_contacts_page as page %}
+
+      {% if page.tabs %}
+        <ul class="contact-tabs-filter">
+          {% for tab in page.tabs %}
+            <li data-target="contact-tabs-{{ tab.value.title|slugify }}">
+              <span>{{ tab.value.title }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="row v-gutters">
+        <div class="col-lg-6 col-12">
+          <div class="card">
+            {% if page.form_code %}
+              {% include_block page.form_code|safe %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-12">
+          <div class="card">
+            {% if page.tabs %}
+              <ul class="contact-tabs">
+                {% for tab in page.tabs %}<li class="hidden" id="contact-tabs-{{ tab.value.title|slugify }}">{{ tab.value.content|richtext }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if page.social_networks %}
+              <ul class="social-links social-links--large">
+                {% for link in page.social_networks|split:'\n' %}
+                  <li>
+                    <a href="{{ link }}" target="_blank" rel="nofollow noopener">
+                      {{ link|social_network_icon }}
+                      <span>{{ link|website_title }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endwith %}
+  </div>
+{% endblock content %}

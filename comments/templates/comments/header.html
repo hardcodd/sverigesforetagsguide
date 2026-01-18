@@ -1,0 +1,9 @@
+{% load comments i18n %}
+{% get_comments_count page as comments_count %}
+{% spaceless %}
+	<div class="comments__header">
+		<h3>
+			{% blocktranslate count counter=comments_count %}{{ counter }} comment{% plural %}{{ counter }} comments{% endblocktranslate %}
+		</h3>
+	</div>
+{% endspaceless %}

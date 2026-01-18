@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+
+<nav class="footer__nav">
+  <h2 class="h4 footer__title">{{ self.title }}</h2>
+  {% if self.links %}
+    <ul>
+      {% for block in self.links %}
+        <li>{% include_block block %}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</nav>

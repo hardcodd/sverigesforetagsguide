@@ -1,0 +1,44 @@
+@use "../mixins/mixins" as *;
+@use "../functions" as *;
+
+.logo {
+	position: relative;
+	z-index: 1;
+
+	display: inline-block;
+	min-width: rem(40);
+
+	color: var(--text-color);
+	font-weight: var(--medium);
+	font-size: rem(14);
+	line-height: 1;
+	text-decoration: none;
+
+	&--mobile {
+		max-height: rem(30);
+	}
+
+	@include lg-d {
+		flex: 0 0 rem(50);
+	}
+
+	@include sm-d {
+		flex: 0 0 rem(40);
+
+		font-size: rem(12);
+	}
+
+	&__text {
+		display: block;
+		margin: rem(3) 0 0;
+
+		white-space: nowrap;
+
+		@include transition;
+	}
+
+	@include hover {
+		color: var(--accent-color);
+		text-decoration: none;
+	}
+}

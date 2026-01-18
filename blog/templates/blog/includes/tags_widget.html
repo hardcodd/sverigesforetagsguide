@@ -1,0 +1,23 @@
+{% load i18n blog core cache %}
+
+{% get_current_language as lang %}
+
+{% get_blog_index_page as blog_index_page %}
+{% cache 604800 blog_tags_list lang blog_index_page.pk %}
+{% get_blog_tags_list as tags %}
+
+{% if tags.count %}
+  <aside class="widget widget--tags-list">
+    <div class="h3 widget__title">{% trans "By tags" %}</div>
+    <ul>
+      {% for tag in tags %}
+        {% if tag.blog_blogtag_items.all.count %}
+          <li>
+            <a href="{{ blog_index_page.url }}?tag={{ tag.slug }}">{{ tag.name|lower }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </aside>
+{% endif %}
+{% endcache %}

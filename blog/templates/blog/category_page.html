@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load core blog %}
+
+{% block body_class %}template-blog-category-page{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row v-gutters">
+      <div class="col-lg-9 col-12">
+        <h1 class="page__title">{{ page.title|mark|safe }}</h1>
+        {% if page.subtitle %}<h2 class="page__subtitle">{{ page.subtitle }}</h2>{% endif %}
+
+        <div class="posts-list">
+          <div class="row v-gutters">
+            {% get_paginated_blog_posts page as posts %}
+            {% for post in posts %}
+              <div class="col-lg-4 col-sm-6 col-12">{% include "blog/includes/post-item.html" %}</div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% include "includes/pagination.html" with page_obj=posts %}
+      </div>
+
+      <div class="col-lg-3 col-12">
+        <div class="sidebar">{% include "blog/includes/sidebar.html" %}</div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,43 @@
+{% load wagtailimages_tags %}
+
+{% spaceless %}
+  <div class="swiper organization__images">
+    <div class="swiper-wrapper">
+      {% if page.images.count %}
+        {% for item in page.images.all %}
+          {% image item.image original as img %}
+          {% image item.image original format-webp as img_webp %}
+          {% image item.image max-165x165 as thumb %}
+          {% if forloop.counter <= 10 %}
+            <div class="swiper-slide">
+              <div class="swiper-slide-thumb">
+                <img src="{{ thumb.url }}" alt="{{ item.image.alt|default:page.title }}">
+              </div>
+              <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ item.image.alt|default:page.title }}">
+                <div class="ratio">{% srcset_image item.image width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+                <div class="swiper-lazy-preloader"></div>
+              </a>
+            </div>
+          {% else %}
+            <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ item.image.alt|default:page.title }}" class="hidden" hidden>{{ item.image.alt|default:page.title }}</a>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% image settings.core.SiteSettings.default_organization_image original as img %}
+        {% image settings.core.SiteSettings.default_organization_image max-165x165 as thumb %}
+        <div class="swiper-slide">
+          <div class="swiper-slide-thumb">
+            <img src="{{ thumb.url }}" alt="{{ item.image.alt|default:page.title }}">
+          </div>
+          <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ item.image.alt|default:page.title }}">
+            {% with settings.core.SiteSettings.default_organization_image as default_img %}
+              <div class="ratio">{% srcset_image default_img width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+            {% endwith %}
+            <div class="swiper-lazy-preloader"></div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+{% endspaceless %}

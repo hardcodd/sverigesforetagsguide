@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n wagtailcore_tags core %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block content %}
+  <div class="container">
+    <h1 class="sr-only">{{ page.seo_title|default:page.title|clear }}</h1>
+
+    <section class="section section-hero">
+      <div class="container">
+        {% include "includes/hero-banner.html" %}
+        {% include "includes/hero-counters.html" %}
+      </div>
+    </section>
+
+    {% include_block page.content %}
+  </div>
+{% endblock content %}

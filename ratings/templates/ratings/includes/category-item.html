@@ -1,0 +1,15 @@
+<li {% if category.children %}class="has-children"{% endif %}>
+  <a href="{{ category.url }}">
+    {% if category.children %}
+      <span class="icon">{% include "icons/folder.svg" %}</span>
+    {% endif %}
+    <h2>{{ category.title }}</h2>
+  </a>
+  {% if category.children %}
+    <ul>
+      {% for category in category.children %}
+        {% include "blog/includes/category-item.html" %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

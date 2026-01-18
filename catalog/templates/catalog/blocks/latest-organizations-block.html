@@ -1,0 +1,7 @@
+{% load catalog %}
+
+{% get_latest_organizations self.page self.count as organizations %}
+
+{% for organization in organizations %}
+  <div class="{% if as_carousel %}swiper-slide{% else %}grid-col{% endif %}">{% include "catalog/includes/organization-item.html" %}</div>
+{% endfor %}

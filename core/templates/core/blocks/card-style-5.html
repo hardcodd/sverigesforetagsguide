@@ -1,0 +1,14 @@
+{% load wagtailimages_tags i18n %}
+
+{% spaceless %}
+  <div class="{% if as_carousel %}swiper-slide{% else %}grid-col{% endif %}">
+    <div class="card card--style-5{% if self.page %} has-link{% endif %}">
+      {% srcset_image self.image width-402 format-{avif,webp,png} loading="lazy" class="card__image" %}
+      <div class="card__content">
+        <h3 class="card__title">{{ self.title }}</h3>
+        {% if self.description %}<p class="card__description">{{ self.description }}</p>{% endif %}
+      </div>
+      {% if self.get_url and self.button_text %}<a href="{{ self.get_url }}" class="btn round orange">{{ self.button_text }}</a>{% endif %}
+    </div>
+  </div>
+{% endspaceless %}

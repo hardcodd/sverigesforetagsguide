@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-30 08:58+0100\n"
+"PO-Revision-Date: 2025-11-30 08:59+0100\n"
+"Last-Translator: Alex Hardcodd <shubenkin.alexander@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
+
+#: src/js/components/blog-post.js:24
+msgid "Table of Contents"
+msgstr "შინაარსი"
+
+#: src/js/components/cookie-consent.js:102
+#: src/js/components/cookie-consent.js:220
+#: src/js/components/cookie-consent.js:259
+msgid "Cookie preferences saved."
+msgstr "ქუქი-ფაილების პარამეტრები შენახულია."
+
+#: src/js/components/cookie-consent.js:208
+msgid "All cookies accepted."
+msgstr "ყველა ქუქი მიღებულია."
+
+#: src/js/components/cookie-consent.js:211
+msgid "Only necessary cookies allowed."
+msgstr "დაშვებულია მხოლოდ აუცილებელი ქუქი-ფაილები."
+
+#: src/js/components/header-search.js:58
+msgid "No results found"
+msgstr "შედეგი ვერ მოიძებნა"
+
+#: src/js/components/header-search.js:61
+msgid "Error while fetching data"
+msgstr "შეცდომა მონაცემების მიღებისას"
+
+#: src/js/components/images-upload-field.js:170
+msgid "is already uploaded."
+msgstr "უკვე ატვირთულია."
+
+#: src/js/components/images-upload-field.js:178
+msgid "You can upload a maximum of 10 images."
+msgstr "შეგიძლიათ მაქსიმუმ 10 სურათის ატვირთვა."
+
+#: src/js/components/images-upload-field.js:186
+msgid "is too large. Max size is 10MB."
+msgstr "ძალიან დიდია. მაქსიმალური ზომაა 10 მბ."
+
+#: src/js/components/images-upload-field.js:194
+msgid "is not an image."
+msgstr "გამოსახულება არ არის."
+
+#: src/js/components/images-upload-field.js:197
+msgid "is not a valid image type."
+msgstr "სურათის სწორი ტიპი არ არის."
+
+#: src/js/components/organization.js:42
+msgid "Link copied!"
+msgstr "ბმული კოპირებულია!"
+
+#: src/js/components/organization.js:43
+msgid "Failed to copy the link!"
+msgstr "ბმულის კოპირება ვერ მოხერხდა!"
+
+#: src/js/components/organization.js:51
+msgid "Coordinates copied!"
+msgstr "კოორდინატები დაკოპირებულია!"
+
+#: src/js/components/organization.js:52
+msgid "Failed to copy coordinates!"
+msgstr "კოორდინატების კოპირება ვერ მოხერხდა!"
+
+#: src/js/components/organization.js:60
+msgid "Plus code copied!"
+msgstr "პლუს კოდი დაკოპირდა!"
+
+#: src/js/components/organization.js:61
+msgid "Failed to copy plus code!"
+msgstr "პლუს კოდის კოპირება ვერ მოხერხდა!"
+
+#: src/js/components/reviews.js:26
+msgid "Success"
+msgstr "წარმატება"
+
+#: src/js/components/reviews.js:38
+msgid "Error"
+msgstr "შეცდომა"

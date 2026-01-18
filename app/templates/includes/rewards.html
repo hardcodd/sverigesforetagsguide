@@ -1,0 +1,20 @@
+{% load wagtailimages_tags %}
+
+{% spaceless %}
+  {% if rewards %}
+    <ul class="rewards{% if class %} {{ class }}{% endif %}">
+      {% for reward in rewards %}
+        {% with reward.reward as reward %}
+          <li class="rewards__item" data-tippy-content="<div class='h4 rewards__title'>{{ reward.title }}</div><div class='rewards__description'>{{ reward.description }}</div>">
+            {% image reward.icon fill-100x100 as img %}
+            {% image reward.icon fill-100x100 format-webp as img_webp %}
+            <picture class="rewards__image">
+              <source srcset="{{ img_webp.url }}" type="image/webp">
+              <img src="{{ img.url }}" alt="{{ award.title }}" loading="lazy">
+            </picture>
+          </li>
+        {% endwith %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endspaceless %}

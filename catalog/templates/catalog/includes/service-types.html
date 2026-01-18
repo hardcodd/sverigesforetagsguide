@@ -1,0 +1,19 @@
+{% if page.service_types.count %}
+  <div class="organization-block">
+    {% regroup service_types|dictsort:"category.title" by category as grouped_service_types %}
+    <ul class="organization__service-types">
+      {% for group in grouped_service_types %}
+        <li>
+          <strong>{{ group.grouper }}</strong>
+          <ul>
+            {% for service_type in group.list|dictsort:"name" %}
+              <li>
+                <a href="{{ page.get_parent.url }}?service_type={{ service_type.id }}">{{ service_type.name }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

@@ -1,0 +1,28 @@
+{% load wagtailcore_tags core %}
+
+<section class="section section-cards">
+  <div class="container">
+    {% include "includes/section-header.html" with section_title=self.title pageurl=self.pageurl.url button_text=self.button_text %}
+    {% with self.cards.raw_data|first as first_card %}
+      {% if self.as_carousel and not first_card.type == 'paginated_organizations' %}
+        <div class="row">
+          <div class="swiper cards-carousel" data-slides-per-view="{{ self.in_row }}">
+            <div class="swiper-wrapper">
+              {% for c in self.cards %}
+                {% include_block c with as_carousel=self.as_carousel %}
+              {% endfor %}
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+      {% else %}
+        <div class="grid-row row-items-{{ self.in_row }}">
+          {% for c in self.cards %}
+            {% include_block c %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+</section>

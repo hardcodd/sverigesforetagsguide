@@ -1,0 +1,67 @@
+{% load i18n madloba %}
+
+{% get_content_types as content_types %}
+
+<style>
+    th {
+        text-transform: lowercase !important;
+        font-weight: bold !important;
+    }
+</style>
+
+<section class="content-types">
+	<h2>{% trans "Content types" %}</h2>
+	<table class="listing">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>{% trans "Name" %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for ct in content_types %}
+				<tr>
+					<td>{{ ct.pk }}</td>
+					<td>{{ ct }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+
+<section id="listings">
+  <h2>{% trans "CSV File (Minimal example)" %}</h2>
+  <table class="listing">
+    <thead>
+      <tr>
+        <th>content_type</th>
+        <th>post_id</th>
+        <th>user</th>
+				<th>rating</th>
+        <th>comment</th>
+				<th>publish_at</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>9</td>
+        <td>998</td>
+        <td>John / m_john</td>
+				<td>5</td>
+        <td>Example text of the comment ...</td>
+				<td>2025-12-31 17:45</td>
+      </tr>
+      <tr>
+        <td>150</td>
+        <td>999</td>
+        <td>Alex / alex_dude</td>
+				<td>3</td>
+        <td>Example text of the comment ...</td>
+				<td>2025-12-31 17:45</td>
+      </tr>
+      <tr>
+        <td>...</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

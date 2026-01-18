@@ -1,0 +1,18 @@
+{% load wagtailcore_tags core %}
+
+<section class="section section-qna">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title">{{ self.title|mark|safe }}</h2>
+    </div>
+
+    <div class="accordion qna">
+      {% for item in self.items %}
+        <div class="accordion__pane">
+          <div class="accordion__heading">{{ item.value.question }}</div>
+          <div class="accordion__content">{{ item.value.answer|richtext }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

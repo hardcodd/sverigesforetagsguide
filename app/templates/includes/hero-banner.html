@@ -1,0 +1,15 @@
+{% load wagtailimages_tags static i18n %}
+
+{% spaceless %}
+  <div class="hero-banner">
+    <div class="hero-text">
+      <div class="hero-banner__left">
+        <h2 class="hero-banner__title">{% trans "Select the city you are interested in" %}</h2>
+        <div class="hero-banner__description">
+          <p>{% trans "After selecting a city, you will be taken to its page and can start searching for the establishment or company you need." %}</p>
+        </div>
+      </div>
+    </div>
+    <div class="hero-banner__image">{% srcset_image settings.core.SiteSettings.flag fill-494x352 format-{avif,webp} loading="lazy" %}</div>
+  </div>
+{% endspaceless %}

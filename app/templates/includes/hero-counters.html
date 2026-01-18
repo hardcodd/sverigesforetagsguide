@@ -1,0 +1,41 @@
+{% load i18n static catalog reviews cache %}
+
+{% spaceless %}
+  <div class="hero-counters">
+    <div class="row align-start space-around v-gutters">
+      <div class="col">
+        <div class="hero-counter hero-counter--organizations-count">
+          <div class="hero-counter__icon">{% include "icons/marker.svg" %}</div>
+          <div class="hero-counter__text">
+            {% cache 86400 hero_counters_organizations %}
+            <div class="hero-counter__number">{% get_organizations_count %}</div>
+          {% endcache %}
+          <div class="hero-counter__description">{% blocktrans %}Organizations in catalog{% endblocktrans %}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="hero-counter hero-counter--updated-organizations">
+        <div class="hero-counter__icon">{% include "icons/refresh.svg" %}</div>
+        <div class="hero-counter__text">
+          {% cache 86400 hero_counters_updated %}
+          <div class="hero-counter__number">{% get_updated_organizations_count %}</div>
+        {% endcache %}
+        <div class="hero-counter__description">{% trans "Updated in a day" %}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="hero-counter hero-counter--user-reviews">
+      <div class="hero-counter__icon">{% include "icons/chat.svg" %}</div>
+      <div class="hero-counter__text">
+        {% cache 86400 hero_counters_reviews %}
+        <div class="hero-counter__number">{% get_total_reviews_count %}</div>
+      {% endcache %}
+      <div class="hero-counter__description">{% trans "User reviews" %}</div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% endspaceless %}

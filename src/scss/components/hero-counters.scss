@@ -1,0 +1,70 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.hero-counters {
+	margin: rem(10) 0 0;
+	padding: rem(26) rem(20);
+
+	text-align: center;
+
+	background-color: var(--white-color);
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow-1);
+
+	@include md-d {
+		padding: rem(20) rem(10);
+	}
+}
+
+.hero-counter {
+	display: flex;
+	gap: rem(20);
+	align-items: center;
+	justify-content: center;
+
+	line-height: 1;
+
+	@include md-d {
+		flex-direction: column;
+		gap: rem(10);
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__icon {
+		flex: 0 0 rem(58);
+
+		@include md-d {
+			flex: 0 0 rem(40);
+			width: rem(40);
+		}
+	}
+
+
+	&__number {
+		font-weight: var(--medium);
+		font-size: em(36);
+		line-height: 1.2;
+
+		@include md-d {
+			font-size: em(24);
+		}
+	}
+
+	&__description {
+		font-size: em(14);
+		line-height: 1.2;
+	}
+
+	&--organizations-count .hero-counter__icon {
+		color: var(--theme-color);
+	}
+
+	&--updated-organizations .hero-counter__icon {
+		color: var(--accent-color);
+	}
+
+	&--user-reviews .hero-counter__icon {
+		color: var(--green-color);
+	}
+}
