@@ -3,159 +3,159 @@
   "assets": {
     ".DS_Store": {
       "name": ".DS_Store",
-      "path": "/Volumes/HC/www/madloba/app/static/.DS_Store",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/.DS_Store",
       "publicPath": "/static/.DS_Store",
       "sourceFilename": "static/.DS_Store"
     },
     "404.png": {
       "name": "404.png",
-      "path": "/Volumes/HC/www/madloba/app/static/404.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/404.png",
       "publicPath": "/static/404.png",
       "sourceFilename": "static/404.png"
     },
     "banners/cupman.png": {
       "name": "banners/cupman.png",
-      "path": "/Volumes/HC/www/madloba/app/static/banners/cupman.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/banners/cupman.png",
       "publicPath": "/static/banners/cupman.png",
       "sourceFilename": "static/banners/cupman.png"
     },
     "css/0f50ea0558d10964abea.main.css": {
       "name": "css/0f50ea0558d10964abea.main.css",
-      "path": "/Volumes/HC/www/madloba/app/static/css/0f50ea0558d10964abea.main.css",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/css/0f50ea0558d10964abea.main.css",
       "publicPath": "/static/css/0f50ea0558d10964abea.main.css"
     },
     "favicon/favicon.png": {
       "name": "favicon/favicon.png",
-      "path": "/Volumes/HC/www/madloba/app/static/favicon/favicon.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/favicon/favicon.png",
       "publicPath": "/static/favicon/favicon.png",
       "sourceFilename": "static/favicon/favicon.png"
     },
     "favicon/favicon.svg": {
       "name": "favicon/favicon.svg",
-      "path": "/Volumes/HC/www/madloba/app/static/favicon/favicon.svg",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/favicon/favicon.svg",
       "publicPath": "/static/favicon/favicon.svg",
       "sourceFilename": "static/favicon/favicon.svg"
     },
     "flags.png": {
       "name": "flags.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags.png",
       "publicPath": "/static/flags.png",
       "sourceFilename": "static/flags.png"
     },
     "flags/da.png": {
       "name": "flags/da.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/da.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/da.png",
       "publicPath": "/static/flags/da.png",
       "sourceFilename": "static/flags/da.png"
     },
     "flags/en.png": {
       "name": "flags/en.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/en.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/en.png",
       "publicPath": "/static/flags/en.png",
       "sourceFilename": "static/flags/en.png"
     },
     "flags/fi.png": {
       "name": "flags/fi.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/fi.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/fi.png",
       "publicPath": "/static/flags/fi.png",
       "sourceFilename": "static/flags/fi.png"
     },
     "flags/ka.png": {
       "name": "flags/ka.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/ka.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/ka.png",
       "publicPath": "/static/flags/ka.png",
       "sourceFilename": "static/flags/ka.png"
     },
     "flags/nb.png": {
       "name": "flags/nb.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/nb.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/nb.png",
       "publicPath": "/static/flags/nb.png",
       "sourceFilename": "static/flags/nb.png"
     },
     "flags/ru.png": {
       "name": "flags/ru.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/ru.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/ru.png",
       "publicPath": "/static/flags/ru.png",
       "sourceFilename": "static/flags/ru.png"
     },
     "flags/sv.png": {
       "name": "flags/sv.png",
-      "path": "/Volumes/HC/www/madloba/app/static/flags/sv.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/flags/sv.png",
       "publicPath": "/static/flags/sv.png",
       "sourceFilename": "static/flags/sv.png"
     },
     "gray-stars.svg": {
       "name": "gray-stars.svg",
-      "path": "/Volumes/HC/www/madloba/app/static/gray-stars.svg",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/gray-stars.svg",
       "publicPath": "/static/gray-stars.svg",
       "sourceFilename": "static/gray-stars.svg"
     },
     "hero-banner.png": {
       "name": "hero-banner.png",
-      "path": "/Volumes/HC/www/madloba/app/static/hero-banner.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/hero-banner.png",
       "publicPath": "/static/hero-banner.png",
       "sourceFilename": "static/hero-banner.png"
     },
     "js/4390d0f0bb51f4d0ccd4.main.js": {
       "name": "js/4390d0f0bb51f4d0ccd4.main.js",
-      "path": "/Volumes/HC/www/madloba/app/static/js/4390d0f0bb51f4d0ccd4.main.js",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/js/4390d0f0bb51f4d0ccd4.main.js",
       "publicPath": "/static/js/4390d0f0bb51f4d0ccd4.main.js"
     },
     "js/f7983d9e4f74e31a9456.272.js": {
       "name": "js/f7983d9e4f74e31a9456.272.js",
-      "path": "/Volumes/HC/www/madloba/app/static/js/f7983d9e4f74e31a9456.272.js",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/js/f7983d9e4f74e31a9456.272.js",
       "publicPath": "/static/js/f7983d9e4f74e31a9456.272.js"
     },
     "js/f7983d9e4f74e31a9456.272.js.LICENSE.txt": {
       "name": "js/f7983d9e4f74e31a9456.272.js.LICENSE.txt",
-      "path": "/Volumes/HC/www/madloba/app/static/js/f7983d9e4f74e31a9456.272.js.LICENSE.txt",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/js/f7983d9e4f74e31a9456.272.js.LICENSE.txt",
       "publicPath": "/static/js/f7983d9e4f74e31a9456.272.js.LICENSE.txt"
     },
     "legend.png": {
       "name": "legend.png",
-      "path": "/Volumes/HC/www/madloba/app/static/legend.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/legend.png",
       "publicPath": "/static/legend.png",
       "sourceFilename": "static/legend.png"
     },
     "madloba-admin.css": {
       "name": "madloba-admin.css",
-      "path": "/Volumes/HC/www/madloba/app/static/madloba-admin.css",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/madloba-admin.css",
       "publicPath": "/static/madloba-admin.css",
       "sourceFilename": "static/madloba-admin.css"
     },
     "madloba-admin.js": {
       "name": "madloba-admin.js",
-      "path": "/Volumes/HC/www/madloba/app/static/madloba-admin.js",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/madloba-admin.js",
       "publicPath": "/static/madloba-admin.js",
       "sourceFilename": "static/madloba-admin.js"
     },
     "madloba-mobile.svg": {
       "name": "madloba-mobile.svg",
-      "path": "/Volumes/HC/www/madloba/app/static/madloba-mobile.svg",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/madloba-mobile.svg",
       "publicPath": "/static/madloba-mobile.svg",
       "sourceFilename": "static/madloba-mobile.svg"
     },
     "madloba.png": {
       "name": "madloba.png",
-      "path": "/Volumes/HC/www/madloba/app/static/madloba.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/madloba.png",
       "publicPath": "/static/madloba.png",
       "sourceFilename": "static/madloba.png"
     },
     "marker.png": {
       "name": "marker.png",
-      "path": "/Volumes/HC/www/madloba/app/static/marker.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/marker.png",
       "publicPath": "/static/marker.png",
       "sourceFilename": "static/marker.png"
     },
     "red-stars.svg": {
       "name": "red-stars.svg",
-      "path": "/Volumes/HC/www/madloba/app/static/red-stars.svg",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/red-stars.svg",
       "publicPath": "/static/red-stars.svg",
       "sourceFilename": "static/red-stars.svg"
     },
     "watermark.png": {
       "name": "watermark.png",
-      "path": "/Volumes/HC/www/madloba/app/static/watermark.png",
+      "path": "/Volumes/HC/www/madlobafamily/madloba/app/static/watermark.png",
       "publicPath": "/static/watermark.png",
       "sourceFilename": "static/watermark.png"
     }

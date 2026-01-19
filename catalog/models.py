@@ -10,13 +10,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
 from modeltranslation.utils import get_language
 from taggit.models import ItemBase, TagBase
-from wagtail.admin.panels import (
-    FieldPanel,
-    MultipleChooserPanel,
-    ObjectList,
-    TabbedInterface,
-    TitleFieldPanel,
-)
+from wagtail.admin.panels import FieldPanel, MultipleChooserPanel, ObjectList, TabbedInterface, TitleFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, PageManager, ParentalKey
@@ -310,7 +304,7 @@ class Organization(Page):
 
     description = RichTextField(
         blank=True,
-        verbose_name=_("Description test"),
+        verbose_name=_("Description"),
     )
 
     address = models.CharField(

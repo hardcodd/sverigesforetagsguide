@@ -23,7 +23,6 @@ class PremiumSubscription(models.Model):
         verbose_name=_("Subscription Level"),
     )
     start_date = models.DateField(
-        auto_now_add=True,
         verbose_name=_("Start Date"),
     )
     end_date = models.DateField(
@@ -37,6 +36,7 @@ class PremiumSubscription(models.Model):
     panels = [
         FieldPanel("organization"),
         FieldPanel("level"),
+        FieldPanel("start_date"),
         FieldPanel("end_date"),
         FieldPanel("is_active"),
     ]
