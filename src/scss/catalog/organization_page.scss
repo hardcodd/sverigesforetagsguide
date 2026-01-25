@@ -1,8 +1,22 @@
 @use "../functions" as *;
 @use "../mixins/mixins" as *;
 
-// .template-catalog-organization {
-// }
+.template-catalog-organization {
+	.tabs__content {
+		.section-qna {
+			margin: 0;
+			padding: 0;
+
+			.container {
+				padding: 0;
+			}
+
+			.section__title {
+				font-size: em(18);
+			}
+		}
+	}
+}
 
 .organization {
 	&__header {

@@ -1,7 +1,14 @@
 from modeltranslation.decorators import register
 from modeltranslation.translator import TranslationOptions
 
-from catalog.models import City, Organization, OrganizationType, Reward, ServiceType, ServiceTypeCategory
+from catalog.models import (
+    City,
+    Organization,
+    OrganizationType,
+    Reward,
+    ServiceType,
+    ServiceTypeCategory,
+)
 
 
 @register(City)
@@ -21,6 +28,7 @@ class OrganizationPageTR(TranslationOptions):
         "description",
         "how_to_arrive",
         "address",
+        "qna",
     )
 
 

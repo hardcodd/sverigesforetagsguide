@@ -10,7 +10,13 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
 from modeltranslation.utils import get_language
 from taggit.models import ItemBase, TagBase
-from wagtail.admin.panels import FieldPanel, MultipleChooserPanel, ObjectList, TabbedInterface, TitleFieldPanel
+from wagtail.admin.panels import (
+    FieldPanel,
+    MultipleChooserPanel,
+    ObjectList,
+    TabbedInterface,
+    TitleFieldPanel,
+)
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, PageManager, ParentalKey
@@ -350,6 +356,12 @@ class Organization(Page):
         default=0,
     )
 
+    qna = StreamField(
+        [("qna_block", blocks.QnABlock())],
+        blank=True,
+        verbose_name=_("Q&A"),
+    )
+
     content_panels = [
         TitleFieldPanel("h1_title"),
         TitleFieldPanel("title", targets=["slug"]),
@@ -395,6 +407,10 @@ class Organization(Page):
         FieldPanel("description"),
     ]
 
+    qna_panels = [
+        FieldPanel("qna"),
+    ]
+
     rewards_panels = [
         MultipleChooserPanel(
             "rewards",
@@ -416,6 +432,7 @@ class Organization(Page):
             ObjectList(content_panels, heading=_("General")),
             ObjectList(contacts_panels, heading=_("Contacts")),
             ObjectList(description_panels, heading=_("Description")),
+            ObjectList(qna_panels, heading=_("Q&A")),
             ObjectList(location_panels, heading=_("Location")),
             ObjectList(images_panels, heading=_("Images")),
             ObjectList(rewards_panels, heading=_("Rewards")),

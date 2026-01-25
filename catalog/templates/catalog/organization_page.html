@@ -57,6 +57,9 @@
                 {% if in_building %}
                   <li data-target="#tab-in-building">{% trans "In building" %} ({{ in_building.count }})</li>
                 {% endif %}
+								{% if page.qna %}
+                  <li data-target="#tab-qna">{% trans "QnA" %}</li>
+								{% endif %}
               </ul>
             </div>
             <div class="tabs__content">
@@ -258,6 +261,11 @@
               {% if page.service_types.count %}
                 <div id="tab-service-types">{% include "catalog/includes/service-types.html" %}</div>
               {% endif %}
+							{% if page.qna %}
+								<div id="tab-qna">
+									{{ page.qna }}
+								</div>
+							{% endif %}
             </div>
           </div>
           <div style="color:var(--gray-color)">
