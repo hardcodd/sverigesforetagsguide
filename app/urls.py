@@ -3,12 +3,12 @@ from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.contrib.admin.sites import JavaScriptCatalog
-from django.urls import include, path
+from django.urls import include, path, re_path
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
-from core.views import robots_txt, sitemap
+from core.views import robots_txt, sitemap_index, sitemap_section
 from search import views as search_views
 
 urlpatterns = [
@@ -19,8 +19,14 @@ urlpatterns = [
     path("select2/", include("django_select2.urls")),
     path("accounts/", include("allauth.urls")),
     path("robots.txt", robots_txt, name="robots_txt"),
-    path("sitemap.xml", sitemap),
-    path("sitemap-<section>.xml", sitemap),
+    path("sitemap.xml", sitemap_index, name="sitemap-index"),
+    # Секции по языкам и типам страниц
+    # Пример: /sitemaps/en/catalog_organizations/sitemap-1.xml
+    re_path(
+        r"^sitemaps/(?P<lang>[a-z]{2})/(?P<section>[\w_]+)/sitemap-(?P<num>\d+)\.xml$",
+        sitemap_section,
+        name="sitemap-section",
+    ),
 ]
 
 
@@ -30,8 +36,7 @@ if settings.DEBUG:
 
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += debug_toolbar_urls()
 
 
