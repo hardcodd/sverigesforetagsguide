@@ -31,7 +31,7 @@ def sitemap_index(request):
     template_path = os.path.join(SITEMAP_ROOT, "sitemap.xml")
     if not os.path.exists(template_path):
         raise Http404("Sitemap index not found")
-    return render(request, "sitemaps/sitemap.xml")
+    return render(request, "sitemaps/sitemap.xml", content_type="application/xml")
 
 
 def sitemap_section(request, lang, section, num):
@@ -51,4 +51,4 @@ def sitemap_section(request, lang, section, num):
     template_relative = os.path.relpath(
         template_path, os.path.join(settings.BASE_DIR, "app", "templates")
     )
-    return render(request, template_relative)
+    return render(request, template_relative, content_type="application/xml")
