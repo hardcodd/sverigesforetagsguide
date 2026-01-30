@@ -30,7 +30,7 @@ class RatingCategoryPage(Panels, Page):
         verbose_name = "Overviews Category Page"
 
 
-class RatingPage(Page):
+class RatingPage(Panels, Page):
     parent_page_types = ["ratings.RatingCategoryPage"]
     subpage_types = []
 

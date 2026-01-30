@@ -1,3 +1,5 @@
+import math
+
 from django.core.paginator import Paginator
 
 
@@ -101,3 +103,35 @@ def get_weekday_name(weekday_number: int) -> str:
         7: "Sunday",
     }
     return weekdays.get(weekday_number, "")  # Return empty string if not found
+
+
+def starsort(ns):
+    """
+    http://www.evanmiller.org/ranking-items-with-star-ratings.html
+
+    nk is the number of k-star ratings,
+
+    sk is the “worth” (in points) of k stars,
+
+    N is the total number of votes
+
+    K is the maximum number of stars (e.g. K=5, in a 5-star rating system)
+
+    z_alpha/2 is the 1 - alpha/2 quantile of a normal distribution.
+    If you want 95% confidence (based on the Bayesian posterior distribution)
+    that the actual sort criterion is at least as big as the computed sort
+    criterion, choose z_alpha/2 = 1.65.
+    """
+    N = sum(ns)
+    K = len(ns)
+    s = list(range(K, 0, -1))
+    s2 = [sk**2 for sk in s]
+    z = 1.65
+
+    def f(s, ns):
+        N = sum(ns)
+        K = len(ns)
+        return sum(sk * (nk + 1) for sk, nk in zip(s, ns)) / (N + K)
+
+    fsns = f(s, ns)
+    return fsns - z * math.sqrt((f(s2, ns) - fsns**2) / (N + K + 1))

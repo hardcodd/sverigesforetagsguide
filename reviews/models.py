@@ -1,14 +1,14 @@
-from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from wagtail.admin.panels import FieldPanel, MultipleChooserPanel, ObjectList, TabbedInterface, TitleFieldPanel
+from wagtail.admin.panels import FieldPanel, MultipleChooserPanel
 from wagtail.models import ClusterableModel, Orderable, ParentalKey
-from wagtail.snippets.models import register_snippet
+
+from core.utils import starsort
 
 USER_MODEL = get_user_model()
 
@@ -76,22 +76,6 @@ class Review(ClusterableModel):
         return f"{self.user}"
 
 
-@receiver(post_save, sender=Review)
-def update_avg_rating(sender, instance, **kwargs):
-    """Update content_object avg_rating after Review save"""
-
-    if instance.status == ReviewStatus.PUBLISHED:
-        content_object = instance.content_object
-        all_reviews = Review.objects.filter(
-            content_type=ContentType.objects.get_for_model(content_object),
-            object_id=content_object.pk,
-            status=ReviewStatus.PUBLISHED,
-        )
-        avg_rating = all_reviews.aggregate(models.Avg("rating"))["rating__avg"]
-        content_object.avg_rating = avg_rating
-        content_object.save()
-
-
 class ReviewImage(Orderable):
     review = ParentalKey(
         "reviews.Review",
@@ -112,3 +96,56 @@ class ReviewImage(Orderable):
     class Meta(Orderable.Meta):
         verbose_name = _("Image")
         verbose_name_plural = _("Images")
+
+
+@receiver(post_save, sender=Review)
+def update_organization_rating_after_add_review(sender, instance, *args, **kwargs):
+    update_avg_rating(sender, instance, **kwargs)
+    update_rating_score(sender, instance, *args, **kwargs)
+
+
+@receiver(post_delete, sender=Review)
+def update_organization_rating_after_delete_review(sender, instance, *args, **kwargs):
+    update_avg_rating(sender, instance, **kwargs)
+    update_rating_score(sender, instance, *args, **kwargs)
+
+
+def update_avg_rating(sender, instance, **kwargs):
+    """Update content_object avg_rating after Review save"""
+
+    if instance.status == ReviewStatus.PUBLISHED:
+        content_object = instance.content_object
+        all_reviews = Review.objects.filter(
+            content_type=ContentType.objects.get_for_model(content_object),
+            object_id=content_object.pk,
+            status=ReviewStatus.PUBLISHED,
+        )
+        avg_rating = all_reviews.aggregate(models.Avg("rating"))["rating__avg"]
+        content_object.avg_rating = avg_rating
+        content_object.save()
+
+
+def update_rating_score(sender, instance, *args, **kwargs):
+    obj = instance.content_object
+
+    if not hasattr(obj, "avg_rating"):
+        return
+
+    obj_reviews = sender.objects.filter(
+        status=ReviewStatus.PUBLISHED,
+        object_id=obj.id,
+        content_type=obj.content_type,
+        # parent=None,
+        rating__gte=0,
+    )
+
+    stars = (
+        obj_reviews.filter(rating=5).count(),
+        obj_reviews.filter(rating=4).count(),
+        obj_reviews.filter(rating=3).count(),
+        obj_reviews.filter(rating=2).count(),
+        obj_reviews.filter(rating=1).count(),
+    )
+
+    obj.rating_score = float(starsort(stars))
+    obj.save()

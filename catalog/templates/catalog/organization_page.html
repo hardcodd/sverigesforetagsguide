@@ -57,9 +57,9 @@
                 {% if in_building %}
                   <li data-target="#tab-in-building">{% trans "In building" %} ({{ in_building.count }})</li>
                 {% endif %}
-								{% if page.qna %}
+                {% if page.qna %}
                   <li data-target="#tab-qna">{% trans "QnA" %}</li>
-								{% endif %}
+                {% endif %}
               </ul>
             </div>
             <div class="tabs__content">
@@ -261,18 +261,16 @@
               {% if page.service_types.count %}
                 <div id="tab-service-types">{% include "catalog/includes/service-types.html" %}</div>
               {% endif %}
-							{% if page.qna %}
-								<div id="tab-qna">
-									{{ page.qna }}
-								</div>
-							{% endif %}
+              {% if page.qna %}<div id="tab-qna">{{ page.qna }}</div>{% endif %}
             </div>
           </div>
-          <div style="color:var(--gray-color)">
-            <p>
-              <small>{% trans "Source: Brønnøysund Register Centre (NLOD 2.0) / Norwegian Mapping Authority Address API" %}</small>
-            </p>
-          </div>
+          {% if settings.core.SiteSettings.content_source %}
+            <div style="color:var(--gray-color)">
+              <p>
+                <small>{{ settings.core.SiteSettings.content_source }}</small>
+              </p>
+            </div>
+          {% endif %}
         </div>
         <div class="organization__content--right">
           {% if page.show_on_map %}

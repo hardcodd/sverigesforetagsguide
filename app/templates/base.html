@@ -61,12 +61,17 @@
       {% include "includes/footer.html" %}
     </div>
 
+		{% if request.user.is_staff or request.user.is_superuser %}
+			<div class="check-links-btn">Check links</div>
+		{% endif %}
+
     {# Global javascript #}
     {% if "localhost" in request.build_absolute_uri or "127.0.0.1" in request.build_absolute_uri %}
       <script>window.NG_COOKIE_DOMAIN = "localhost";</script>
     {% else %}
       <script>window.NG_COOKIE_DOMAIN = ".{{ request.build_absolute_uri|website_name }}";</script>
     {% endif %}
+
     <script src="{% url 'javascript-catalog' %}"></script>
     {% render_bundle 'main' 'js' %}
 

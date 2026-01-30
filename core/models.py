@@ -3,9 +3,19 @@ from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from wagtail.admin.panels import FieldPanel, HelpPanel, MultiFieldPanel, ObjectList, TabbedInterface
+from wagtail.admin.panels import (
+    FieldPanel,
+    HelpPanel,
+    MultiFieldPanel,
+    ObjectList,
+    TabbedInterface,
+)
 from wagtail.blocks import CharBlock, ListBlock, StructBlock
-from wagtail.contrib.settings.models import BaseGenericSetting, BaseSiteSetting, register_setting
+from wagtail.contrib.settings.models import (
+    BaseGenericSetting,
+    BaseSiteSetting,
+    register_setting,
+)
 from wagtail.fields import StreamField
 
 from core.blocks import BannerBlock, CardStyle5Block, ExternalCodeBlock, LinkBlock
@@ -61,12 +71,20 @@ class SiteSettings(BaseGenericSetting):
         help_text=_("Enter one social network link per line."),
     )
 
+    content_source = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name=_("Content source"),
+        help_text=_("Source of the content displayed on the site."),
+    )
+
     panels = [
         FieldPanel("logo"),
         FieldPanel("logo_mobile"),
         FieldPanel("default_organization_image"),
         FieldPanel("flag"),
         FieldPanel("social_networks"),
+        FieldPanel("content_source"),
     ]
 
     class Meta(BaseGenericSetting.Meta):

@@ -4,6 +4,8 @@ import tippy, { followCursor } from "tippy.js";
 import { Fancybox } from "@fancyapps/ui";
 import { isTouchDevice } from "./utils";
 
+import LinksChecker from "./check-links";
+
 // Components
 import "./components/header";
 import "./components/header-search";
@@ -60,3 +62,6 @@ if (!isTouchDevice()) {
 		content: (reference) => reference.getAttribute("data-tippy-content-follow"),
 	});
 }
+
+// Links checker
+new LinksChecker();

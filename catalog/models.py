@@ -71,7 +71,8 @@ class OrganizationManager(PageManager):
                 "temporarily_closed",
                 F("subscription_priority").desc(nulls_last=True),
                 F("has_images").desc(),
-                "-avg_rating",
+                "-avg_rating_weight",
+                "-rating_score",
                 "-first_published_at",
             )
         )
@@ -355,6 +356,16 @@ class Organization(Page):
         decimal_places=2,
         default=0,
     )
+    rating_score = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=0,
+    )
+    avg_rating_weight = models.SmallIntegerField(
+        verbose_name=_("Average Rating Weight"),
+        help_text=_("From 115 to 0"),  # type: ignore
+        default=100,  # type: ignore
+    )  # type: ignore
 
     qna = StreamField(
         [("qna_block", blocks.QnABlock())],
@@ -420,10 +431,17 @@ class Organization(Page):
     ]
 
     promote_panels = Panels.promote_panels + [
-        FieldPanel("verified", help_text=_("Mark this organization as verified.")),
+        FieldPanel(
+            "verified",
+            help_text=_("Mark this organization as verified."),
+        ),
         FieldPanel(
             "temporarily_closed",
             help_text=_("Mark this organization as temporarily closed."),
+        ),
+        FieldPanel(
+            "avg_rating_weight",
+            help_text=_("Higher weight increases the ranking. From 115 to 0."),
         ),
     ]
 
