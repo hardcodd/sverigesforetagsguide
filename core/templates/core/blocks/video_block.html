@@ -1,0 +1,33 @@
+{% load wagtailcore_tags wagtailimages_tags core %}
+
+<section class="section section--video">
+  {{ self.embed }}
+  {% wagtail_site as current_site %}
+  {% image settings.core.SiteSettings.logo width-120 as logo %}
+  <script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "VideoObject",
+			"name": "{{ self.title }}",
+			"description": "{{ self.description }}",
+			{% if self.image %}
+			{% image self.image width-1200 as img %}
+			"thumbnailUrl": [
+				"{{ img.url }}"
+			],
+			{% endif %}
+			"uploadDate": "{{ self.upload_date|date:'c' }}",
+			"duration": "{{ self.duration|duration_format }}",
+			"embedUrl": "https://www.youtube.com/embed/{{ self.video_id }}",
+			"contentUrl": "https://www.youtube.com/watch?v={{ self.video_id }}",
+			"publisher": {
+				"@type": "Organization",
+				"name": "{{ current_site.site_name }}",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "{{ logo.url }}"
+				}
+			}
+		}
+  </script>
+</section>

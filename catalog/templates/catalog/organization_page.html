@@ -144,7 +144,7 @@
                                 <noindex><span>{{ link }}</span></noindex>
                               </div>
                             {% else %}
-                              <a href="{{ link }}" target="_blank" rel="nofollow noopener">{{ link|website_name }}</a>
+                              <a href="{{ link }}" target="_blank" rel="sponsored nofollow noopener">{{ link|website_name }}</a>
                             {% endif %}
                           </li>
                         {% endfor %}
@@ -176,7 +176,7 @@
                         {% get_social_networks page as socials %}
                         {% for link in socials %}
                           <li>
-                            <a href="{{ link }}" target="_blank" rel="nofollow noopener">
+                            <a href="{{ link }}" target="_blank" rel="sponsored nofollow noopener">
                               {{ link|social_network_icon }}
                               <span class="sr-only">{{ link }}</span>
                             </a>

@@ -3,6 +3,7 @@ from wagtail.blocks import (
     BooleanBlock,
     CharBlock,
     ChoiceBlock,
+    DateBlock,
     PageChooserBlock,
     RawHTMLBlock,
     RichTextBlock,
@@ -12,6 +13,7 @@ from wagtail.blocks import (
     TimeBlock,
 )
 from wagtail.blocks import TextBlock as WagtailTextBlock
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 from blog.blocks import LatestBlogPostsBlock, LatestBlogPostsFromCategoryBlock
@@ -156,6 +158,18 @@ class CardStyle5Block(StructBlock):
         value_class = LinkStructValue
 
 
+class CardStyle6Block(StructBlock):
+    content = RichTextBlock(label=_("Content"))
+    page = PageChooserBlock(label=_("Page"), required=False)
+    url = CharBlock(max_length=200, label=_("URL"), required=False)
+    button_text = CharBlock(max_length=50, label=_("Button text"), required=False)
+
+    class Meta:
+        template = "core/blocks/card-style-6.html"
+        label = _("Card (Style 6)")
+        value_class = LinkStructValue
+
+
 class SectionCardsBlock(StructBlock):
     title = CharBlock(
         max_length=255,
@@ -204,6 +218,10 @@ class SectionCardsBlock(StructBlock):
             (
                 "card_style_5",
                 CardStyle5Block(),
+            ),
+            (
+                "card_style_6",
+                CardStyle6Block(),
             ),
             (
                 "organization",
@@ -313,3 +331,57 @@ class HTMLBlock(RawHTMLBlock):
     class Meta:
         template = "core/blocks/html_block.html"
         icon = "code"
+
+
+class ReviewBlock(StructBlock):
+    author = CharBlock(max_length=255, label=_("Author"))
+    rating = ChoiceBlock(
+        choices=[
+            (1, "1"),
+            (2, "2"),
+            (3, "3"),
+            (4, "4"),
+            (5, "5"),
+        ],
+        label=_("Rating"),
+    )
+    comment = RichTextBlock(label=_("Comment"), features=["bold", "italic", "link"])
+
+    class Meta:
+        template = "core/blocks/review_block.html"
+        label = _("Review")
+        icon = "comment"
+
+
+class ReviewsBlock(StructBlock):
+    title = CharBlock(
+        max_length=255,
+        label=_("Title"),
+        required=False,
+    )
+    reviews = StreamBlock(
+        [
+            ("review_card", ReviewBlock()),
+        ],
+        label=_("Reviews"),
+    )
+
+    class Meta:
+        template = "core/blocks/reviews_block.html"
+        label = _("Reviews")
+        icon = "pick"
+
+
+class VideoBlock(StructBlock):
+    embed = EmbedBlock(label=_("Video url"))
+    video_id = CharBlock(max_length=255, label=_("Video ID"))
+    title = CharBlock(max_length=255, label=_("Title"))
+    description = CharBlock(max_length=255, label=_("Description"))
+    upload_date = DateBlock(label=_("Upload date"))
+    duration = TimeBlock(label=_("Duration"), format="%H:%M:%S")
+    image = ImageChooserBlock(label=_("Thumbnail image"))
+
+    class Meta:
+        template = "core/blocks/video_block.html"
+        label = _("Video")
+        icon = "media"

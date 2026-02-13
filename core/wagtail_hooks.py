@@ -5,7 +5,7 @@ from pathlib import Path
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.templatetags.static import static
-from django.utils.html import escape, format_html
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from wagtail import hooks
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
@@ -16,7 +16,6 @@ from wagtail.images.formats import (
     register_image_format,
     unregister_image_format,
 )
-from wagtail.rich_text import LinkHandler
 from wagtail.snippets.models import register_snippet
 
 from core.views import FooterViewSet
@@ -185,18 +184,3 @@ def register_align_right(features):
     )
 
     features.default_features.append(feature_name)
-
-
-# Sponsored Link Handler
-class ExternalLinkHandler(LinkHandler):
-    identifier = "external"
-
-    @classmethod
-    def expand_db_attributes(cls, attrs):
-        href = escape(attrs["href"])
-        return f'<a href="{href}" rel="sponsored noopener noreferrer">'
-
-
-@hooks.register("register_rich_text_features")
-def register_sponsored_link_handler(features):
-    features.register_link_type(ExternalLinkHandler)

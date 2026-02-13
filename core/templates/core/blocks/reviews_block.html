@@ -1,0 +1,14 @@
+{% load wagtailcore_tags core %}
+
+<section class="section section-reviews">
+  {% include "includes/section-header.html" with section_title=self.title %}
+  <div class="swiper reviews-carousel" data-slides-per-view="3">
+    <div class="swiper-wrapper">
+      {% for r in self.reviews %}
+        {% include_block r with as_carousel=self.as_carousel %}
+      {% endfor %}
+    </div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+</section>

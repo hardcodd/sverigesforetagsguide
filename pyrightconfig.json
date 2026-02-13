@@ -1,6 +1,6 @@
 {
-	"venv": ".venv",
-	"venvPath": "./",
+	"venv": "madloba",
+	"venvPath": "/Users/alex/.pyenv/versions",
 	"typeCheckingMode": "basic",
 	"reportGeneralTypeIssues": false,
 	"reportAttributeAccessIssue": false,

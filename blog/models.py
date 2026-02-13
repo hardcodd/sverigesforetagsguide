@@ -89,6 +89,8 @@ class BlogPostPage(Panels, Page):
             ("qna", blocks.QnABlock()),
             ("banner", blocks.BannerBlock()),
             ("html", blocks.HTMLBlock()),
+            ("reviews", blocks.ReviewsBlock()),
+            ("video", blocks.VideoBlock()),
         ],
         blank=True,
         verbose_name=_("Content"),

@@ -204,8 +204,7 @@ article[id^="organization-"] {
 	}
 
 	&__content {
-		display: flex;
-		flex-direction: column;
+		display: grid;
 		gap: rem(5);
 		padding: rem(10) rem(15) rem(20);
 	}

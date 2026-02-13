@@ -1,5 +1,6 @@
 import random
 import re
+from datetime import time
 from functools import lru_cache
 
 from django import template
@@ -7,12 +8,18 @@ from django.conf import settings
 from django.forms.renderers import get_template
 from django.template.base import mark_safe
 from django.template.exceptions import TemplateDoesNotExist
-from django.utils.translation import gettext_lazy as _
+from slugify import slugify
 
+from core.jsonld import render_jsonld
 from core.models import SiteSettings
 from core.utils import get_domain_name, truncate_string
 
 register = template.Library()
+
+
+@register.filter(name="slugify")
+def slugify_filter(value: str):
+    return slugify(value)
 
 
 @register.filter(name="dir")
@@ -108,7 +115,7 @@ def phone_excerpt(value: str):
         # If the character is a digit, replace it with an "x".
         if value[i].isdigit():
             digits_left -= 1
-            value = value[:i] + "x" + value[i + 1:]
+            value = value[:i] + "x" + value[i + 1 :]
 
             # If there are more than 4 digits left, break the loop.
             if digits_left <= digits_len - 4:
@@ -152,7 +159,7 @@ def rating_percent(value):
     """Convert rating to percent"""
     if value is None:
         return 0
-    return int(value * 100 / 5)
+    return int(int(value) * 100 / 5)
 
 
 @register.filter()
@@ -193,6 +200,12 @@ def social_network_icon(url: str):
             html_icon = get_template("icons/vk.svg").render()
         elif "pinterest.com" in url:
             html_icon = get_template("icons/pinterest.svg").render()
+        elif "dzen.ru" in url:
+            html_icon = get_template("icons/dzen.svg").render()
+        elif "whatsapp.com" in url:
+            html_icon = get_template("icons/whatsapp.svg").render()
+        elif "t.me" in url:
+            html_icon = get_template("icons/telegram.svg").render()
         else:
             html_icon = get_domain_name(url)
     except TemplateDoesNotExist:
@@ -305,3 +318,43 @@ def get_search_result_item_template(item) -> str:
         return search_template
     except TemplateDoesNotExist:
         return default_template_name
+
+
+@register.simple_tag(takes_context=True)
+def jsonld(context):
+    request = context.get("request")
+    page = context.get("page")
+    return render_jsonld(page, request) if page and request else ""
+
+
+@register.filter()
+def duration_format(value: time) -> str:
+    """
+    Convert datetime.time (e.g. 00:56:28) to ISO 8601 duration.
+
+    Examples:
+    00:03:12 -> PT3M12S
+    01:05:00 -> PT1H5M
+    00:00:45 -> PT45S
+    """
+
+    if not isinstance(value, time):
+        return ""
+
+    hours = value.hour or 0
+    minutes = value.minute or 0
+    seconds = value.second or 0
+
+    if hours == 0 and minutes == 0 and seconds == 0:
+        return "PT0S"
+
+    duration = "PT"
+
+    if hours:
+        duration += f"{hours}H"
+    if minutes:
+        duration += f"{minutes}M"
+    if seconds:
+        duration += f"{seconds}S"
+
+    return duration

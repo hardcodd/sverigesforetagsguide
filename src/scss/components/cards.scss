@@ -290,6 +290,28 @@
 	}
 }
 
+.card.card--style-6 {
+	padding: 0;
+
+	.card__content {
+		padding: rem(10) rem(20);
+
+		> * {
+			margin: 0 0 rem(10);
+		}
+	}
+
+	ul {
+		li {
+			padding: rem(5) rem(10);
+
+			&:not(:last-child) {
+				border-bottom: rem(1) solid rgba(var(--black-color-rgb), 0.1);
+			}
+		}
+	}
+}
+
 .cards-carousel {
 	width: 100%;
 	padding: rem(10) rem(20) rem(30);

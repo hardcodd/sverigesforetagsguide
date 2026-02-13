@@ -6,7 +6,7 @@ from core.models import Footer, NotFoundPageSettings, SiteSettings
 
 @register(SiteSettings)
 class SiteSettingsTR(TranslationOptions):
-    fields = ("content_source",)
+    fields = ("content_source", "footer_text")
 
 
 @register(Footer)

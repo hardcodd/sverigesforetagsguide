@@ -6,7 +6,7 @@
       {% get_social_networks settings.core.SiteSettings as links %}
       {% for link in links %}
         <li>
-          <a href="{{ link }}" target="_blank" rel="nofollow noopener">
+          <a href="{{ link }}" target="_blank" rel="sponsored nofollow noopener">
             {{ link|social_network_icon }}
             <span class="sr-only">{{ link }}</span>
           </a>

@@ -1,7 +1,7 @@
 {
-	"name": "sverigesforetagsguide.se",
+	"name": "madloba",
 	"version": "1.0.0",
-	"description": "sverigesforetagsguide.se",
+	"description": "madloba",
 	"private": true,
 	"scripts": {
 		"dev": "webpack serve --mode development",

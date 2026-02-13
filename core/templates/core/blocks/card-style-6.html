@@ -1,0 +1,7 @@
+{% load wagtailcore_tags %}
+
+<div class="{% if as_carousel %}swiper-slide{% else %}grid-col{% endif %}">
+  <div class="card card--style-6">
+    <div class="card__content">{{ self.content|richtext }}</div>
+  </div>
+</div>

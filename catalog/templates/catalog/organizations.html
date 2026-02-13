@@ -8,6 +8,8 @@
 
 {% block extrahead %}
   <meta name="description" content="{% trans "Organizations list page." %}">
+  <link rel="canonical" href="{{ request.path }}" />
+  <meta name="robots" content="noindex, follow">
 {% endblock extrahead %}
 
 {% block body_class %}template-catalog-organizations{% endblock %}

@@ -1,7 +1,7 @@
 import Swiper from "swiper";
 import { Navigation, Mousewheel, Autoplay } from "swiper/modules";
 
-document.querySelectorAll(".cards-carousel").forEach((carousel) => {
+document.querySelectorAll(".cards-carousel, .reviews-carousel").forEach((carousel) => {
 	const slidesPerView = carousel.getAttribute("data-slides-per-view");
 
 	const slidesPerViewLg = slidesPerView ? slidesPerView : 4;

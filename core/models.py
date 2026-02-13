@@ -10,7 +10,7 @@ from wagtail.admin.panels import (
     ObjectList,
     TabbedInterface,
 )
-from wagtail.blocks import CharBlock, ListBlock, StructBlock
+from wagtail.blocks import CharBlock, ListBlock, StructBlock, TextBlock
 from wagtail.contrib.settings.models import (
     BaseGenericSetting,
     BaseSiteSetting,
@@ -78,6 +78,20 @@ class SiteSettings(BaseGenericSetting):
         help_text=_("Source of the content displayed on the site."),
     )
 
+    footer_text = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name=_("Footer text"),
+        help_text=_("Text displayed in the footer of the site."),
+    )
+
+    footer_scripts = StreamField(
+        [("script", TextBlock(label=_("Footer script")))],
+        blank=True,
+        verbose_name=_("Footer scripts"),
+        help_text=_("Scripts added here will be included in the footer of the site."),
+    )
+
     panels = [
         FieldPanel("logo"),
         FieldPanel("logo_mobile"),
@@ -85,6 +99,8 @@ class SiteSettings(BaseGenericSetting):
         FieldPanel("flag"),
         FieldPanel("social_networks"),
         FieldPanel("content_source"),
+        FieldPanel("footer_text"),
+        FieldPanel("footer_scripts"),
     ]
 
     class Meta(BaseGenericSetting.Meta):

@@ -1,0 +1,20 @@
+{% load i18n wagtailimages_tags wagtailcore_tags core %}
+
+{% with self as review %}
+  <div class="swiper-slide">
+    <div class="review">
+      <div class="review__header">
+        <div class="review__avatar">
+          {% with review.author|make_list|first as char %}<span data-char="{{ char|lower }}">{{ char }}</span>{% endwith %}
+        </div>
+        <div class="review__info">
+          <div class="review__rating">{% include "includes/stars-rating.html" with stars=review.rating %}</div>
+          <div class="review__meta">
+            <div class="review__author">{{ review.author }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="review__content">{{ review.comment|richtext }}</div>
+    </div>
+  </div>
+{% endwith %}

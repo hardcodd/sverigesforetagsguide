@@ -1,28 +1,34 @@
 {% load i18n wagtailimages_tags core %}
 
-<div class="review" id="review-{{ review.pk }}">
+<article class="review" id="review-{{ review.pk }}" itemprop="review" itemscope itemtype="https://schema.org/Review">
   <div class="review__header">
     <div class="review__avatar">
       {% with review.user.get_full_name|make_list|first|default:review.user|make_list|first as char %}<span data-char="{{ char|lower }}">{{ char }}</span>{% endwith %}
     </div>
     <div class="review__info">
-      <div class="review__rating">{% include "includes/stars-rating.html" with stars=review.rating %}</div>
+      <div class="review__rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+        <meta itemprop="worstRating" content="1">
+        <meta itemprop="bestRating" content="5">
+        <meta itemprop="ratingValue" content="{{ review.rating }}">
+        {% include "includes/stars-rating.html" with stars=review.rating %}
+      </div>
       <div class="review__meta">
         <div class="review__date">
+          <meta itemprop="datePublished" content="{{ review.created_at|date:'Y-m-d\TH:i:s' }}">
           {% now "Y" as current_year %}
           <time datetime="{{ review.created_at|date:'c' }}">
             {% if review.created_at|date:'Y' == current_year %}
               {{ review.created_at|date:'j E' }}
             {% else %}
-              {{ review.created_at|date:'j E, Y' }}
+              {% trans "This year" %}
             {% endif %}
           </time>
         </div>
-        <div class="review__author">{{ review.user.get_full_name|default:review.user }}</div>
+        <div class="review__author" itemprop="author">{{ review.user.get_full_name|default:review.user }}</div>
       </div>
     </div>
   </div>
-  <div class="review__content">
+  <div class="review__content" itemprop="reviewBody">
     <p>
       {{ review.comment|striptags|replace:"\n|<br>" }}
     </p>
@@ -35,4 +41,4 @@
       {% endfor %}
     </div>
   {% endif %}
-</div>
+</article>
