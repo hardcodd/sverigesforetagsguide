@@ -1,7 +1,12 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.views import csrf_protect
 from django.http import Http404, JsonResponse
+from django.shortcuts import redirect, reverse
+from django.utils.html import format_html
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from wagtail.admin.ui.tables import StatusTagColumn, UserColumn
+from django.views.decorators.http import require_POST
+from wagtail.admin.ui.tables import Column, UserColumn
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.images.models import Image
 from wagtail.models import ContentType
@@ -10,30 +15,124 @@ from core.utils import is_ajax
 from reviews.models import Review, ReviewImage, ReviewStatus
 
 
+class StatusColumn(Column):
+    def get_value(self, instance):
+        if instance.status == ReviewStatus.PUBLISHED:
+            return format_html(
+                f"<span class='w-status w-status--primary'>{_('Published')}</span>"
+            )
+        elif instance.status == ReviewStatus.MODERATION:
+            return format_html(
+                f"<span class='w-status w-status--warning'>{_('On Moderation')}</span>"
+            )
+        elif instance.status == ReviewStatus.REJECTED:
+            return format_html(
+                f"<span class='w-status w-status--danger'>{_('Rejected')}</span>"
+            )
+        elif instance.status == ReviewStatus.DELETED:
+            return format_html(
+                f"<span class='w-status w-status--secondary'>{_('Deleted')}</span>"
+            )
+        else:
+            return instance.status
+
+
+class ApproveColumn(Column):
+    def get_value(self, instance):
+        url_1 = ""
+        title_1 = ""
+        url_2 = ""
+        title_2 = ""
+
+        if instance.status == ReviewStatus.MODERATION:
+            url_1 = reverse("reviews:publish_review", args=[instance.id])
+            title_1 = _("Approve")
+            url_2 = reverse("reviews:reject_review", args=[instance.id])
+            title_2 = _("Reject")
+        elif instance.status == ReviewStatus.PUBLISHED:
+            url_1 = reverse("reviews:reject_review", args=[instance.id])
+            title_1 = _("Reject")
+            url_2 = reverse("reviews:delete_review", args=[instance.id])
+            title_2 = _("Delete")
+        elif instance.status == ReviewStatus.REJECTED:
+            url_1 = reverse("reviews:publish_review", args=[instance.id])
+            title_1 = _("Approve")
+            url_2 = reverse("reviews:delete_review", args=[instance.id])
+            title_2 = _("Delete")
+        elif instance.status == ReviewStatus.DELETED:
+            url_1 = reverse("reviews:publish_review", args=[instance.id])
+            title_1 = _("Approve")
+            url_2 = reverse("reviews:reject_review", args=[instance.id])
+            title_2 = _("Reject")
+
+        lang = get_language()
+
+        prefix = f"/{lang}" if lang else ""
+
+        # remove language prefix from URLs
+        url_1 = url_1[len(prefix) :] if url_1.startswith(prefix) else url_1
+        url_2 = url_2[len(prefix) :] if url_2.startswith(prefix) else url_2
+
+        return format_html(
+            '<a href="{}" class="button button-small button-secondary">{}</a> \
+            <a href="{}" class="button button-small no">{}</a>',
+            url_1,
+            title_1,
+            url_2,
+            title_2,
+        )
+
+
+class ContentTypeColumn(Column):
+    def get_value(self, instance):
+        return f"{instance.content_type.app_label.title()}"
+
+
+class ContentObjectColumn(Column):
+    def get_value(self, instance):
+        if len(instance.content_object.__str__()) > 50:
+            title = instance.content_object.__str__()[:50] + " ..."
+        else:
+            title = instance.content_object.__str__()
+
+        lang = get_language()
+
+        prefix = f"/{lang}" if lang else ""
+
+        # remove language prefix from URL
+        url = instance.content_object.url
+        url = url[len(prefix) :] if url.startswith(prefix) else url
+
+        return format_html(
+            '<a href="{}" target="_blank">{}</a>',
+            url,
+            title,
+        )
+
+
 class ReviewViewSet(ModelViewSet):
     model = Review
     icon = "glasses"
     menu_label = _("Reviews")
     add_to_admin_menu = True
     menu_order = 250
+    search_fields = ("user__username", "comment")
+    list_filter = ("status",)
     list_display = (
         "id",
         UserColumn("user", label=_("User")),
-        "content_type",
-        "content_object",
-        "rating",
-        "status",
-        StatusTagColumn(
-            "status",
-            lambda obj: obj.status == ReviewStatus.PUBLISHED,
-            label=_("Status"),
-        ),
+        StatusColumn("status"),
+        ApproveColumn(name=""),
+        ContentTypeColumn(name=_("App")),
+        ContentObjectColumn(name=_("Content Object")),
     )
 
 
 review_viewset = ReviewViewSet("reviews_list")
 
 
+@csrf_protect
+@require_POST
 @login_required
 def add_review(request):
     if not request.method == "POST" and not is_ajax(request):
@@ -99,3 +198,43 @@ def add_review(request):
             ),
         }
     )
+
+
+@login_required
+@permission_required("reviews.can_edit")
+def delete_review(request, review_id):
+    review = Review.objects.get(id=review_id)
+    review.status = ReviewStatus.DELETED
+    review.save()
+
+    try:
+        back_url = request.META["HTTP_REFERER"]
+    except Exception:  # noqa
+        back_url = review.content_object.url
+
+    return redirect(back_url)
+
+
+@login_required
+@permission_required("reviews.can_edit")
+def reject_review(request, review_id):
+    review = Review.objects.get(id=review_id)
+    review.status = ReviewStatus.REJECTED
+    review.save()
+
+    try:
+        back_url = request.META["HTTP_REFERER"]
+    except Exception:  # noqa
+        back_url = review.content_object.url
+
+    return redirect(back_url)
+
+
+@login_required
+@permission_required("reviews.can_edit")
+def publish_review(request, review_id):
+    review = Review.objects.get(id=review_id)
+    review.status = ReviewStatus.PUBLISHED
+    review.save()
+    back_url = request.META["HTTP_REFERER"]
+    return redirect(back_url)

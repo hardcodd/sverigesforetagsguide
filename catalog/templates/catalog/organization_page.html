@@ -12,11 +12,13 @@
           {% if page.verified %}
             {% include "includes/verified.html" %}
           {% endif %}
-          <h1 class="h2 organization__title">{{ page.h1_title|mark|safe }}</h1>
+          <h1 class="h2 organization__title">
+            {% if page.temporarily_closed %}
+              <div class="organization__closed-bage">{% trans "Temporarily Closed" %}</div>
+            {% endif %}
+            {{ page.h1_title|mark|safe }}
+          </h1>
         </div>
-        {% if page.temporarily_closed %}
-          <div class="organization__closed-bage">{% trans "Temporarily Closed" %}</div>
-        {% endif %}
         <div class="organization__meta">
           {% get_organization_status page as status %}
           <div class="organization__status{% if "open" in status|lower %} open{% elif "closed" in status|lower %} closed{% else %} unknown{% endif %}">{{ status }}</div>

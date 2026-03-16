@@ -2,12 +2,15 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface
+from wagtail.admin.panels import (
+    FieldPanel,
+    MultiFieldPanel,
+    ObjectList,
+    TabbedInterface,
+)
 
 user_model = get_user_model()
 
@@ -45,8 +48,7 @@ class Comment(MPTTModel):
     created_at = models.DateTimeField(
         verbose_name=_("Created at"), auto_now=False, auto_now_add=True
     )
-    status = models.IntegerField(verbose_name=_(
-        "Status"), choices=COMMENT_STATUSES)
+    status = models.IntegerField(verbose_name=_("Status"), choices=COMMENT_STATUSES)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -62,10 +64,8 @@ class Comment(MPTTModel):
         verbose_name_plural = _("Comments")
         ordering = ["-created_at"]
 
-    def __str__(self) -> str:
-        end = "..." if len(self.comment) > 50 else ""  # type: ignore
-        comment = self.comment[:50] + end  # type: ignore
-        return mark_safe("%s: %s" % (self.user_name, escape(comment)))
+    def __str__(self):
+        return f"{self.user}"
 
     comment_panel = [
         MultiFieldPanel(

@@ -2,6 +2,8 @@ from .base import *
 
 DEBUG = False
 
+WAGTAIL_ENABLE_UPDATE_CHECK = False
+
 ALLOWED_HOSTS = literal_eval(os.environ.get("ALLOWED_HOSTS", '["*"]'))
 
 SECRET_KEY = os.environ.get(

@@ -18,8 +18,16 @@ from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.pages import PageListingViewSet
 from wagtail.images.models import Rendition
 
-from catalog.models import (City, Language, Organization, OrganizationImage, OrganizationType, Reward, ServiceType,
-                            ServiceTypeCategory)
+from catalog.models import (
+    City,
+    Language,
+    Organization,
+    OrganizationImage,
+    OrganizationType,
+    Reward,
+    ServiceType,
+    ServiceTypeCategory,
+)
 from catalog.utils import get_start_end_day, to_12h
 from core.models import SiteSettings
 from core.utils import get_weekday_name, get_weekday_number, is_ajax, paginate
@@ -51,11 +59,7 @@ def organizations(request):
     else:
         raise Http404
 
-    organizations = (
-        Organization.objects.live()
-        .filter(**filters)
-        .order_by("-avg_rating", "-first_published_at")
-    )
+    organizations = Organization.objects.live().filter(**filters)
 
     organizations = paginate(request, organizations, 20)
 

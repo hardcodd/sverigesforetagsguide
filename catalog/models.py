@@ -70,9 +70,9 @@ class OrganizationManager(PageManager):
             .order_by(
                 "temporarily_closed",
                 F("subscription_priority").desc(nulls_last=True),
-                F("has_images").desc(),
                 "-avg_rating_weight",
                 "-rating_score",
+                F("has_images").desc(),
                 "-first_published_at",
             )
         )

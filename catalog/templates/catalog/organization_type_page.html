@@ -4,7 +4,9 @@
 
 {% block content %}
   <div class="container">
-    <h1 class="page__title">{{ page.title|mark|safe }}</h1>
+    <h1 class="page__title">
+      {{ page.title|mark|safe }} <mark><a href="{{ page.get_parent.url }}" style="color: var(--accent-color)">{{ page.get_parent.title }}</a></mark>
+    </h1>
     {% if active_service_type %}
       <p>
         <big><strong>{% trans "By tag:" %}</strong></big> <mark>{{ active_service_type }}</mark>

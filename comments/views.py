@@ -5,18 +5,26 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, reverse
 from django.template.response import TemplateResponse
-from django.utils.html import strip_tags
+from django.utils.html import format_html, strip_tags
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_GET, require_POST
+from wagtail.admin.ui.tables import Column, UserColumn
+from wagtail.admin.viewsets.model import ModelViewSet
 
 from core.utils import is_ajax
 
 from . import models
-from .models import COMMENT_DELETED, COMMENT_ON_MODERATION, COMMENT_PUBLISHED, COMMENT_REJECTED
-from .utils import check_for_bad_words
+from .models import (
+    COMMENT_DELETED,
+    COMMENT_ON_MODERATION,
+    COMMENT_PUBLISHED,
+    COMMENT_REJECTED,
+    Comment,
+)
 
 USER_MODEL = get_user_model()
 
@@ -59,10 +67,10 @@ def add_comment(request):
         # type: ignore
         return HttpResponse(_("Comment is too short!"), status=403)
 
-    status = (
-        COMMENT_ON_MODERATION if check_for_bad_words(
-            comment) else COMMENT_PUBLISHED
-    )
+    if user.is_staff or user.is_superuser:
+        status = COMMENT_PUBLISHED
+    else:
+        status = COMMENT_ON_MODERATION
 
     if parent_id:
         try:
@@ -172,3 +180,120 @@ def publish_comment(request, comment_id):
     comment.save()
     back_url = request.META["HTTP_REFERER"]
     return redirect(back_url)
+
+
+class ApproveColumn(Column):
+    def get_value(self, instance):
+        url_1 = ""
+        title_1 = ""
+        url_2 = ""
+        title_2 = ""
+
+        if instance.status == COMMENT_ON_MODERATION:
+            url_1 = reverse("comments:publish_comment", args=[instance.id])
+            title_1 = _("Approve")
+            url_2 = reverse("comments:reject_comment", args=[instance.id])
+            title_2 = _("Reject")
+        elif instance.status == COMMENT_PUBLISHED:
+            url_1 = reverse("comments:reject_comment", args=[instance.id])
+            title_1 = _("Reject")
+            url_2 = reverse("comments:delete_comment", args=[instance.id])
+            title_2 = _("Delete")
+        elif instance.status == COMMENT_REJECTED:
+            url_1 = reverse("comments:publish_comment", args=[instance.id])
+            title_1 = _("Approve")
+            url_2 = reverse("comments:delete_comment", args=[instance.id])
+            title_2 = _("Delete")
+        elif instance.status == COMMENT_DELETED:
+            url_1 = reverse("comments:publish_comment", args=[instance.id])
+            title_1 = _("Approve")
+            url_2 = reverse("comments:reject_comment", args=[instance.id])
+            title_2 = _("Reject")
+
+        lang = get_language()
+
+        prefix = f"/{lang}" if lang else ""
+
+        # remove language prefix from URLs
+        url_1 = url_1[len(prefix) :] if url_1.startswith(prefix) else url_1
+        url_2 = url_2[len(prefix) :] if url_2.startswith(prefix) else url_2
+
+        return format_html(
+            '<a href="{}" class="button button-small button-secondary">{}</a> \
+            <a href="{}" class="button button-small no">{}</a>',
+            url_1,
+            title_1,
+            url_2,
+            title_2,
+        )
+
+
+class ContentObjectColumn(Column):
+    def get_value(self, instance):
+        if len(instance.content_object.__str__()) > 50:
+            title = instance.content_object.__str__()[:50] + " ..."
+        else:
+            title = instance.content_object.__str__()
+
+        lang = get_language()
+
+        prefix = f"/{lang}" if lang else ""
+
+        # remove language prefix from URL
+        url = instance.content_object.url
+        url = url[len(prefix) :] if url.startswith(prefix) else url
+
+        return format_html(
+            '<a href="{}" target="_blank">{}</a>',
+            url,
+            title,
+        )
+
+
+class StatusColumn(Column):
+    def get_value(self, instance):
+        if instance.status == COMMENT_PUBLISHED:
+            return format_html(
+                f"<span class='w-status w-status--primary'>{_('Published')}</span>"
+            )
+        elif instance.status == COMMENT_ON_MODERATION:
+            return format_html(
+                f"<span class='w-status w-status--warning'>{_('On Moderation')}</span>"
+            )
+        elif instance.status == COMMENT_REJECTED:
+            return format_html(
+                f"<span class='w-status w-status--danger'>{_('Rejected')}</span>"
+            )
+        elif instance.status == COMMENT_DELETED:
+            return format_html(
+                f"<span class='w-status w-status--secondary'>{_('Deleted')}</span>"
+            )
+        else:
+            return instance.status
+
+
+class ContentTypeColumn(Column):
+    def get_value(self, instance):
+        return f"{instance.content_type.app_label.title()}"
+
+
+class CommentViewSet(ModelViewSet):
+    model = Comment
+    menu_label = _("Comments")  # type: ignore
+    icon = "comment-add"
+    add_to_admin_menu = True
+    copy_view_enabled = False
+    menu_order = 200
+    search_fields = ("user__username", "comment")
+    list_filter = ("status",)
+    list_display = [
+        "id",
+        UserColumn("user", label=_("User")),
+        StatusColumn("status"),
+        ApproveColumn(name=""),
+        ContentTypeColumn(name=_("App")),
+        ContentObjectColumn(name=_("Content Object")),
+    ]
+
+
+comments_viewset = CommentViewSet("comments_list")
