@@ -92,11 +92,34 @@ class SiteSettings(BaseGenericSetting):
         help_text=_("Scripts added here will be included in the footer of the site."),
     )
 
+    ad_button_text = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name=_("Ad button text"),
+        help_text=_("Text for the ad button displayed in the header."),
+    )
+
+    ad_button_caption = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name=_("Ad button caption"),
+        help_text=_("Caption for the ad button displayed in the header."),
+    )
+
+    ad_button_url = models.URLField(
+        blank=True,
+        verbose_name=_("Ad button URL"),
+        help_text=_("URL for the ad button displayed in the header."),
+    )
+
     panels = [
         FieldPanel("logo"),
         FieldPanel("logo_mobile"),
         FieldPanel("default_organization_image"),
         FieldPanel("flag"),
+        FieldPanel("ad_button_text"),
+        FieldPanel("ad_button_url"),
+        FieldPanel("ad_button_caption"),
         FieldPanel("social_networks"),
         FieldPanel("content_source"),
         FieldPanel("footer_text"),

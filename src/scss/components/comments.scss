@@ -99,6 +99,8 @@
 }
 
 .comments__comment.comment {
+	position: relative;
+
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
@@ -142,6 +144,21 @@
 				content: "]";
 			}
 		}
+	}
+
+	.pin-icon {
+		position: absolute;
+		top: rem(10);
+		right: rem(10);
+
+		display: block;
+		align-items: center;
+		justify-content: center;
+
+		width: rem(18);
+		height: rem(18);
+
+		color: var(--gray-color);
 	}
 }
 
@@ -242,8 +259,10 @@
 	}
 }
 
-.comment__created_at {
-	opacity: 0.8;
+.comment {
+	&__created_at {
+		opacity: 0.8;
+	}
 }
 
 .comment__content {

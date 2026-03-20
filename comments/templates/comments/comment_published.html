@@ -1,7 +1,10 @@
 {% load wagtailadmin_tags i18n comments wagtailcore_tags core %}
 
 {% spaceless %}
-  <li class="comments__comment comment" id="comment-{{ node.id }}"{% if node.parent %} data-parent="comment-{{ node.parent.id }}"{% endif %}>
+  <li class="comments__comment comment{% if node.pin %} pinned{% endif %}" id="comment-{{ node.id }}"{% if node.parent %} data-parent="comment-{{ node.parent.id }}"{% endif %}>
+    {% if node.pin %}
+      <span class="pin-icon">{% include "icons/pin.svg" %}</span>
+    {% endif %}
     <div class="comment__avatar">
       {% with node.user.get_short_name|default:node.user|make_list|first as char %}<span data-char="{{ char|lower }}">{{ char }}</span>{% endwith %}
     </div>

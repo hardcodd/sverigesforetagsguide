@@ -1,9 +1,6 @@
 {% load i18n wagtailimages_tags core cache reviews %}
 
-{% get_current_language as current_lang %}
-
 {% spaceless %}
-  {% cache 604800 organization_item organization.pk current_lang %}
   {% with organization.specific as o %}
     <article id="organization-{{ o.pk }}"{% if o.temporarily_closed %} class="temporarily-closed"{% endif %}>
       <a class="organization-item{% if o.premium_subscription %} {{ o.premium_subscription.classname }}{% endif %}" href="{{ o.url }}">
@@ -55,5 +52,4 @@
       </a>
     </article>
   {% endwith %}
-{% endcache %}
 {% endspaceless %}

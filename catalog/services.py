@@ -1,5 +1,4 @@
-from datetime import datetime
-from datetime import time
+from datetime import datetime, time
 from datetime import time as dtime
 
 from django.utils import timezone
@@ -45,7 +44,7 @@ def get_working_hours_service(organization: Organization) -> str:
             elif end:
                 day_str = f"{first_day}: {end}"
             elif holiday:
-                day_str = f"{first_day}: {_("Holiday")}"
+                day_str = f"{first_day}: {_('Holiday')}"
             else:
                 day_str = first_day
         else:
@@ -54,7 +53,7 @@ def get_working_hours_service(organization: Organization) -> str:
             elif start and end:
                 day_str = f"{first_day}–{last_day}: {start}–{end}"
             elif holiday:
-                day_str = f"{first_day}–{last_day}: {_("Holiday")}"
+                day_str = f"{first_day}–{last_day}: {_('Holiday')}"
             elif start:
                 day_str = f"{first_day}–{last_day}: {start}"
             elif end:
@@ -84,7 +83,7 @@ def get_working_hours_service(organization: Organization) -> str:
 
         if last_client:
             if end:
-                end += f' ({_("Until the last client")})'
+                end += f" ({_('Until the last client')})"
             else:
                 end = _("Until the last client")
 
@@ -100,8 +99,7 @@ def get_working_hours_service(organization: Organization) -> str:
         if start == previous_start and end == previous_end:
             previous_day = day
         else:
-            append_result(first_day, previous_day,
-                          first_start, first_end, holiday)
+            append_result(first_day, previous_day, first_start, first_end, holiday)
             first_day = day
             first_start = start
             first_end = end

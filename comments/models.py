@@ -56,6 +56,8 @@ class Comment(MPTTModel):
 
     comment = models.TextField(verbose_name=_("Comment text"))
 
+    pin = models.BooleanField(verbose_name=_("Pin comment"), default=False)
+
     class MPTTMeta:
         order_insertion_by = ["-created_at"]
 
@@ -71,6 +73,7 @@ class Comment(MPTTModel):
         MultiFieldPanel(
             [
                 FieldPanel("status"),
+                FieldPanel("pin"),
                 FieldPanel("comment", classname="readonly"),
             ],
             heading=_("Comment"),

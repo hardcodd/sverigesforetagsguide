@@ -152,13 +152,31 @@ def add_review(request):
             status=400,
         )
 
+    # Check if the user has already submitted a review for this object
+    existing_review = Review.objects.filter(
+        user=request.user,
+        content_type=content_type,
+        object_id=object_id,
+    ).first()
+
+    if existing_review:
+        return JsonResponse(
+            {"message": _("You have already submitted a review for this item.")},
+            status=400,
+        )
+
     try:
+        if request.user.is_superuser or request.user.is_staff:
+            status = ReviewStatus.PUBLISHED
+        else:
+            status = ReviewStatus.MODERATION
         review = Review(
             user=request.user,
             content_type=content_type,
             object_id=object_id,
             rating=rating,
             comment=comment,
+            status=status,
         )
         review.save()
     except Exception as e:

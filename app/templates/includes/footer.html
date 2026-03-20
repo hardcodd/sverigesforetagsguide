@@ -9,7 +9,9 @@
           <div class="col-lg-4 col-auto hidden-sm-d">{% include "includes/logo.html" %}</div>
 
           <div class="col-lg-4 col-auto text-center">
-            <a href="#" class="offers__link" data-tippy-content="{% trans 'Find out all the benefits of premium placement in our catalog.' %}">{% trans "Advertising on Madloba" %}</a>
+            {% if s.ad_button_text and s.ad_button_url %}
+              <a href="{{ s.ad_button_url }}" class="offers__link"{% if s.ad_button_caption %} data-tippy-content="{{ s.ad_button_caption }}"{% endif %}>{{ s.ad_button_text }}</a>
+            {% endif %}
           </div>
 
           <div class="col hidden-sm-d"></div>

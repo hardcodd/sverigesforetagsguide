@@ -5,7 +5,13 @@ from django.utils import timezone
 from wagtail.models import Page
 
 from comments.forms import CommentForm
-from comments.models import COMMENT_DELETED, COMMENT_ON_MODERATION, COMMENT_PUBLISHED, COMMENT_REJECTED, Comment
+from comments.models import (
+    COMMENT_DELETED,
+    COMMENT_ON_MODERATION,
+    COMMENT_PUBLISHED,
+    COMMENT_REJECTED,
+    Comment,
+)
 
 register = template.Library()
 
@@ -23,7 +29,7 @@ def render_comments_list(context, obj: Page):
 
     context["comments"] = Comment.objects.filter(
         content_type=ctype, object_id=object_id, created_at__lte=timezone.now()
-    )
+    ).order_by("-pin", "-created_at")
 
     return render_to_string("comments/comments_list.html", context.flatten(), request)
 
