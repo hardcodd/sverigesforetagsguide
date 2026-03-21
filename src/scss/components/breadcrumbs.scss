@@ -2,10 +2,6 @@
 @use "../functions" as *;
 
 .breadcrumbs {
-	@include md-d {
-		@include sr-only;
-	}
-
 	&__list {
 		display: flex;
 		flex-wrap: wrap;
