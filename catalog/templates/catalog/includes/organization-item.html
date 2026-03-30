@@ -36,7 +36,7 @@
             {% if organization.avg_rating %}
               <div class="organization-item__rating">{% include "includes/star-rating-mini.html" with rating=organization.avg_rating|floatformat:"1u" %}</div>
             {% endif %}
-            <h3 class="organization-item__title">{{ o.rating_score }}{{ o.title|default:o.h1_title }}</h3>
+            <h3 class="organization-item__title">{{ o.title|default:o.h1_title }}</h3>
           </div>
           {% if o.temporarily_closed %}
             <div class="organization-item__closed-bage">{% trans "Temporarily Closed" %}</div>

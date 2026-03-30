@@ -92,7 +92,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    # "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "core.middleware.MultilingualRedirectMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 
