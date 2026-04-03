@@ -8,8 +8,9 @@ from wagtail.contrib.redirects.middleware import RedirectMiddleware, get_redirec
 
 
 class MultilingualRedirectMiddleware(RedirectMiddleware):
-    """Custom wagtail 7.0 redirect middleware that respects multilingual settings and redirects to the correct language
-    version of the page."""
+    """Custom Wagtail redirect middleware that respects multilingual settings
+    and redirects to the correct language version of the page.
+    """
 
     def process_response(self, request, response):
         if not settings.USE_I18N:
@@ -19,22 +20,25 @@ class MultilingualRedirectMiddleware(RedirectMiddleware):
         if response.status_code != 404:
             return response
 
-        lang_code = request.LANGUAGE_CODE
+        # Keep Wagtail's original behavior.
         path = models.Redirect.normalise_path(request.get_full_path())
 
-        # Remove the language code from the path if it exists
-        if path.startswith(f"/{lang_code}/"):
-            path_without_lang = path[len(lang_code) + 1 :]
+        # Detect only the language prefix that is actually present in the URL.
+        language_from_path = translation.get_language_from_path(request.path_info)
+
+        # Remove the language code from the path if it is really present.
+        if language_from_path and path.startswith(f"/{language_from_path}/"):
+            path_without_lang = path[len(language_from_path) + 1 :]
         else:
             path_without_lang = path
 
         redirect = get_redirect(request, path_without_lang)
         if redirect is None:
-            # Get the path without the query string or params
+            # Get the path without the query string or params.
             path_without_query = urlparse(path_without_lang).path
 
             if path_without_lang == path_without_query:
-                # don't try again if we know we will get the same response
+                # Don't try again if we know we will get the same response.
                 return response
 
             redirect = get_redirect(request, path_without_query)
@@ -44,15 +48,20 @@ class MultilingualRedirectMiddleware(RedirectMiddleware):
         if redirect.link is None:
             return response
 
-        # If the redirect is site-agnostic, we need to add the language code back in
-        language_from_path = translation.get_language_from_path(request.path_info)
+        # Default target URL.
+        redirect_url = redirect.link
 
-        if redirect.site is None and redirect.link.startswith("/"):
-            if language_from_path and not redirect.link.startswith(
-                f"/{language_from_path}/"
-            ):
-                redirect_url = f"/{language_from_path}{redirect.link}"
-            else:
-                redirect_url = redirect.link
+        # If the redirect is site-agnostic and the original request had a language
+        # prefix, add that prefix back to the redirect target.
+        if (
+            redirect.site is None
+            and redirect.link.startswith("/")
+            and language_from_path
+            and not redirect.link.startswith(f"/{language_from_path}/")
+        ):
+            redirect_url = f"/{language_from_path}{redirect.link}"
 
-        return http.HttpResponsePermanentRedirect(redirect_url)
+        if redirect.is_permanent:
+            return http.HttpResponsePermanentRedirect(redirect_url)
+
+        return http.HttpResponseRedirect(redirect_url)
