@@ -53,9 +53,6 @@ class HomePage(Panels, Page):
 class FlatPage(Panels, Page):
     """A simple page with a title and body."""
 
-    parent_page_types = []
-    subpage_types = []
-
     content = StreamField(
         [
             ("text", blocks.TextBlock(label=_("Text"))),
