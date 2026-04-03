@@ -27,3 +27,6 @@ flake8-requirements.txt
 /app/templates/sitemaps/
 
 logs/
+
+export_catalog.py
+*.csv

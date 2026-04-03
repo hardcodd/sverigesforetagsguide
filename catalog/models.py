@@ -232,7 +232,6 @@ class Organization(Page):
     objects = OrganizationManager()
     template = "catalog/organization_page.html"
     parent_page_types = ["catalog.OrganizationType"]
-    subpage_types = []
 
     h1_title = models.CharField(
         verbose_name=_("h1 title"), max_length=255, blank=True, null=True

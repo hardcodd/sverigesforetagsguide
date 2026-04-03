@@ -227,7 +227,7 @@ def get_top_organizations_service(page):
 
 def get_latest_organizations_service(parent=None, count=4):
     """Return latest organizations for."""
-    qs = Organization.objects.live()
+    qs = Organization.objects.live().order_by("-latest_revision_created_at")
     if parent:
         qs = qs.descendant_of(parent)
     return qs[:count]

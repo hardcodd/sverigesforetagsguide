@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 
 from django import http
 from django.conf import settings
+from django.utils import translation
 from wagtail.contrib.redirects import models
 from wagtail.contrib.redirects.middleware import RedirectMiddleware, get_redirect
 
@@ -44,9 +45,14 @@ class MultilingualRedirectMiddleware(RedirectMiddleware):
             return response
 
         # If the redirect is site-agnostic, we need to add the language code back in
-        if redirect.site is None:
-            redirect_url = f"/{lang_code}{redirect.link}"
-        else:
-            redirect_url = redirect.link
+        language_from_path = translation.get_language_from_path(request.path_info)
+
+        if redirect.site is None and redirect.link.startswith("/"):
+            if language_from_path and not redirect.link.startswith(
+                f"/{language_from_path}/"
+            ):
+                redirect_url = f"/{language_from_path}{redirect.link}"
+            else:
+                redirect_url = redirect.link
 
         return http.HttpResponsePermanentRedirect(redirect_url)
