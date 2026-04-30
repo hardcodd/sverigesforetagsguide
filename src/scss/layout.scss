@@ -243,3 +243,41 @@ body {
 		padding: rem(30) 0;
 	}
 }
+
+.support-link {
+	position: fixed;
+	z-index: 9999;
+	right: rem(10);
+	bottom: rem(100);
+	display: flex;
+	gap: rem(5);
+	align-items: center;
+	border-radius: 10em;
+	background-color: white;
+	box-shadow: var(--box-shadow-1);
+	padding: rem(10) rem(15) rem(10) rem(12);
+	line-height: 1;
+	text-decoration: none;
+	color: currentColor;
+	@include transition;
+
+	&__icon {
+		width: rem(24);
+		height: rem(24);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--theme-color);
+	}
+
+	@include hover {
+		background-color: var(--theme-color);
+		color: white;
+		text-decoration: none;
+
+		.support-link__icon {
+			color: currentColor;
+		}
+	}
+}
+

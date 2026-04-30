@@ -1,10 +1,13 @@
 from django.urls import path, reverse
-from django.utils.translation import gettext_lazy as _
 from wagtail import hooks
 from wagtail.admin.menu import AdminOnlyMenuItem, Menu, MenuItem, SubmenuMenuItem
 
-from catalog.admin_views import import_organizations
-from catalog.views import CatalogViewSetGroup, OrganizationReportView, service_type_category_chooser_viewset
+from catalog.admin_views import import_organizations, update_organizations
+from catalog.views import (
+    CatalogViewSetGroup,
+    OrganizationReportView,
+    service_type_category_chooser_viewset,
+)
 
 
 @hooks.register("register_admin_viewset")
@@ -18,26 +21,35 @@ def register_viewset():
 
 
 @hooks.register("register_admin_urls")
-def register_import_organizations():
+def register_import_update_catalog():
     return [
-        path("import-organizations/", import_organizations,
-             name="import-organizations")
+        path(
+            "import-organizations/", import_organizations, name="import-organizations"
+        ),
+        path(
+            "update-organizations/", update_organizations, name="update-organizations"
+        ),
     ]
 
 
 @hooks.register("register_admin_menu_item")
-def register_import_organizations_menu_item():
+def register_import_update_catalog_menu_item():
     submenu = Menu(
         items=[
             MenuItem(
-                "Organizations",
+                "Import organizations",
                 reverse("import-organizations"),
                 icon_name="briefcase-solid",
-            )
+            ),
+            MenuItem(
+                "Update organizations",
+                reverse("update-organizations"),
+                icon_name="briefcase-solid",
+            ),
         ]
     )
 
-    return SubmenuMenuItem("Import", submenu, icon_name="resubmit")
+    return SubmenuMenuItem("Import / Update", submenu, icon_name="resubmit")
 
 
 @hooks.register("register_reports_menu_item")

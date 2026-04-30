@@ -385,6 +385,210 @@ def import_organization(request):
     return JsonResponse({"success": True}, status=200)
 
 
+@permission_required("catalog.edit_organization")
+def update_organization(request):
+    if not request.method == "POST":
+        raise Http404
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        return JsonResponse({"message": "Invalid JSON"}, status=400)
+
+    data_fields = data.keys()
+
+    id = data.get("id")
+    if not id:
+        return JsonResponse({"success": False, "message": "ID is required"}, status=400)
+
+    awailable_fields = [
+        "slug",
+        "tin",
+        "legal_name",
+        "plus_code",
+        "working_hours",
+        "verified",
+        "temporarily_closed",
+        "languages",
+        "ll",
+        "show_on_map",
+        "located_in",
+        "service_types",
+        "phones",
+        "social_networks",
+        "website_links",
+    ]
+
+    i18n_awailable_fields = [
+        "title",
+        "h1_title",
+        "seo_title",
+        "search_description",
+        "description",
+        "address",
+        "how_to_arrive",
+    ]
+
+    awailable_locales = settings.MODELTRANSLATION_LANGUAGES
+
+    for field in i18n_awailable_fields:
+        for locale in awailable_locales:
+            localized_field = f"{field}_{locale}"
+            awailable_fields.append(localized_field)
+
+    awailable_fields += i18n_awailable_fields
+
+    try:
+        organization = Organization.objects.get(id=id)
+    except Organization.DoesNotExist:
+        return JsonResponse(
+            {"success": False, "message": "Organization not found"}, status=404
+        )
+
+    for field in data_fields:
+        if field not in awailable_fields:
+            continue
+
+        # Get field type, ex: 'CharField', 'BooleanField', etc.
+        field_type = organization._meta.get_field(field).get_internal_type()
+
+        if field_type == "CharField":
+            setattr(organization, field, data[field])
+        elif field_type == "SlugField":
+            slug = data[field].strip()
+            if slug:
+                setattr(organization, field, slug)
+        elif (
+            field_type == "TextField"
+            and "search" not in field
+            and "website" not in field
+            and "social" not in field
+        ):
+            # Make paragraphs from text
+            text = data[field].split("\n\n")
+            text = "<p>" + "</p><p>".join(text) + "</p>"
+            setattr(organization, field, text)
+        elif field_type == "TextField":
+            setattr(organization, field, data[field])
+        elif field_type == "BooleanField":
+            setattr(
+                organization,
+                field,
+                data[field] in [True, "true", "True", 1, "yes", "on", "Yes", "On"],
+            )
+        elif field == "working_hours":
+            if data[field]:
+                wh = json.loads(data[field])
+                days = []
+                for day in wh:
+                    if wh[day].lower() == "closed":
+                        days.append(
+                            {
+                                "type": "day",
+                                "value": {
+                                    "day": get_weekday_number(day),
+                                    "end": None,
+                                    "start": None,
+                                    "holiday": True,
+                                    "last_client": False,
+                                },
+                            }
+                        )
+                    elif wh[day].lower() == "open 24 hours":
+                        days.append(
+                            {
+                                "type": "day",
+                                "value": {
+                                    "day": get_weekday_number(day),
+                                    "end": "23:59",
+                                    "start": "00:00",
+                                    "holiday": False,
+                                    "last_client": False,
+                                },
+                            }
+                        )
+                    else:
+                        try:
+                            start, end = get_start_end_day(wh[day])
+                        except ValueError:
+                            return JsonResponse(
+                                {
+                                    "success": False,
+                                    "message": f"Invalid working hours format for {day}",
+                                },
+                                status=400,
+                            )
+
+                        days.append(
+                            {
+                                "type": "day",
+                                "value": {
+                                    "day": get_weekday_number(day),
+                                    "end": end,
+                                    "start": start,
+                                    "holiday": False,
+                                },
+                            }
+                        )
+
+                organization.working_hours = days
+
+        elif field == "located_in":
+            located_in = data.get(field, "")
+            if located_in:
+                try:
+                    located_in = int(located_in)
+                    organization.located_in = Organization.objects.get(id=located_in)
+                except (ValueError, Organization.DoesNotExist):
+                    return JsonResponse(
+                        {"success": False, "message": "Invalid located_in ID"},
+                        status=400,
+                    )
+
+    try:
+        if "service_types" in data_fields:
+            sts = []
+            for st in data["service_types"].split(","):
+                names = []
+                for locale in awailable_locales:
+                    field_name = f"name_{locale}__iexact"
+                    names.append(Q(**{field_name: st.strip()}))
+
+                try:
+                    sts.append(
+                        ServiceType.objects.get(reduce(lambda x, y: x | y, names))
+                    )
+                except ServiceType.DoesNotExist:
+                    continue
+
+                if sts:
+                    organization.service_types.set(sts)
+
+        if "languages" in data_fields:
+            langs = []
+            for lang in data["languages"].split(","):
+                try:
+                    language_obj = Language.objects.get(
+                        language_name__iexact=lang.strip()
+                    )
+                    langs.append(language_obj)
+                except Language.DoesNotExist:
+                    continue
+
+            if langs:
+                organization.languages.set(langs)
+
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)}, status=500)
+
+    try:
+        organization.save_revision().publish()
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)}, status=500)
+
+    return JsonResponse({"success": True}, status=200)
+
+
 class OrganizationReportFilters(WagtailFilterSet):
     """Filters for the Organization report."""
 

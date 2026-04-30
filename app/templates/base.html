@@ -63,6 +63,11 @@
       {% include "includes/footer.html" %}
     </div>
 
+		<a href="{% localize_url '/support/' %}" class="support-link">
+			<div class="support-link__icon">{% include "icons/help.svg" %}</div>
+			<div class="support-link__text">{% trans "Help" %}</div>
+		</a>
+
     {% if request.user.is_staff or request.user.is_superuser %}<div class="check-links-btn">Check links</div>{% endif %}
 
     {# Global javascript #}

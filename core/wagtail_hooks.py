@@ -1,7 +1,10 @@
 import os
 import time
 from pathlib import Path
-
+from wagtail.admin.rich_text.converters.html_to_contentstate import (
+    InlineStyleElementHandler,
+)
+from wagtail.admin.rich_text.editors.draftail.features import InlineStyleFeature
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.templatetags.static import static
@@ -16,6 +19,7 @@ from wagtail.images.formats import (
     register_image_format,
     unregister_image_format,
 )
+
 from wagtail.snippets.models import register_snippet
 
 from core.views import FooterViewSet
@@ -179,6 +183,51 @@ def register_align_right(features):
             },
             "to_database_format": {
                 "block_map": {type_: {"element": tag, "props": {"class": "text-right"}}}
+            },
+        },
+    )
+
+    features.default_features.append(feature_name)
+
+
+# -----------------------------
+# INLINE CODE
+# -----------------------------
+@hooks.register("register_rich_text_features")
+def register_inline_code(features):
+    feature_name = "inline-code"
+    type_ = "INLINE_CODE"
+    tag = "code"
+
+    control = {
+        "type": type_,
+        "label": "</>",
+        "description": "Inline Code",
+        "style": {
+            "fontFamily": "monospace",
+            "backgroundColor": "rgba(0, 0, 0, 0.2)",
+            "padding": "0.1em 0.25em",
+            "borderRadius": "3px",
+        },
+    }
+
+    features.register_editor_plugin(
+        "draftail",
+        feature_name,
+        InlineStyleFeature(control),
+    )
+
+    features.register_converter_rule(
+        "contentstate",
+        feature_name,
+        {
+            "from_database_format": {
+                tag: InlineStyleElementHandler(type_),
+            },
+            "to_database_format": {
+                "style_map": {
+                    type_: tag,
+                },
             },
         },
     )

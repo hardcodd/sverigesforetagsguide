@@ -121,7 +121,7 @@ const importSequentially = async (url, data, csrf, progressBar) => {
 		const statusTd = tr?.querySelector(".status-message");
 
 		try {
-			const form = document.querySelector("#import-organizations-form");
+			// const form = document.querySelector("#import-organizations-form");
 			const result = await postRow(url, csrf.value, row);
 
 			if (result.ok) {

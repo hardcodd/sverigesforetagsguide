@@ -34,9 +34,9 @@ def get_latest_blog_posts(category=None, count=4):
     return get_latest_blog_posts_service(category, count)
 
 
-@register.simple_tag
-def get_blog_tags_list(count: int = 20):
-    return get_blog_tags_list_service(count)
+@register.simple_tag(takes_context=True)
+def get_blog_tags_list(context, count: int = 20):
+    return get_blog_tags_list_service(context, count)
 
 
 @register.simple_tag

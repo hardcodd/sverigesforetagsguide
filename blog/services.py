@@ -53,8 +53,26 @@ def get_blog_categories_list_service(context):
     return _build_tree(categories, blog)
 
 
-def get_blog_tags_list_service(count=20):
-    qs = BlogTag.tags_for(BlogPostPage)[:count]
+def get_blog_tags_list_service(context, count=20):
+    index_blog_page = get_blog_index_page_service(context)
+
+    blog_posts = (
+        BlogPostPage.objects
+        .live()
+        .descendant_of(index_blog_page)
+    )
+
+    tag_relname = BlogTag.tag_relname()
+
+    qs = (
+        BlogTag.tags_for(
+            BlogPostPage,
+            **{f"{tag_relname}__content_object__in": blog_posts}
+        )
+        .order_by("name")
+        .distinct()[:count]
+    )
+
     return qs
 
 
