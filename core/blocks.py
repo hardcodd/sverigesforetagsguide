@@ -170,98 +170,6 @@ class CardStyle6Block(StructBlock):
         value_class = LinkStructValue
 
 
-class SectionCardsBlock(StructBlock):
-    title = CharBlock(
-        max_length=255,
-        label=_("Title"),
-        required=False,
-    )
-    pageurl = PageChooserBlock(required=False, label=_("Page URL"))
-    button_text = CharBlock(
-        max_length=50,
-        label=_("Button text"),
-        required=False,
-    )
-    in_row = ChoiceBlock(
-        choices=[
-            ("1", "1"),
-            ("2", "2"),
-            ("3", "3"),
-            ("4", "4"),
-            ("5", "5"),
-        ],
-        label=_("Cards in row"),
-        default="4",
-    )
-    as_carousel = BooleanBlock(
-        required=False,
-        help_text=_("Not working for <code>Paginated organizations</code>"),
-    )
-    cards = StreamBlock(
-        [
-            (
-                "card_style_1",
-                CardStle1Block(),
-            ),
-            (
-                "card_style_2",
-                CardStyle2Block(),
-            ),
-            (
-                "card_style_3",
-                CardStyle3Block(),
-            ),
-            (
-                "card_style_4",
-                CardStyle4Block(),
-            ),
-            (
-                "card_style_5",
-                CardStyle5Block(),
-            ),
-            (
-                "card_style_6",
-                CardStyle6Block(),
-            ),
-            (
-                "organization",
-                OrganizationBlock(),
-            ),
-            (
-                "city_latest_organizations",
-                LatestOrganizationsFromCityBlock(),
-            ),
-            (
-                "organization_type_latest_organizations",
-                LatestOrganizationsFromOrganizationTypeBlock(),
-            ),
-            (
-                "paginated_organizations",
-                PaginatedOrganizationsBlock(),
-            ),
-            (
-                "rating_card",
-                RatingCardBlock(),
-            ),
-            (
-                "latest_blog_posts",
-                LatestBlogPostsBlock(),
-            ),
-            (
-                "latest_blog_posts_from_category",
-                LatestBlogPostsFromCategoryBlock(),
-            ),
-        ],
-        min_num=1,
-        label=_("Cards"),
-    )
-
-    class Meta:
-        template = "core/blocks/section_cards_block.html"
-        label = _("Section with cards")
-        icon = "rectangle-group-solid"
-
-
 class QnABlock(StructBlock):
     title = CharBlock(
         max_length=255,
@@ -385,3 +293,114 @@ class VideoBlock(StructBlock):
         template = "core/blocks/video_block.html"
         label = _("Video")
         icon = "media"
+
+
+class CustomContentBlock(StructBlock):
+    content = StreamBlock(
+        [
+            ("text", RichTextBlock(label=_("Text"))),
+            ("image", ImageChooserBlock(label=_("Image"))),
+            ("video", VideoBlock()),
+            ("html", HTMLBlock()),
+        ]
+    )
+
+    class Meta:
+        template = "core/blocks/custom_content_block.html"
+        label = _("Custom")
+
+
+class SectionCardsBlock(StructBlock):
+    title = CharBlock(
+        max_length=255,
+        label=_("Title"),
+        required=False,
+    )
+    pageurl = PageChooserBlock(required=False, label=_("Page URL"))
+    button_text = CharBlock(
+        max_length=50,
+        label=_("Button text"),
+        required=False,
+    )
+    in_row = ChoiceBlock(
+        choices=[
+            ("1", "1"),
+            ("2", "2"),
+            ("3", "3"),
+            ("4", "4"),
+            ("5", "5"),
+        ],
+        label=_("Cards in row"),
+        default="4",
+    )
+    as_carousel = BooleanBlock(
+        required=False,
+        help_text=_("Not working for <code>Paginated organizations</code>"),
+    )
+    cards = StreamBlock(
+        [
+            (
+                "card_style_1",
+                CardStle1Block(),
+            ),
+            (
+                "card_style_2",
+                CardStyle2Block(),
+            ),
+            (
+                "card_style_3",
+                CardStyle3Block(),
+            ),
+            (
+                "card_style_4",
+                CardStyle4Block(),
+            ),
+            (
+                "card_style_5",
+                CardStyle5Block(),
+            ),
+            (
+                "card_style_6",
+                CardStyle6Block(),
+            ),
+            (
+                "custom_content_block",
+                CustomContentBlock(),
+            ),
+            (
+                "organization",
+                OrganizationBlock(),
+            ),
+            (
+                "city_latest_organizations",
+                LatestOrganizationsFromCityBlock(),
+            ),
+            (
+                "organization_type_latest_organizations",
+                LatestOrganizationsFromOrganizationTypeBlock(),
+            ),
+            (
+                "paginated_organizations",
+                PaginatedOrganizationsBlock(),
+            ),
+            (
+                "rating_card",
+                RatingCardBlock(),
+            ),
+            (
+                "latest_blog_posts",
+                LatestBlogPostsBlock(),
+            ),
+            (
+                "latest_blog_posts_from_category",
+                LatestBlogPostsFromCategoryBlock(),
+            ),
+        ],
+        min_num=1,
+        label=_("Cards"),
+    )
+
+    class Meta:
+        template = "core/blocks/section_cards_block.html"
+        label = _("Section with cards")
+        icon = "rectangle-group-solid"

@@ -315,7 +315,7 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
                 "ol",
                 "ul",
                 "hr",
-                "inline-code",
+                "code-block",
                 "link",
                 "document-link",
                 "image",

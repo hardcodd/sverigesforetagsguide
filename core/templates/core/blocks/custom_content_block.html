@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+
+<div class="{% if as_carousel %}swiper-slide{% else %}grid-col{% endif %}">
+  <div class="card card--custom-content">
+    {% for block in self.content %}
+			{% include_block block %}
+		{% endfor %}
+  </div>
+</div>

@@ -281,3 +281,16 @@ body {
 	}
 }
 
+pre code {
+	white-space: normal;
+  font-size: em(14);
+  line-height: 1.3;
+  display: block;
+  background: rgba(#000, .08);
+  border-radius: var(--border-radius-sm);
+  padding: rem(5) rem(10);
+}
+
+pre, code {
+	user-select: all;
+}

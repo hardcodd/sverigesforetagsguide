@@ -1,15 +1,13 @@
 import os
 import time
 from pathlib import Path
-from wagtail.admin.rich_text.converters.html_to_contentstate import (
-    InlineStyleElementHandler,
-)
-from wagtail.admin.rich_text.editors.draftail.features import InlineStyleFeature
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from draftjs_exporter.dom import DOM
 from wagtail import hooks
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 from wagtail.admin.rich_text.editors.draftail.features import BlockFeature
@@ -19,7 +17,6 @@ from wagtail.images.formats import (
     register_image_format,
     unregister_image_format,
 )
-
 from wagtail.snippets.models import register_snippet
 
 from core.views import FooterViewSet
@@ -193,28 +190,32 @@ def register_align_right(features):
 # -----------------------------
 # INLINE CODE
 # -----------------------------
+def code_block_element(props):
+    text = props["block"].get("text", "")
+
+    return DOM.create_element(
+        "code",
+        {},
+        f"{text}\n",
+    )
+
+
 @hooks.register("register_rich_text_features")
-def register_inline_code(features):
-    feature_name = "inline-code"
-    type_ = "INLINE_CODE"
-    tag = "code"
+def register_code_block(features):
+    feature_name = "code-block"
+    type_ = "code-block"
 
     control = {
         "type": type_,
-        "label": "</>",
-        "description": "Inline Code",
-        "style": {
-            "fontFamily": "monospace",
-            "backgroundColor": "rgba(0, 0, 0, 0.2)",
-            "padding": "0.1em 0.25em",
-            "borderRadius": "3px",
-        },
+        "label": "{}",
+        "description": "Code Block",
+        "element": "pre",
     }
 
     features.register_editor_plugin(
         "draftail",
         feature_name,
-        InlineStyleFeature(control),
+        BlockFeature(control),
     )
 
     features.register_converter_rule(
@@ -222,12 +223,16 @@ def register_inline_code(features):
         feature_name,
         {
             "from_database_format": {
-                tag: InlineStyleElementHandler(type_),
+                "pre": BlockElementHandler(type_),
+                "pre code": BlockElementHandler(type_),
             },
             "to_database_format": {
-                "style_map": {
-                    type_: tag,
-                },
+                "block_map": {
+                    type_: {
+                        "element": code_block_element,
+                        "wrapper": "pre",
+                    }
+                }
             },
         },
     )
