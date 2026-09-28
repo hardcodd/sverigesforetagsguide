@@ -44,3 +44,28 @@ import ajax from "../core/ajax";
 			});
 	});
 })();
+
+(() => {
+	const loadMoreBtn = document.querySelector(".load-more-reviews");
+	if (!loadMoreBtn) return;
+	loadMoreBtn.addEventListener("click", (e) => {
+		e.preventDefault();
+		loadMoreBtn.classList.add("loading");
+		const container = document.querySelector(".reviews-list");
+		ajax.get(loadMoreBtn.href).then((data) => {
+			loadMoreBtn.classList.remove("loading");
+			data.reviews.forEach((review) => {
+				const reviewTemplate = document.createElement("li");
+				reviewTemplate.classList.add("reviews-list__item");
+				reviewTemplate.innerHTML = review;
+				container.insertAdjacentElement("beforeend", reviewTemplate);
+			});
+			const nextPageNumber = data.page_number;
+			if (nextPageNumber) {
+				loadMoreBtn.href = loadMoreBtn.href.replace(/page=\d+/, `page=${nextPageNumber}`);
+			} else {
+				loadMoreBtn.remove();
+			}
+		});
+	});
+})();

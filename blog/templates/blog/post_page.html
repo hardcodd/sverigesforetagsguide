@@ -15,12 +15,12 @@
           <div class="blog-post__meta">
             <div class="blog-post__meta-item">
               <span>{% trans "Created at:" %}</span>
-              <time datetime="{{ page.first_published_at|date:'c' }}">{{ page.first_published_at|date:'M d, Y' }}</time>
+              <time datetime="{{ page.first_published_at|date:'c' }}">{{ page.first_published_at|date:'DATE_FORMAT' }}</time>
             </div>
             {% if not page.first_published_at == page.last_published_at %}
               <div class="blog-post__meta-item">
                 <span>{% trans "Updated at:" %}</span>
-                <time datetime="{{ page.last_published_at|date:'c' }}">{{ page.last_published_at|date:'M d, Y' }}</time>
+                <time datetime="{{ page.last_published_at|date:'c' }}">{{ page.last_published_at|date:'DATE_FORMAT' }}</time>
               </div>
             {% endif %}
           </div>

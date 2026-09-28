@@ -1,4 +1,9 @@
+from collections.abc import Mapping
+
+from django.template import Context
+
 from blog.models import BlogCategoryPage, BlogIndexPage, BlogPostPage, BlogTag
+from core.page_tree import PageTreeNode, build_page_tree
 from core.utils import paginate
 
 
@@ -30,27 +35,15 @@ def get_paginated_blog_posts_service(context, parent, count=16):
     return paginate(request, qs, count)
 
 
-def _build_tree(pages, parent):
-    tree = []
-
-    for page in pages:
-        page.children = []
-
-        if page.is_child_of(parent):
-            tree.append(page)
-
-        children = page.get_children().type(BlogCategoryPage)
-        if children:
-            page.children = _build_tree(children, page)
-
-    return tree
-
-
-def get_blog_categories_list_service(context):
+def get_blog_categories_list_service(
+    context: Context | Mapping[str, object],
+) -> list[PageTreeNode]:
+    """Load public category navigation with one query for the entire tree."""
     blog = get_blog_index_page_service(context)
+    if blog is None:
+        return []
     categories = BlogCategoryPage.objects.live().descendant_of(blog)
-
-    return _build_tree(categories, blog)
+    return build_page_tree(categories, blog)
 
 
 def get_blog_tags_list_service(context, count=20):

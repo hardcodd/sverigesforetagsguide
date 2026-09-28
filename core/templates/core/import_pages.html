@@ -1,0 +1,99 @@
+{% extends "wagtailadmin/base.html" %}
+
+{% load i18n %}
+
+{% block titletag %}Import Pages{% endblock %}
+{% block extra_js %}
+	{{ block.super }}
+	<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+{% endblock extra_js %}
+
+{% block extra_css %}
+	<style>
+
+	</style>
+{% endblock extra_css %}
+
+{% block content %}
+	{% with "Import Pages" as title %}
+		{% include "wagtailadmin/shared/header.html" with title=title icon="order-down" %}
+	{% endwith %}
+
+	<div class="nice-padding">
+		<h2>{% trans 'Page type' %}</h2>
+		<form id="madloba-import-form" action="/en/core/import-page/" method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			<fieldset>
+				<ul class="fields">
+					<li>
+						<div class="w-field__wrapper " data-field-wrapper="">
+							<label class="w-field__label" for="id_file" id="id_file-label">
+								CSV File<span class="w-required-mark">*</span>
+							</label>
+							<div class="w-field w-field--file_field w-field--file_input" data-field="" data-contentpath="file">
+								<div class="w-field__errors" data-field-errors=""></div>
+								<div class="w-field__help" data-field-help=""></div>
+								<div class="w-field__input" data-field-input="">
+									<input type="file" name="file" id="id_file" accept=".csv" required data-next="#id_page-type">
+								</div>
+							</div>
+						</div>
+					</li>
+
+					<li hidden>
+						<div class="w-field__wrapper " data-field-wrapper="">
+							<label class="w-field__label" for="id_page-type" id="id_page-type-label">
+								Select page type<span class="w-required-mark">*</span>
+							</label>
+							<div class="w-field" data-field="" data-contentpath="">
+								<div class="w-field__errors" data-field-errors=""></div>
+								<div class="w-field__help" data-field-help=""></div>
+								<div class="w-field__input" data-field-input="">
+									<select name="page_type" id="id_page-type" data-next="#id_fields-mapping" required>
+										<option value="">{% trans "Select page type" %}</option>
+										{% for model, model_name, model_fields in page_models %}
+											<option value="{{ model }}" data-fields="{{ model_fields }}">{{ model_name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+						</div>
+					</li>
+
+					<li hidden>
+						<div class="w-field__wrapper " data-field-wrapper="">
+							<table class="listing fields-mapping" id="id_fields-mapping">
+								<thead>
+								<tr>
+									<th>{% trans "Unique" %}</th>
+									<th>{% trans "Page Fields" %}</th>
+									<th>{% trans "CSV Fields" %}</th>
+								</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</li>
+				</ul>
+
+				<button type="submit" class="button">{% trans "Import" %}</button>
+			</fieldset>
+		</form>
+
+		<div id="import-progress" class="progress" hidden>
+			<div class="bar" style="width: 0%">0%</div>
+		</div>
+
+		<div class="table-listing-wrapper">
+			<table class="results">
+				<thead>
+				<tr>
+					<td>{% trans "Status" %}</td>
+					<td>{% trans "" %}</td>
+				</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+{% endblock %}

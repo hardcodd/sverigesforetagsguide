@@ -1,8 +1,10 @@
-{% load i18n %}
+{% load i18n core %}
+{% get_current_language as map_language %}
 
 <div id="org-map-wrapper" class="map-wrapper ratio">
   <!-- Static map preview -->
-  <img id="org-map-static" class="map-static" src="https://maps.googleapis.com/maps/api/staticmap?center={{ page.ll }}&zoom=15&size=800x400&markers={{ page.ll }}&key={{ GOOGLE_MAPS_API_KEY }}" alt="Location map" />
+	{% get_static_map page as static_map_src %}
+	<img id="org-map-static" class="map-static" src="{{ static_map_src }}" alt="{% trans 'Location map' %}" loading="lazy" width="800" height="400" />
 
   <!-- Overlay with text -->
   <div class="map-overlay">
@@ -37,7 +39,7 @@
 			googleMapsLoaded = true;
 
 			const script = document.createElement("script");
-			script.src = "https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}";
+			script.src = "https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&language={{ map_language|escapejs }}";
 			script.async = true;
 			script.onload = callback;
 			document.body.appendChild(script);

@@ -8,6 +8,7 @@ import ClipboardJS from "clipboard";
 
 		const copyBtn = container.querySelector(btnSelector);
 		const copyInput = container.querySelector(inputSelector);
+		if (!copyBtn || !copyInput) return;
 
 		const clipboard = new ClipboardJS(copyBtn, {
 			text: () => copyInput.value,

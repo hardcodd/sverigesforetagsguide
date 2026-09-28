@@ -25,6 +25,8 @@ from core.blocks import BannerBlock, CardStyle5Block, ExternalCodeBlock, LinkBlo
 class SiteSettings(BaseGenericSetting):
     """Site settings for the site. E.g. Logo, etc."""
 
+    slogan = models.CharField(max_length=255, blank=True, null=True)
+
     logo = models.ForeignKey(
         "wagtailimages.Image",
         on_delete=models.SET_NULL,
@@ -113,6 +115,7 @@ class SiteSettings(BaseGenericSetting):
     )
 
     panels = [
+        FieldPanel("slogan"),
         FieldPanel("logo"),
         FieldPanel("logo_mobile"),
         FieldPanel("default_organization_image"),

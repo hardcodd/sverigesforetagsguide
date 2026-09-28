@@ -1,0 +1,112 @@
+{% load i18n %}
+
+<form class="organization-filters" id="organization-filters" method="get" action="{{ request.path }}#organization-filters" aria-labelledby="organization-filters-title" data-counts-url="{{ listing.counts_url }}">
+  <div class="organization-filters__heading">
+    <h2 id="organization-filters-title">{% trans "Find your place" %}</h2>
+    <p class="organization-filters__count">{% blocktranslate with count=listing.count total=listing.total %}Found: {{ count }} of {{ total }}{% endblocktranslate %}</p>
+  </div>
+  <details class="organization-filters__body" data-has-errors="{{ listing.form.errors|yesno:'true,false' }}" open>
+    <summary>
+      {% trans "Filters and sorting" %}
+      {% if listing.active_filters %}<span class="organization-filters__badge">{{ listing.active_filters|length }}</span>{% endif %}
+    </summary>
+    <div class="organization-filters__main">
+      <div class="organization-filters__field organization-filters__search">
+        {{ listing.form.q.label_tag }}
+        {{ listing.form.q }}
+      </div>
+      <div class="organization-filters__field organization-filters__sort">
+        {{ listing.form.sort.label_tag }}
+        {{ listing.form.sort }}
+      </div>
+      {% if listing.has_ratings %}
+        <div class="organization-filters__field">
+          {{ listing.form.rating.label_tag }}
+          {{ listing.form.rating }}
+        </div>
+      {% endif %}
+      {% if listing.has_languages %}
+        <div class="organization-filters__field">
+          {{ listing.form.language.label_tag }}
+          {{ listing.form.language }}
+        </div>
+      {% endif %}
+    </div>
+    <div class="organization-filters__quick">
+      {% if listing.has_verified %}
+        <label class="organization-filters__toggle">
+          {{ listing.form.verified }}<span>{{ listing.form.verified.label }}</span>
+        </label>
+      {% endif %}
+      {% if listing.has_closed %}
+        <label class="organization-filters__toggle">
+          {{ listing.form.hide_closed }}<span>{{ listing.form.hide_closed.label }}</span>
+        </label>
+      {% endif %}
+    </div>
+    {% if listing.service_groups %}
+      <details class="organization-filters__services"{% if listing.form.service_type.value %} open{% endif %}>
+        <summary>
+          {% trans "Services and features" %}
+          <span class="organization-filters__badge" data-service-count{% if not listing.form.service_type.value %} hidden{% endif %}>{{ listing.form.service_type.value|length }}</span>
+        </summary>
+        <fieldset class="organization-filters__match" aria-describedby="organization-match-help">
+          <legend>{% trans "How to match services and features" %}</legend>
+          <div class="organization-filters__match-options">
+            <label><input type="radio" name="service_match" value="all"{% if listing.service_match == 'all' %} checked{% endif %}><span>{% trans "All conditions" %}</span></label>
+            <label><input type="radio" name="service_match" value="any"{% if listing.service_match == 'any' %} checked{% endif %}><span>{% trans "At least one" %}</span></label>
+          </div>
+          <div id="organization-match-help" class="organization-filters__hint">
+            <p data-match-help="all"{% if listing.service_match != 'all' %} hidden{% endif %}>{% trans "At least one feature from every selected group is required. Counts include selections in other groups." %}</p>
+            <p data-match-help="any"{% if listing.service_match != 'any' %} hidden{% endif %}>{% trans "Any selected feature is enough. Each number counts places with that feature; a place may match several features." %}</p>
+            <p>{% trans "Search, rating and other filters apply in both modes. The button shows the total number of matching places." %}</p>
+          </div>
+        </fieldset>
+        <div class="organization-filters__groups">
+          {% for group in listing.service_groups.values %}
+            <details class="organization-filters__group" name="organization-service-group">
+              <summary>
+                {{ group.label }}
+                <span class="organization-filters__badge" data-group-count{% if not group.selected_count %} hidden{% endif %}>{{ group.selected_count }}</span>
+              </summary>
+              <div class="organization-filters__options">
+                {% for option in group.options %}
+                  <label class="organization-filters__option{% if not option.count %} is-empty{% endif %}">
+                    <input type="checkbox" name="service_type" value="{{ option.id }}"{% if option.selected %} checked{% endif %}>
+                    <span>{{ option.label }}</span><small data-option-count="{{ option.id }}">{{ option.count }}</small>
+                  </label>
+                {% endfor %}
+              </div>
+            </details>
+          {% endfor %}
+        </div>
+      </details>
+    {% endif %}
+    {% if listing.form.errors %}
+      <p class="organization-filters__error" role="alert">{% trans "Some filters are invalid or no longer available. Reset the filters and try again." %}</p>
+    {% endif %}
+    <div class="organization-filters__actions">
+      <button type="submit" class="btn organization-filters__submit">{% trans "Show places" %}<span data-result-count> ({{ listing.count }})</span></button>
+      {% if listing.is_filtered %}
+        <a class="organization-filters__reset" href="{{ request.path }}#organization-filters">{% trans "Reset filters" %}</a>
+      {% endif %}
+    </div>
+    <p class="organization-filters__hint organization-filters__preview-status" role="status" aria-live="polite" data-preview-status data-loading="{% trans 'Updating counts…' %}" data-failed="{% trans 'Counts could not be updated. Use Show places to apply your filters.' %}" data-ready="{% trans 'Matching places:' %}"></p>
+  </details>
+  {% if listing.active_filters %}
+    <div class="organization-filters__active" aria-label="{% trans 'Applied filters' %}">
+      {% for filter in listing.active_filters %}
+        <a href="{{ filter.remove_url }}" aria-label="{% blocktranslate with label=filter.label %}Remove filter: {{ label }}{% endblocktranslate %}">
+          <span class="organization-filters__active-label">{{ filter.label }}</span>
+          <span class="organization-filters__remove" aria-hidden="true"><span class="organization-filters__remove-icon">×</span></span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if not listing.count and not listing.form.errors %}
+    <div class="organization-filters__empty" role="status">
+      <h3>{% trans "No matching places" %}</h3>
+      <p>{% trans "Try another name, lower the rating or remove a filter." %}</p>
+    </div>
+  {% endif %}
+</form>

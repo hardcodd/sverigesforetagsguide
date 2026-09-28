@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
@@ -11,6 +12,9 @@ from wagtail.models import ClusterableModel, Orderable, ParentalKey
 from core.utils import starsort
 
 USER_MODEL = get_user_model()
+
+MIN_REVIEW_RATING = 1
+MAX_REVIEW_RATING = 5
 
 
 class ReviewStatus(models.TextChoices):
@@ -40,6 +44,10 @@ class Review(ClusterableModel):
     rating = models.PositiveIntegerField(
         verbose_name=_("Rating"),
         help_text=_("Rating value"),
+        validators=[
+            MinValueValidator(MIN_REVIEW_RATING),
+            MaxValueValidator(MAX_REVIEW_RATING),
+        ],
     )
 
     comment = models.TextField(
@@ -72,6 +80,18 @@ class Review(ClusterableModel):
         ),
     ]
 
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=("content_type", "object_id", "user"),
+                name="reviews_import_lookup_idx",
+            ),
+            models.Index(
+                fields=("content_type", "object_id", "status", "rating"),
+                name="reviews_rating_lookup_idx",
+            ),
+        ]
+
     def __str__(self):
         return f"{self.user}"
 
@@ -100,14 +120,19 @@ class ReviewImage(Orderable):
 
 @receiver(post_save, sender=Review)
 def update_organization_rating_after_add_review(sender, instance, *args, **kwargs):
-    update_avg_rating(sender, instance, **kwargs)
-    update_rating_score(sender, instance, *args, **kwargs)
+    if getattr(instance, "_defer_rating_update", False):
+        return
+    update_review_ratings(instance)
 
 
 @receiver(post_delete, sender=Review)
 def update_organization_rating_after_delete_review(sender, instance, *args, **kwargs):
-    update_avg_rating(sender, instance, **kwargs)
-    update_rating_score(sender, instance, *args, **kwargs)
+    update_review_ratings(instance)
+
+
+def update_review_ratings(instance):
+    update_avg_rating(Review, instance)
+    update_rating_score(Review, instance)
 
 
 def update_avg_rating(sender, instance, **kwargs):
@@ -119,9 +144,10 @@ def update_avg_rating(sender, instance, **kwargs):
             content_type=ContentType.objects.get_for_model(content_object),
             object_id=content_object.pk,
             status=ReviewStatus.PUBLISHED,
+            rating__range=(MIN_REVIEW_RATING, MAX_REVIEW_RATING),
         )
         avg_rating = all_reviews.aggregate(models.Avg("rating"))["rating__avg"]
-        content_object.avg_rating = avg_rating
+        content_object.avg_rating = avg_rating or 0
         content_object.save()
 
 
@@ -136,7 +162,7 @@ def update_rating_score(sender, instance, *args, **kwargs):
         object_id=obj.id,
         content_type=obj.content_type,
         # parent=None,
-        rating__gte=0,
+        rating__range=(MIN_REVIEW_RATING, MAX_REVIEW_RATING),
     )
 
     stars = (

@@ -10,8 +10,9 @@ from core.panels import Panels
 class AuthorsIndexPage(Panels, Page):
     parent_page_types = ["home.HomePage"]
 
-    class Meta:
+    class Meta(Page.Meta):
         verbose_name = _("Authors index page")
+        verbose_name_plural = _("Authors index pages")
 
 
 class AuthorPage(Panels, Page):

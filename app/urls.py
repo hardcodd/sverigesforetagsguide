@@ -9,6 +9,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from core.views import robots_txt, sitemap_index, sitemap_section
+from reviews import views as review_views
 from search import views as search_views
 
 urlpatterns = [
@@ -46,10 +47,15 @@ if "rosetta" in settings.INSTALLED_APPS:
     )
 
 urlpatterns += i18n_patterns(
+    path("core/", include("core.urls"), name="core"),
     path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     path("search/", search_views.search, name="search"),
+    path(
+        "reviews/load-more/", review_views.load_more_reviews, name="load-more-reviews"
+    ),
     path("catalog/", include("catalog.urls"), name="catalog"),
     path("comments/", include("comments.urls", namespace="comments")),
+    path("gallery/", include("gallery.urls", namespace="gallery")),
     path("", include(wagtail_urls)),
     prefix_default_language=False,
 )

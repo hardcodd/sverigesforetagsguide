@@ -11,3 +11,21 @@
 .Draftail-block--ALIGN_RIGHT > * {
 	text-align: right !important;
 }
+
+.import-field-label,
+.import-field-name {
+	display: block;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+}
+
+.import-field-label {
+	color: var(--w-color-text-label);
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+.import-field-name {
+	color: var(--w-color-text-meta);
+	font-size: 0.75rem;
+}

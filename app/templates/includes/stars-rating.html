@@ -1,12 +1,12 @@
-{% load static core %}
+{% load static core i18n %}
 
-<div class="stars-rating">
+<div class="stars-rating" role="img" aria-label="{% blocktranslate with rating=stars %}Rating: {{ rating }} out of 5{% endblocktranslate %}">
   <div class="stars-rating__stars">
     <div class="stars-rating__placeholder">
-      <img src="{% static 'gray-stars.svg' %}" alt="gray stars" loading="lazy" />
+      <img src="{% static 'gray-stars.svg' %}" alt="" loading="lazy" />
     </div>
     <div class="stars-rating__fill" style="width:{% rating_percent stars %}%">
-      <img src="{% static 'red-stars.svg' %}" alt="red stars" loading="lazy" />
+      <img src="{% static 'red-stars.svg' %}" alt="" loading="lazy" />
     </div>
   </div>
 </div>

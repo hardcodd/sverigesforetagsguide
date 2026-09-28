@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<section id="listings">
+  <h2>{% trans "All required fields" %}</h2>
+  <table class="listing">
+    <thead>
+      <tr>
+        <th>{% trans "Key" %}</th>
+        <th>{% trans "Description" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <sup>*</sup> id
+        </td>
+        <td>{% trans "Page ID" %}</td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> text
+        </td>
+        <td>{% trans "Review text" %}</td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> user
+        </td>
+        <td>John Doe / john_doe_username</td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> date
+        </td>
+        <td>
+          {% trans "Date of publication in format" %}: <code>YYYY-MM-DD HH:MM</code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <sup>*</sup> rate
+        </td>
+        <td>{% trans "Rating" %}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

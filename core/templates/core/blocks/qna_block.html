@@ -1,4 +1,4 @@
-{% load wagtailcore_tags core %}
+{% load wagtailcore_tags core seo %}
 
 <section class="section section-qna">
   <div class="container">
@@ -16,3 +16,5 @@
     </div>
   </div>
 </section>
+{% if page %}{% fullpageurl page as faq_page_url %}{% endif %}
+{% faq_jsonld self faq_page_url %}

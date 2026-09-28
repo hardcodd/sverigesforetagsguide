@@ -2,7 +2,7 @@
 
 {% block body_class %}template-blog-index-page{% endblock %}
 
-{% load i18n core blog authors %}
+{% load i18n core blog authors wagtailcore_tags %}
 
 {% block content %}
   <div class="container">
@@ -12,14 +12,15 @@
 
         {% if request.GET.author %}
           {% get_author_by_slug request.GET.author as author %}
-          {% trans "[[By author]]: "|add:author.title as section_title %}
+          {% blocktranslate with author_name=author.title asvar section_title %}[[By author]]: {{ author_name }}{% endblocktranslate %}
           {% include "includes/section-header.html" %}
         {% elif request.GET.tag %}
           {% get_tag_by_slug request.GET.tag as tag %}
-          {% trans "[[By tag]]: "|add:tag.tag.name as section_title %}
+          {% blocktranslate with tag_name=tag.tag.name asvar section_title %}[[By tag]]: {{ tag_name }}{% endblocktranslate %}
           {% include "includes/section-header.html" %}
         {% endif %}
-        {% if page.subtitle %}<h2 class="page__subtitle">{{ page.subtitle }}</h2>{% endif %}
+        {% if page.subtitle %}<div class="h2 page__subtitle">{{ page.subtitle|richtext }}</div>{% endif %}
+        {% include_block page.banners %}
 
         <div class="posts-list">
           <div class="row v-gutters">

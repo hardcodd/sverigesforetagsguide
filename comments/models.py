@@ -65,6 +65,18 @@ class Comment(MPTTModel):
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(
+                fields=(
+                    "content_type",
+                    "object_id",
+                    "user",
+                    "parent",
+                    "created_at",
+                ),
+                name="comments_import_lookup_idx",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.user}"

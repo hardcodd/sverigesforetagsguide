@@ -1,0 +1,85 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.nearby-organizations {
+	padding: rem(28) 0;
+
+	&__intro {
+		margin-bottom: rem(20);
+
+		color: #586777;
+		font-size: rem(14);
+		line-height: 1.6;
+	}
+
+	&__items {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: rem(20);
+		margin: 0;
+		padding: 0;
+
+		list-style: none;
+
+		@include md-d {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	&__distance {
+		display: block;
+		margin-bottom: rem(6);
+
+		color: var(--theme-color);
+		font-weight: var(--medium);
+		font-size: rem(13);
+		line-height: 1.5;
+	}
+
+	&__more {
+		margin-top: rem(24);
+
+		text-align: center;
+	}
+
+	&__status {
+		margin: rem(12) 0 0;
+
+		color: #586777;
+		font-size: rem(14);
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	&__load-more {
+		max-width: 100%;
+		min-height: rem(44);
+
+		color: var(--theme-color);
+		font-size: rem(14);
+		white-space: normal;
+
+		border-color: var(--theme-color);
+		border-radius: var(--border-radius-sm);
+
+		&[hidden] {
+			display: none;
+		}
+
+		&:focus-visible {
+			outline: rem(2) solid var(--theme-color);
+			outline-offset: rem(3);
+		}
+
+		&:disabled {
+			cursor: wait;
+			opacity: 0.6;
+		}
+	}
+
+	&__address {
+		font-style: normal;
+	}
+}

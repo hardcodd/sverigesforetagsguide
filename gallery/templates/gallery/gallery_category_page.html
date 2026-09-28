@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n wagtailcore_tags wagtailimages_tags core gallery %}
+
+{% block body_class %}template-gallery-category-page{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1 class="page__title">{{ page.title|mark|safe }}</h1>
+		<hr>
+		{% if page.description %}
+			{{ page.description|richtext }}
+			<hr>
+		{% endif %}
+		<div class="row v-gutters">
+			{% get_gallery_categories page as categories %}
+			{% for category in categories %}
+				{% include "gallery/includes/gallery-category-item.html" %}
+			{% empty %}
+				{% get_paginated_galleries as galleries %}
+				{% for gallery in galleries %}
+					{% include "gallery/includes/gallery-item.html" %}
+				{% endfor %}
+			{% endfor %}
+		</div>
+
+		{% include "includes/pagination.html" with page_obj=galleries %}
+	</div>
+{% endblock content %}

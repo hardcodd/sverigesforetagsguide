@@ -1,11 +1,16 @@
-{% load reviews %}
+{% load i18n reviews core %}
 
 {% get_reviews page as reviews %}
 
 {% if reviews %}
-  <ul class="reviews-list">
-    {% for review in reviews %}
-      <li class="reviews-list__item">{% include "reviews/review.html" %}</li>
-    {% endfor %}
-  </div>
+	<ul class="reviews-list">
+		{% for review in reviews %}
+			<li class="reviews-list__item">{% include "reviews/review.html" %}</li>
+		{% endfor %}
+	</ul>
+	{% if reviews.has_next %}
+		<div class="text-center" style="margin-top: calc(30 / 16 * 1rem);">
+			<a href="{% url 'load-more-reviews' %}?page={{ reviews.next_page_number }}&token={% signing page.pk %}" class="btn load-more-reviews">{% trans "Show more reviews" %}</a>
+		</div>
+	{% endif %}
 {% endif %}

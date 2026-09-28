@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "authors",
     "comments",
     "ratings",
+    "gallery",
     "search",
 ]
 
@@ -94,6 +95,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     # "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "core.middleware.MultilingualRedirectMiddleware",
+    "core.pagination.PaginationMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -342,6 +344,14 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
         "LOCATION": os.path.join(BASE_DIR, "cache"),
+    },
+    # Keep rendition metadata off the filesystem and out of the HTML cache.
+    # This bounded cache is local to each worker; image files remain in storage.
+    "renditions": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "madloba-renditions",
+        "TIMEOUT": 60,
+        "OPTIONS": {"MAX_ENTRIES": 2000},
     },
 }
 

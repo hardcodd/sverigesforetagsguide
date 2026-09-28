@@ -18,7 +18,7 @@ class CityPageTR(TranslationOptions):
 
 @register(OrganizationType)
 class OrganizationTypePageTR(TranslationOptions):
-    fields = ("content",)
+    fields = ("content", "ratings_text")
 
 
 @register(Organization)
@@ -29,6 +29,7 @@ class OrganizationPageTR(TranslationOptions):
         "how_to_arrive",
         "address",
         "qna",
+        "banners",
     )
 
 

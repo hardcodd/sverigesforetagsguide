@@ -1,0 +1,24 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{% with settings.core.SiteSettings.default_organization_image as default_image %}
+	{% for nearby in nearby_organizations %}
+		{% with nearby.organization as organization %}
+			<li>
+				<a class="search-item search-item__link nearby-organizations__card" href="{% pageurl organization %}">
+					{% with organization.images.all.0.image|default:default_image as image %}
+						{% if image %}
+							<div class="search-item__image">
+								<div class="ratio">{% image image fill-280x158 loading="lazy" alt="" %}</div>
+							</div>
+						{% endif %}
+					{% endwith %}
+					<div class="search-item__content">
+						<span class="nearby-organizations__distance">{{ nearby.distance_label }}</span>
+						<h3 class="search-item__title">{{ organization.title|default:organization.h1_title }}</h3>
+						{% if organization.address %}<address class="search-item__description nearby-organizations__address">{{ organization.address }}</address>{% endif %}
+					</div>
+				</a>
+			</li>
+		{% endwith %}
+	{% endfor %}
+{% endwith %}

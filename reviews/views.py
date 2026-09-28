@@ -1,134 +1,142 @@
+import json
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.views import csrf_protect
-from django.http import Http404, JsonResponse
-from django.shortcuts import redirect, reverse
-from django.utils.html import format_html
-from django.utils.translation import get_language
+from django.core import signing
+from django.http import Http404, HttpRequest, JsonResponse
+from django.shortcuts import redirect, render, reverse
+from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
+from django.urls import path
 from django.views.decorators.http import require_POST
-from wagtail.admin.ui.tables import Column, UserColumn
+from wagtail.admin.menu import MenuItem
+from wagtail.admin.ui.tables import DateColumn, StatusTagColumn, UserColumn
+from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
 from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.widgets.button import ListingButton
 from wagtail.images.models import Image
-from wagtail.models import ContentType
+from wagtail.models import ContentType, Page
 
+from core.admin_columns import (
+    ContentObjectColumn,
+    RelatedContentIndexView,
+    TextPreviewColumn,
+    without_language_prefix,
+)
 from core.utils import is_ajax
-from reviews.models import Review, ReviewImage, ReviewStatus
+from reviews.models import (
+    MAX_REVIEW_RATING,
+    MIN_REVIEW_RATING,
+    Review,
+    ReviewImage,
+    ReviewStatus,
+)
+from reviews.services import ReviewImportError, import_review_row, import_review_rows
+from reviews.templatetags.reviews import get_reviews
 
 
-class StatusColumn(Column):
-    def get_value(self, instance):
-        if instance.status == ReviewStatus.PUBLISHED:
-            return format_html(
-                f"<span class='w-status w-status--primary'>{_('Published')}</span>"
-            )
-        elif instance.status == ReviewStatus.MODERATION:
-            return format_html(
-                f"<span class='w-status w-status--warning'>{_('On Moderation')}</span>"
-            )
-        elif instance.status == ReviewStatus.REJECTED:
-            return format_html(
-                f"<span class='w-status w-status--danger'>{_('Rejected')}</span>"
-            )
-        elif instance.status == ReviewStatus.DELETED:
-            return format_html(
-                f"<span class='w-status w-status--secondary'>{_('Deleted')}</span>"
-            )
-        else:
-            return instance.status
+class ReviewIndexView(RelatedContentIndexView):
+    page_title = _("Reviews")
+    add_item_label = _("Add review")
 
+    def get_list_more_buttons(self, instance):
+        buttons = super().get_list_more_buttons(instance)
+        if not self.request.user.has_perm("reviews.can_edit"):
+            return buttons
 
-class ApproveColumn(Column):
-    def get_value(self, instance):
-        url_1 = ""
-        title_1 = ""
-        url_2 = ""
-        title_2 = ""
-
+        actions = []
         if instance.status == ReviewStatus.MODERATION:
-            url_1 = reverse("reviews:publish_review", args=[instance.id])
-            title_1 = _("Approve")
-            url_2 = reverse("reviews:reject_review", args=[instance.id])
-            title_2 = _("Reject")
+            actions = [
+                (_("Approve"), "reviews:publish_review", "success"),
+                (_("Reject"), "reviews:reject_review", "cross"),
+            ]
         elif instance.status == ReviewStatus.PUBLISHED:
-            url_1 = reverse("reviews:reject_review", args=[instance.id])
-            title_1 = _("Reject")
-            url_2 = reverse("reviews:delete_review", args=[instance.id])
-            title_2 = _("Delete")
+            actions = [
+                (_("Reject"), "reviews:reject_review", "cross"),
+                (_("Delete"), "reviews:delete_review", "bin"),
+            ]
         elif instance.status == ReviewStatus.REJECTED:
-            url_1 = reverse("reviews:publish_review", args=[instance.id])
-            title_1 = _("Approve")
-            url_2 = reverse("reviews:delete_review", args=[instance.id])
-            title_2 = _("Delete")
+            actions = [
+                (_("Approve"), "reviews:publish_review", "success"),
+                (_("Delete"), "reviews:delete_review", "bin"),
+            ]
         elif instance.status == ReviewStatus.DELETED:
-            url_1 = reverse("reviews:publish_review", args=[instance.id])
-            title_1 = _("Approve")
-            url_2 = reverse("reviews:reject_review", args=[instance.id])
-            title_2 = _("Reject")
+            actions = [
+                (_("Approve"), "reviews:publish_review", "success"),
+                (_("Reject"), "reviews:reject_review", "cross"),
+            ]
 
-        lang = get_language()
-
-        prefix = f"/{lang}" if lang else ""
-
-        # remove language prefix from URLs
-        url_1 = url_1[len(prefix) :] if url_1.startswith(prefix) else url_1
-        url_2 = url_2[len(prefix) :] if url_2.startswith(prefix) else url_2
-
-        return format_html(
-            '<a href="{}" class="button button-small button-secondary">{}</a> \
-            <a href="{}" class="button button-small no">{}</a>',
-            url_1,
-            title_1,
-            url_2,
-            title_2,
-        )
-
-
-class ContentTypeColumn(Column):
-    def get_value(self, instance):
-        return f"{instance.content_type.app_label.title()}"
-
-
-class ContentObjectColumn(Column):
-    def get_value(self, instance):
-        if len(instance.content_object.__str__()) > 50:
-            title = instance.content_object.__str__()[:50] + " ..."
-        else:
-            title = instance.content_object.__str__()
-
-        lang = get_language()
-
-        prefix = f"/{lang}" if lang else ""
-
-        # remove language prefix from URL
-        url = instance.content_object.url
-        url = url[len(prefix) :] if url.startswith(prefix) else url
-
-        return format_html(
-            '<a href="{}" target="_blank">{}</a>',
-            url,
-            title,
-        )
+        for priority, (label, url_name, icon_name) in enumerate(actions, start=40):
+            buttons.append(
+                ListingButton(
+                    label,
+                    url=without_language_prefix(
+                        reverse(url_name, args=[instance.pk])
+                    ),
+                    icon_name=icon_name,
+                    priority=priority,
+                )
+            )
+        return buttons
 
 
 class ReviewViewSet(ModelViewSet):
     model = Review
     icon = "glasses"
-    menu_label = _("Reviews")
-    add_to_admin_menu = True
-    menu_order = 250
-    search_fields = ("user__username", "comment")
-    list_filter = ("status",)
+    menu_label = _("All reviews")
+    add_to_admin_menu = False
+    copy_view_enabled = False
+    index_view_class = ReviewIndexView
+    ordering = "-created_at"
+    list_per_page = 50
+    search_fields = (
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+        "comment",
+    )
+    list_filter = ("status", "rating", "content_type")
     list_display = (
         "id",
         UserColumn("user", label=_("User")),
-        StatusColumn("status"),
-        ApproveColumn(name=""),
-        ContentTypeColumn(name=_("App")),
-        ContentObjectColumn(name=_("Content Object")),
+        TextPreviewColumn("comment", label=_("Review")),
+        "rating",
+        StatusTagColumn(
+            "get_status_display",
+            label=_("Status"),
+            sort_key="status",
+            primary=lambda instance: instance.status == ReviewStatus.PUBLISHED,
+        ),
+        ContentObjectColumn(),
+        DateColumn("created_at", label=_("Created at"), sort_key="created_at"),
     )
 
 
 review_viewset = ReviewViewSet("reviews_list")
+
+
+class ReviewImportMenuItem(MenuItem):
+    def is_shown(self, request):
+        return request.user.has_perm("reviews.add_review")
+
+
+class ReviewImportViewSet(ViewSet):
+    icon = "upload"
+    menu_label = _("Import Reviews")
+    menu_item_class = ReviewImportMenuItem
+
+    def get_urlpatterns(self):
+        return [path("", import_reviews, name="index")]
+
+
+review_import_viewset = ReviewImportViewSet("reviews_import")
+
+
+class ReviewViewSetGroup(ViewSetGroup):
+    menu_label = _("Reviews")
+    menu_icon = "pick"
+    menu_order = 250
+    items = (review_viewset, review_import_viewset)
 
 
 @csrf_protect
@@ -140,7 +148,17 @@ def add_review(request):
 
     images = request.FILES.getlist("images")
     comment = request.POST.get("comment")
-    rating = int(request.POST.get("rating"))
+    try:
+        rating = int(request.POST.get("rating", ""))
+    except (TypeError, ValueError):
+        rating = None
+
+    if rating is None or not MIN_REVIEW_RATING <= rating <= MAX_REVIEW_RATING:
+        return JsonResponse(
+            {"message": _("Rating must be between 1 and 5.")},
+            status=400,
+        )
+
     object_id = request.POST.get("object_id")
 
     try:
@@ -256,3 +274,74 @@ def publish_review(request, review_id):
     review.save()
     back_url = request.META["HTTP_REFERER"]
     return redirect(back_url)
+
+
+def load_more_reviews(request: HttpRequest) -> JsonResponse:
+    """Return a published review batch or a strict pagination error."""
+    token = request.GET.get("token")
+
+    if not token:
+        return JsonResponse({"error": "Token is required"}, status=400)
+
+    page_pk = signing.loads(token)
+    page = Page.objects.get(pk=page_pk)
+
+    reviews = get_reviews({"request": request}, page.specific)
+
+    return JsonResponse(
+        {
+            "reviews": [
+                render_to_string("reviews/review.html", {"review": r})
+                for r in reviews.object_list
+            ],
+            "page_number": reviews.next_page_number() if reviews.has_next() else None,
+        }
+    )
+
+
+@permission_required("reviews.add_review", raise_exception=True)
+def import_reviews(request):
+    return render(request, "catalog/admin/import_reviews.html", {})
+
+
+@require_POST
+@permission_required("reviews.add_review", raise_exception=True)
+def import_review(request):
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return JsonResponse(
+            {"success": False, "code": "invalid_json", "message": _("Invalid JSON.")},
+            status=400,
+        )
+
+    try:
+        if isinstance(data, list):
+            results = import_review_rows(data)
+            return JsonResponse(
+                {
+                    "success": True,
+                    "results": [
+                        {
+                            "success": result.success,
+                            "code": result.code,
+                            "message": result.message,
+                        }
+                        for result in results
+                    ],
+                }
+            )
+        import_review_row(data)
+    except ReviewImportError as error:
+        return JsonResponse(
+            {"success": False, "code": error.code, "message": str(error)},
+            status=error.status,
+        )
+
+    return JsonResponse(
+        {
+            "success": True,
+            "code": "imported",
+            "message": _("Review created successfully."),
+        }
+    )

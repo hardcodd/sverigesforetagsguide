@@ -1,0 +1,15 @@
+{% load wagtailcore_tags wagtailimages_tags core seo %}
+{% wagtail_site as current_site %}
+<meta property="og:title" content="{{ page.seo_title|default:page.title|clear }}" />
+<meta property="og:type" content="{{ page|social_type }}" />
+<meta property="og:url" content="{{ canonical_url }}" />
+{% if page.search_description %}<meta property="og:description" content="{{ page.search_description }}" />{% endif %}
+{% if current_site.site_name %}<meta property="og:site_name" content="{{ current_site.site_name }}" />{% endif %}
+{% social_image page settings.core.SiteSettings.logo as share_image %}
+{% if share_image %}
+  {% image share_image max-1200x630 format-jpeg as share_rendition %}
+  <meta property="og:image" content="{% absolute_media_url request share_rendition.url %}" />
+  <meta property="og:image:width" content="{{ share_rendition.width }}" />
+  <meta property="og:image:height" content="{{ share_rendition.height }}" />
+  <meta property="og:image:alt" content="{{ share_image.title }}" />
+{% endif %}

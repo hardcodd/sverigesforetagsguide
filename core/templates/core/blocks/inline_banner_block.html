@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+
+<section class="promotion-banner promotion-banner--{{ self.style }}">
+  <div class="promotion-banner__content">
+    {% if self.title %}<h2 class="promotion-banner__title">{{ self.title }}</h2>{% endif %}
+    {% if self.description %}<p class="promotion-banner__description">{{ self.description }}</p>{% endif %}
+    {% if self.button_text and self.get_url and self.get_url != "#" %}
+      <a href="{{ self.get_url }}" class="btn orange round">{{ self.button_text }}</a>
+    {% endif %}
+  </div>
+  {% if self.image %}
+    {% srcset_image self.image max-420x420 format-{avif,webp,png} loading="lazy" class="promotion-banner__image" %}
+  {% endif %}
+</section>

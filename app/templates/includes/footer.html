@@ -1,7 +1,8 @@
 {% load i18n cache wagtailcore_tags %}
+{% get_current_language as fragment_language %}
 
 {% spaceless %}
-  {% cache 86400 footer request.LANGUAGE_CODE %}
+  {% cache 86400 footer_i18n fragment_language %}
   {% with settings.core.SiteSettings as s %}
     <footer id="footer" class="footer">
       <div class="footer__topline">

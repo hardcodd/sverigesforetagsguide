@@ -1,26 +1,35 @@
+from collections.abc import Mapping
 from datetime import datetime, time
 from datetime import time as dtime
+from typing import Any
 
+from django.core.paginator import Page as PaginatorPage
+from django.template import Context
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from wagtail.models import Page
+from wagtail.query import PageQuerySet
 
-from catalog.models import Organization
+from catalog.models import City, Organization
 from catalog.utils import to_12h
-from core.utils import is_catalog_city, is_page, paginate
+from core.utils import paginate
 
 
 def get_working_hours_service(organization: Organization) -> str:
     """Render working hours for the organization."""
 
-    def format_time(value):
-        """Return time in 00:00 format."""
-        if isinstance(value, time):
-            return value.strftime("%H:%M")
-        elif isinstance(value, str):
-            return value
+    def format_time(time_value: time | str | None) -> str | None:
+        """Return time in HH:MM format."""
+        if isinstance(time_value, time):
+            return time_value.strftime("%H:%M")
+
+        if isinstance(time_value, str):
+            return time_value
+
+        return None
 
     def get_day_name(day_index: int) -> str:
-        """Return day name for a given index."""
+        """Return the translated short day name for the given index."""
         days = [
             _("Mon"),
             _("Tue"),
@@ -30,107 +39,136 @@ def get_working_hours_service(organization: Organization) -> str:
             _("Sat"),
             _("Sun"),
         ]
+
         return str(days[day_index - 1])
 
-    def append_result(first_day, last_day, start, end, holiday) -> None:
-        """Append the formatted result to the result string."""
-        if first_day == last_day:
-            if start and end and start == "00:00" and end == "23:59":
-                day_str = f"{first_day}: Open 24 hours"
-            elif start and end:
-                day_str = f"{first_day}: {start}–{end}"
-            elif start:
-                day_str = f"{first_day}: {start}"
-            elif end:
-                day_str = f"{first_day}: {end}"
-            elif holiday:
-                day_str = f"{first_day}: {_('Holiday')}"
-            else:
-                day_str = first_day
-        else:
-            if start and end and start == "00:00" and end == "23:59":
-                day_str = f"{first_day}–{last_day}: Open 24 hours"
-            elif start and end:
-                day_str = f"{first_day}–{last_day}: {start}–{end}"
-            elif holiday:
-                day_str = f"{first_day}–{last_day}: {_('Holiday')}"
-            elif start:
-                day_str = f"{first_day}–{last_day}: {start}"
-            elif end:
-                day_str = f"{first_day}–{last_day}: {end}"
-            else:
-                day_str = f"{first_day}–{last_day}"
+    def append_result(
+        first_day: str,
+        last_day: str,
+        start: str | None,
+        end: str | None,
+        holiday: bool,
+    ) -> None:
+        """Append a formatted group of working days to the result."""
         nonlocal result
+
+        if first_day == last_day:
+            day_range = first_day
+        else:
+            day_range = f"{first_day}–{last_day}"
+
+        if holiday:
+            day_str = f"{day_range}: {_('Holiday')}"
+        elif start == "00:00" and end == "23:59":
+            day_str = f"{day_range}: {_('Open 24 hours')}"
+        elif start and end:
+            day_str = f"{day_range}: {start}–{end}"
+        elif start:
+            day_str = f"{day_range}: {start}"
+        elif end:
+            day_str = f"{day_range}: {end}"
+        else:
+            day_str = day_range
+
         if result:
             result += ", "
+
         result += day_str
 
-    first_day = None
-    first_start = None
-    first_end = None
-    previous_day = None
-    previous_start = None
-    previous_end = None
+    first_day: str | None = None
+    first_start: str | None = None
+    first_end: str | None = None
+    first_holiday = False
+
+    previous_day: str | None = None
+    previous_start: str | None = None
+    previous_end: str | None = None
+    previous_holiday = False
+
     result = ""
 
     for block in organization.working_hours:  # type: ignore
         value = dict(block.value)
+
         day = get_day_name(int(value["day"]))
-        start = format_time(value["start"])
-        end = format_time(value["end"])
-        last_client = value["last_client"]
-        holiday = value["holiday"]
+        start = format_time(value.get("start"))
+        end = format_time(value.get("end"))
+
+        last_client = bool(value.get("last_client"))
+        holiday = bool(value.get("holiday"))
 
         if last_client:
             if end:
-                end += f" ({_('Until the last client')})"
+                end = f"{end} ({_('Until the last client')})"
             else:
-                end = _("Until the last client")
+                end = str(_("Until the last client"))
 
         if first_day is None:
             first_day = day
             first_start = start
             first_end = end
+            first_holiday = holiday
+
             previous_day = day
             previous_start = start
             previous_end = end
+            previous_holiday = holiday
             continue
 
-        if start == previous_start and end == previous_end:
+        same_schedule = (
+            start == previous_start
+            and end == previous_end
+            and holiday == previous_holiday
+        )
+
+        if same_schedule:
             previous_day = day
-        else:
-            append_result(first_day, previous_day, first_start, first_end, holiday)
-            first_day = day
-            first_start = start
-            first_end = end
-            previous_day = day
-            previous_start = start
-            previous_end = end
+            continue
+
+        append_result(
+            first_day=first_day,
+            last_day=previous_day or first_day,
+            start=first_start,
+            end=first_end,
+            holiday=first_holiday,
+        )
+
+        first_day = day
+        first_start = start
+        first_end = end
+        first_holiday = holiday
+
+        previous_day = day
+        previous_start = start
+        previous_end = end
+        previous_holiday = holiday
 
     if first_day is not None:
-        append_result(first_day, previous_day, first_start, first_end, holiday)
+        append_result(
+            first_day=first_day,
+            last_day=previous_day or first_day,
+            start=first_start,
+            end=first_end,
+            holiday=first_holiday,
+        )
 
     return result
 
 
-def get_current_city_service(context) -> str:
-    """Return the current city if current page is a catalog.city page.
-    Else try to get the city from parent pages."""
-
+def get_current_city_service(context: Context | Mapping[str, object]) -> str:
+    """Find the nearest city in one query, without loading each ancestor's body."""
     page = context.get("page")
-
-    if not is_page(page):
+    if not isinstance(page, Page):
         return ""
-
-    if is_catalog_city(page):
-        return page.specific.title
-
-    # Try to get the city from parent pages
-    for parent_page in page.get_ancestors().reverse():
-        if is_catalog_city(parent_page):
-            return parent_page.specific.title
-
-    return ""
+    if isinstance(page, City):
+        return str(page.title)
+    city = (
+        City.objects.ancestor_of(page, inclusive=True)
+        .defer_streamfields()
+        .order_by("-depth")
+        .first()
+    )
+    return str(city.title) if city else ""
 
 
 def get_phones_service(organization: Organization) -> list:
@@ -225,18 +263,26 @@ def get_top_organizations_service(page):
     return page.get_descendants().live()
 
 
-def get_latest_organizations_service(parent=None, count=4):
-    """Return latest organizations for."""
-    qs = Organization.objects.live().order_by("-first_published_at")
+def get_latest_organizations_service(
+    parent: Page | None = None, count: int = 4
+) -> PageQuerySet:
+    """Return latest cards without fetching unused translated StreamFields."""
+    qs = Organization.objects.live().defer_streamfields().order_by("-first_published_at")
     if parent:
         qs = qs.descendant_of(parent)
     return qs[:count]
 
 
-def get_paginated_organizations_service(context, parent=None, count=16):
-    """Return paginated organizations"""
+def get_paginated_organizations_service(
+    context: Context | Mapping[str, Any], parent: Page | None = None, count: int = 16
+) -> PaginatorPage:
+    """Paginate category filters only for lists belonging to the current page."""
     request = context.get("request")
-    qs = Organization.objects.live()
+    listing = context.get("organization_listing")
+    page = context.get("page")
+    if listing is not None and (parent is None or parent.pk == page.pk):
+        return paginate(request, listing.queryset, count)
+    qs = Organization.objects.live().defer_streamfields()
     if parent:
         qs = qs.descendant_of(parent)
     return paginate(request, qs, count)
@@ -290,7 +336,7 @@ def get_organization_status_service(organization: Organization):
         found_today = True
 
         if value.get("holiday"):
-            return _("Closed")
+            return {"code": "closed", "status": _("Closed")}
 
         start_t = _to_time(value.get("start"))
         end_t = _to_time(value.get("end"))
@@ -298,17 +344,19 @@ def get_organization_status_service(organization: Organization):
 
         # 24 часа
         if start_t == dtime(0, 0) and end_t in (dtime(23, 59), dtime(23, 59, 59)):
-            return _("Open 24 hours")
+            return {"code": "open", "status": _("Open 24 hours")}
 
         if _in_range(now_t, start_t, end_t):
             if last_client and (end_t is None or now_t <= end_t):
-                return _("Open until the last client")
+                return {"code": "open", "status": _("Open until the last client")}
             if end_t:
-                return _("Open until %(time)s") % {
-                    "time": to_12h(end_t.strftime("%H:%M"))
+                return {
+                    "code": "open",
+                    "status": _("Open until %(time)s")
+                    % {"time": to_12h(end_t.strftime("%H:%M"))},
                 }
-            return _("Open")
+            return {"code": "open", "status": _("Open")}
 
     if found_today:
-        return _("Closed")
-    return _("Unknown")
+        return {"code": "closed", "status": _("Closed")}
+    return {"code": "unknown", "status": _("Unknown")}

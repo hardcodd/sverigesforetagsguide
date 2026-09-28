@@ -1,0 +1,10 @@
+{% load i18n static core %}
+
+<section class="promotion-banner promotion-banner--light-blue">
+  <div class="promotion-banner__content">
+    <h2 class="promotion-banner__title">{% trans "Do you want to increase the number of clients by 5 times?" %}</h2>
+    <p class="promotion-banner__description">{% trans "Choose premium placement on Madloba and attract customers who are currently leaving for your competitors." %}</p>
+    <a href="{% localize_url '/premium-contacts/' %}" class="btn orange round">{% trans "I want" %}</a>
+  </div>
+  <img src="{% static 'banners/premium-placement.png' %}" class="promotion-banner__image" width="420" height="420" loading="lazy" alt="">
+</section>

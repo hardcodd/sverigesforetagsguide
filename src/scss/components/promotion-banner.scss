@@ -1,0 +1,162 @@
+@use "../functions" as *;
+
+.promotion-banner {
+	display: flex;
+	flex-wrap: wrap;
+	gap: rem(24);
+	align-items: center;
+	margin-block: rem(24);
+	padding: clamp(1.25rem, 3vw, 2.5rem);
+
+	border-radius: var(--border-radius);
+
+	&--light-blue {
+		background: #e8f5ff;
+		box-shadow: var(--box-shadow-1);
+	}
+
+	&--purple-red {
+		color: white;
+
+		background: linear-gradient(110deg, #833f9b, #f00023);
+	}
+
+	&--blue-green {
+		color: white;
+
+		background: linear-gradient(110deg, #2452b9, #287d36);
+	}
+
+	&__content {
+		flex: 1 1 rem(260);
+		min-width: 0;
+
+		overflow-wrap: anywhere;
+	}
+
+	&__title {
+		margin: 0 0 rem(12);
+
+		font-weight: 700;
+		font-size: clamp(1.25rem, 2vw, 1.75rem);
+		line-height: 1.3;
+	}
+
+	&__description {
+		margin: 0 0 rem(18);
+	}
+
+	&__image {
+		flex: 0 1 rem(180);
+		width: rem(180);
+		max-width: 100%;
+		height: auto;
+		max-height: rem(200);
+		margin-inline: auto;
+
+		object-fit: contain;
+	}
+}
+
+.category-ratings {
+	display: flex;
+	flex-wrap: wrap;
+	gap: rem(12);
+	align-items: flex-end;
+	margin-block: rem(24);
+	padding: rem(20);
+
+	background: #f3f4f7;
+	border-radius: var(--border-radius);
+
+	&__text {
+		flex: 1 1 rem(160);
+		min-width: 0;
+
+		overflow-wrap: anywhere;
+
+		h3 {
+			margin-top: 0;
+
+			font-size: rem(18);
+		}
+
+		ul {
+			padding-left: rem(20);
+		}
+
+		p:last-child,
+		ul:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&__image {
+		width: rem(100);
+		max-width: 100%;
+		height: auto;
+		max-height: rem(120);
+		margin-left: auto;
+
+		object-fit: contain;
+	}
+}
+
+.organization-promotions__items {
+	display: grid;
+	gap: rem(12);
+
+	.organization-item {
+		display: grid;
+		grid-template-columns: clamp(6rem, 30%, 10rem) minmax(0, 1fr);
+		min-height: rem(132);
+
+		&__images {
+			border-radius: var(--border-radius) 0 0 var(--border-radius);
+
+			.ratio {
+				width: 100%;
+				height: 100%;
+				padding: 0;
+			}
+		}
+
+		&__content {
+			gap: rem(6);
+			align-content: center;
+			min-width: 0;
+			padding: rem(12);
+		}
+
+		&__heading,
+		&__description {
+			display: -webkit-box;
+			overflow: hidden;
+
+			overflow-wrap: anywhere;
+
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+		}
+
+		.rewards--small {
+			min-height: rem(24);
+
+			.rewards__item {
+				width: rem(24);
+			}
+		}
+
+		&.premium .organization-item__content {
+			border-radius: 0 var(--border-radius) var(--border-radius) 0;
+
+			&:before {
+				width: 0;
+				height: 100%;
+
+				border-top: 0;
+				border-left: rem(1) dashed var(--accent-color);
+			}
+		}
+	}
+}

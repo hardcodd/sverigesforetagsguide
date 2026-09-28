@@ -1,0 +1,14 @@
+@use "../functions" as *;
+
+.template-flatpage .text-block {
+	ul {
+		margin: 1em 0;
+		padding-inline-start: em(20);
+
+		list-style: disc outside;
+	}
+
+	ul > li {
+		padding: em(3) 0;
+	}
+}

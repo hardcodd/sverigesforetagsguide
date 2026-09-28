@@ -19,6 +19,12 @@
       "publicPath": "/static/banners/cupman.png",
       "sourceFilename": "static/banners/cupman.png"
     },
+    "banners/premium-placement.png": {
+      "name": "banners/premium-placement.png",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/banners/premium-placement.png",
+      "publicPath": "/static/banners/premium-placement.png",
+      "sourceFilename": "static/banners/premium-placement.png"
+    },
     "btn/1.png": {
       "name": "btn/1.png",
       "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/btn/1.png",
@@ -115,10 +121,10 @@
       "publicPath": "/static/btn/9.png",
       "sourceFilename": "static/btn/9.png"
     },
-    "css/d977b89689ee4c02d9ed.main.css": {
-      "name": "css/d977b89689ee4c02d9ed.main.css",
-      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/css/d977b89689ee4c02d9ed.main.css",
-      "publicPath": "/static/css/d977b89689ee4c02d9ed.main.css"
+    "css/0eb7922e8aeaeb8a3138.main.css": {
+      "name": "css/0eb7922e8aeaeb8a3138.main.css",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/css/0eb7922e8aeaeb8a3138.main.css",
+      "publicPath": "/static/css/0eb7922e8aeaeb8a3138.main.css"
     },
     "favicon/favicon.png": {
       "name": "favicon/favicon.png",
@@ -192,10 +198,10 @@
       "publicPath": "/static/hero-banner.png",
       "sourceFilename": "static/hero-banner.png"
     },
-    "js/c9184a4c439a66921312.main.js": {
-      "name": "js/c9184a4c439a66921312.main.js",
-      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/js/c9184a4c439a66921312.main.js",
-      "publicPath": "/static/js/c9184a4c439a66921312.main.js"
+    "js/2bab489f18a403bd7153.main.js": {
+      "name": "js/2bab489f18a403bd7153.main.js",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/js/2bab489f18a403bd7153.main.js",
+      "publicPath": "/static/js/2bab489f18a403bd7153.main.js"
     },
     "js/f7983d9e4f74e31a9456.272.js": {
       "name": "js/f7983d9e4f74e31a9456.272.js",
@@ -224,6 +230,36 @@
       "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/madloba-admin.js",
       "publicPath": "/static/madloba-admin.js",
       "sourceFilename": "static/madloba-admin.js"
+    },
+    "madloba-export.css": {
+      "name": "madloba-export.css",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/madloba-export.css",
+      "publicPath": "/static/madloba-export.css",
+      "sourceFilename": "static/madloba-export.css"
+    },
+    "madloba-export.js": {
+      "name": "madloba-export.js",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/madloba-export.js",
+      "publicPath": "/static/madloba-export.js",
+      "sourceFilename": "static/madloba-export.js"
+    },
+    "madloba-import-comments.js": {
+      "name": "madloba-import-comments.js",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/madloba-import-comments.js",
+      "publicPath": "/static/madloba-import-comments.js",
+      "sourceFilename": "static/madloba-import-comments.js"
+    },
+    "madloba-import-reviews.js": {
+      "name": "madloba-import-reviews.js",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/madloba-import-reviews.js",
+      "publicPath": "/static/madloba-import-reviews.js",
+      "sourceFilename": "static/madloba-import-reviews.js"
+    },
+    "madloba-import.js": {
+      "name": "madloba-import.js",
+      "path": "/Volumes/HC/www/madlobafamily/new.madloba.info/app/static/madloba-import.js",
+      "publicPath": "/static/madloba-import.js",
+      "sourceFilename": "static/madloba-import.js"
     },
     "madloba-mobile.svg": {
       "name": "madloba-mobile.svg",
@@ -259,8 +295,8 @@
   "chunks": {
     "main": [
       "js/f7983d9e4f74e31a9456.272.js",
-      "css/d977b89689ee4c02d9ed.main.css",
-      "js/c9184a4c439a66921312.main.js"
+      "css/0eb7922e8aeaeb8a3138.main.css",
+      "js/2bab489f18a403bd7153.main.js"
     ]
   },
   "publicPath": "/static/"

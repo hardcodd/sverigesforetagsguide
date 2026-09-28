@@ -1,21 +1,30 @@
 {% extends "base.html" %}
-
-{% load i18n static wagtailcore_tags core %}
+{% load i18n core %}
 
 {% block body_class %}template-searchresults{% endblock %}
-
-{% block title %}Search{% endblock %}
+{% block title %}{% trans "Search" %}{% if search_query %}: {{ search_query }}{% endif %}{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h1>Search</h1>
-
-    <form action="{% url 'search' %}" method="get" hidden>
-      <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-      <input type="submit" value="Search" class="button">
-    </form>
+  <div class="container search-page">
+    <header class="search-page__header">
+      <h1 class="search-page__title">
+        {% trans "Search" %}{% if search_query %} <mark class="search-page__query">«{{ search_query }}»</mark>{% endif %}
+      </h1>
+      <form action="{% url 'search' %}" method="get" class="search-page__form" role="search" aria-label="{% trans 'Search the site' %}">
+        <label for="search-page-query" class="sr-only">{% trans "Search query" %}</label>
+        <div class="search-page__field">
+          <span class="search-page__icon" aria-hidden="true">{% include "icons/search.svg" %}</span>
+          <input id="search-page-query" type="search" name="query" value="{{ search_query }}" placeholder="{% trans 'Name, place or keyword' %}" required>
+        </div>
+        <button type="submit" class="search-page__submit">{% trans "Find" %}</button>
+      </form>
+    </header>
 
     {% if search_results %}
+      <div class="search-page__summary">
+        <p>{% trans "Results found:" %} <strong>{{ search_results.paginator.count }}</strong></p>
+        <p>{% blocktranslate with start=search_results.start_index end=search_results.end_index %}Showing {{ start }}–{{ end }}{% endblocktranslate %}</p>
+      </div>
       <div class="search-results">
         <div class="row v-gutters">
           {% for result in search_results %}
@@ -24,10 +33,18 @@
           {% endfor %}
         </div>
       </div>
-
       {% include "includes/pagination.html" with page_obj=search_results %}
-    {% elif search_query %}
-      <h2>{% trans "No results found" %}</h2>
+    {% else %}
+      <section class="search-page__empty" aria-labelledby="search-empty-title">
+        <span class="search-page__empty-icon" aria-hidden="true">{% include "icons/search.svg" %}</span>
+        {% if search_query %}
+          <h2 id="search-empty-title">{% trans "No results found" %}</h2>
+          <p>{% trans "Check the spelling or try fewer, more general words." %}</p>
+        {% else %}
+          <h2 id="search-empty-title">{% trans "What would you like to find?" %}</h2>
+          <p>{% trans "Enter an organization, place or topic in the search field above." %}</p>
+        {% endif %}
+      </section>
     {% endif %}
   </div>
 {% endblock %}

@@ -1,0 +1,175 @@
+{% extends "wagtailadmin/base.html" %}
+
+{% load i18n static %}
+
+{% block titletag %}
+	{% trans "Export pages" %}
+{% endblock %}
+
+{% block extra_css %}
+	{{ block.super }}
+	<link rel="stylesheet" href="{% static 'madloba-export.css' %}">
+{% endblock %}
+
+{% block content %}
+	{% trans "Export pages" as export_pages_title %}
+	{% include "wagtailadmin/shared/header.html" with title=export_pages_title icon="download" %}
+
+	<div class="nice-padding export-page">
+		<form
+			id="madloba-export-form"
+			class="export-page__form"
+			data-csrf="{{ csrf_token }}"
+			data-fields-url="{{ export_fields_url }}"
+			data-parent-search-url="{{ search_parent_pages_url }}"
+			data-start-url="{{ start_export_url }}"
+			data-progress-url="{{ export_progress_url }}"
+		>
+			<ul class="export-page__sections">
+				<li class="export-card export-card--page-type">
+					<div class="w-field__wrapper" data-field-wrapper>
+						<label class="w-field__label" for="id_page_type" id="id_page_type-label">
+							{% trans "Page type" %}<span class="w-required-mark">*</span>
+						</label>
+						<div class="w-field w-field--choice_field w-field--select" data-field data-contentpath="page_type">
+							<div class="w-field__errors" data-field-errors></div>
+							<div class="w-field__help" data-field-help></div>
+							<div class="w-field__input" data-field-input>
+								<select id="id_page_type" name="page_type" required>
+									<option value="">---</option>
+									{% for page_type in page_types %}
+										<option value="{{ page_type.value }}">{{ page_type.label }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+					</div>
+					<p class="export-card__hint">{% trans "Choose the kind of pages you want to export." %}</p>
+				</li>
+
+				<li class="export-card">
+					<fieldset>
+						<legend class="export-card__title">{% trans "Filters" %}</legend>
+						<p class="export-card__description">{% trans "Narrow the export if you only need part of the selected page type." %}</p>
+
+						<div class="export-filter-grid">
+							<div class="w-field__wrapper" data-field-wrapper>
+								<label class="w-field__label" for="id_created_from" id="id_created_from-label">{% trans "Created from" %}</label>
+								<div class="w-field w-field--date_field w-field--date_input" data-field data-contentpath="created_from">
+									<div class="w-field__errors" data-field-errors></div>
+									<div class="w-field__help" data-field-help></div>
+									<div class="w-field__input" data-field-input>
+										<input type="date" id="id_created_from" name="created_from">
+									</div>
+								</div>
+							</div>
+
+							<div class="w-field__wrapper" data-field-wrapper>
+								<label class="w-field__label" for="id_created_to" id="id_created_to-label">{% trans "Created to" %}</label>
+								<div class="w-field w-field--date_field w-field--date_input" data-field data-contentpath="created_to">
+									<div class="w-field__errors" data-field-errors></div>
+									<div class="w-field__help" data-field-help></div>
+									<div class="w-field__input" data-field-input>
+										<input type="date" id="id_created_to" name="created_to">
+									</div>
+								</div>
+							</div>
+
+							<div class="w-field__wrapper" data-field-wrapper>
+								<label class="w-field__label" for="id_updated_from" id="id_updated_from-label">{% trans "Updated from" %}</label>
+								<div class="w-field w-field--date_field w-field--date_input" data-field data-contentpath="updated_from">
+									<div class="w-field__errors" data-field-errors></div>
+									<div class="w-field__help" data-field-help></div>
+									<div class="w-field__input" data-field-input>
+										<input type="date" id="id_updated_from" name="updated_from">
+									</div>
+								</div>
+							</div>
+
+							<div class="w-field__wrapper" data-field-wrapper>
+								<label class="w-field__label" for="id_updated_to" id="id_updated_to-label">{% trans "Updated to" %}</label>
+								<div class="w-field w-field--date_field w-field--date_input" data-field data-contentpath="updated_to">
+									<div class="w-field__errors" data-field-errors></div>
+									<div class="w-field__help" data-field-help></div>
+									<div class="w-field__input" data-field-input>
+										<input type="date" id="id_updated_to" name="updated_to">
+									</div>
+								</div>
+							</div>
+							<div class="w-field__wrapper" data-field-wrapper>
+								<label class="w-field__label" for="id_parent_search" id="id_parent_search-label">{% trans "Parent page" %}</label>
+								<div class="w-field w-field--char_field w-field--text_input" data-field data-contentpath="parent_id">
+									<div class="w-field__errors" data-field-errors></div>
+									<div class="w-field__help" data-field-help></div>
+									<div class="w-field__input" data-field-input>
+										<input type="search" id="id_parent_search" autocomplete="off" placeholder="{% trans "Search parent page" %}">
+										<input type="hidden" id="id_parent_id" name="parent_id">
+										<div id="parent-search-results" class="listing w-mt-2"></div>
+									</div>
+								</div>
+							</div>
+
+							<div class="w-field__wrapper" data-field-wrapper>
+								<label class="w-field__label" for="id_live" id="id_live-label">{% trans "Published status" %}</label>
+								<div class="w-field w-field--choice_field w-field--select" data-field data-contentpath="live">
+									<div class="w-field__errors" data-field-errors></div>
+									<div class="w-field__help" data-field-help></div>
+									<div class="w-field__input" data-field-input>
+										<select id="id_live" name="live">
+											<option value="">{% trans "Any" %}</option>
+											<option value="true">{% trans "Published" %}</option>
+											<option value="false">{% trans "Unpublished" %}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</li>
+
+				<li class="export-card export-card--fields">
+					<fieldset>
+						<legend class="export-card__title">{% trans "Fields" %}</legend>
+						<div class="export-fields-toolbar">
+							<div>
+								<p class="export-card__description">{% trans "Select the columns to include in the CSV file." %}</p>
+								<span id="export-fields-count" class="export-fields-count" aria-live="polite"></span>
+							</div>
+							<div class="export-fields-actions">
+								<button id="export-fields-select-all" type="button" class="button button-small button-secondary" disabled>
+									{% trans "Select all" %}
+								</button>
+								<button id="export-fields-clear" type="button" class="button button-small button-secondary" disabled>
+									{% trans "Clear choice" %}
+								</button>
+							</div>
+						</div>
+						<div id="export-fields" class="export-fields-list">
+							<p>{% trans "Choose page type first." %}</p>
+						</div>
+					</fieldset>
+				</li>
+
+				<li class="export-actions">
+					<button type="submit" class="button button-longrunning export-submit">
+						{% trans "Start export" %}
+					</button>
+					<p>{% trans "The CSV file will be available here when the export is complete." %}</p>
+				</li>
+			</ul>
+		</form>
+
+		<div id="export-progress" class="export-card export-progress" hidden>
+			<h2>{% trans "Export progress" %}</h2>
+			<div class="progress">
+				<div class="bar">0%</div>
+			</div>
+			<p id="export-progress-status"></p>
+			<p>
+				<a id="export-download-link" class="button" href="#" hidden>
+					{% trans "Download file" %}
+				</a>
+			</p>
+		</div>
+	</div>
+{% endblock %}

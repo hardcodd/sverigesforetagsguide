@@ -18,7 +18,7 @@
   <section class="section section-new-in-city">
     <div class="container">
       {% if request.GET.address %}
-        {% trans "[[By address]]: "|add:request.GET.address as section_title %}
+        {% blocktranslate with address=request.GET.address asvar section_title %}[[By address]]: {{ address }}{% endblocktranslate %}
       {% else %}
         {% trans "Organizations" as section_title %}
       {% endif %}

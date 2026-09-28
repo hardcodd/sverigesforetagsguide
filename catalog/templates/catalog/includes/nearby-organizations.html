@@ -1,0 +1,17 @@
+{% load i18n wagtailimages_tags wagtailcore_tags %}
+
+{% if nearby_organizations %}
+	<section class="nearby-organizations" aria-labelledby="nearby-organizations-title">
+		<h2 class="h3" id="nearby-organizations-title">{% trans "Similar places nearby" %}</h2>
+		<p class="nearby-organizations__intro">{% trans "Places in the same category within 5 km. Distances are approximate and measured in a straight line." %}</p>
+		<ul class="nearby-organizations__items" id="nearby-organization-items">
+			{% include "catalog/includes/nearby-organization-items.html" %}
+		</ul>
+		{% if nearby_next_url %}
+			<div class="nearby-organizations__more">
+				<button type="button" class="btn outline fix nearby-organizations__load-more" data-next-url="{{ nearby_next_url }}" data-loading-text="{% trans 'Loading nearby places…' %}" data-error-text="{% trans 'Could not load nearby places. Please try again.' %}" data-success-text="{% trans 'More nearby places loaded.' %}" data-complete-text="{% trans 'All nearby places have been shown.' %}" aria-controls="nearby-organization-items" hidden>{% trans "Show more nearby places" %}</button>
+				<p class="nearby-organizations__status" role="status" aria-live="polite"></p>
+			</div>
+		{% endif %}
+	</section>
+{% endif %}

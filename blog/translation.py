@@ -6,7 +6,7 @@ from blog.models import BlogCategoryPage, BlogIndexPage, BlogPostPage
 
 @register(BlogIndexPage)
 class BlogIndexPageTR(TranslationOptions):
-    fields = ("subtitle",)
+    fields = ("subtitle", "banners")
 
 
 @register(BlogCategoryPage)

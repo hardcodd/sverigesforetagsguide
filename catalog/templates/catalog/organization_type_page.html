@@ -2,16 +2,15 @@
 
 {% load i18n wagtailcore_tags core catalog %}
 
+{% block extrahead %}
+  {% if organization_listing.is_filtered and not page.noindex %}<meta name="robots" content="noindex, follow">{% endif %}
+{% endblock extrahead %}
+
 {% block content %}
   <div class="container">
     <h1 class="page__title">
       {{ page.title|mark|safe }} <mark><a href="{{ page.get_parent.url }}" style="color: var(--accent-color)">{{ page.get_parent.title }}</a></mark>
     </h1>
-    {% if active_service_type %}
-      <p>
-        <big><strong>{% trans "By tag:" %}</strong></big> <mark>{{ active_service_type }}</mark>
-      </p>
-    {% endif %}
     <div class="page__description">{{ page.description|richtext }}</div>
   </div>
 
@@ -38,9 +37,14 @@
     </section>
   {% endif %}
 
+  <div class="container">
+    {% include "catalog/includes/organization-filters.html" with listing=organization_listing %}
+  </div>
+
   {% for block in page.content %}
     {% include_block block %}
-  {% empty %}
+  {% endfor %}
+  {% if not has_category_listing %}
     <section class="section section--latest-organizations">
       <div class="container">
         <div class="row v-gutters">
@@ -52,5 +56,5 @@
         {% include "includes/pagination.html" with page_obj=organizations %}
       </div>
     </section>
-  {% endfor %}
+  {% endif %}
 {% endblock content %}

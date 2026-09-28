@@ -3,15 +3,15 @@
 {% get_current_language as current_lang %}
 
 {% spaceless %}
-  {% cache 604800 blog_post_item post.pk current_lang %}
+  {% cache 604800 rating_post_item_i18n post.pk current_lang %}
   <article class="blog-post" id="blog-post-{{ post.pk }}">
     <header class="blog-post__header">
       <a href="{{ post.url }}" class="blog-post__image">
         <div class="ratio">
           {% if post.to_organization.images.count %}
-            {% srcset_image post.to_organization.images.first.image width-720 format-{avif,webp,jpeg} loading="lazy" %}
+            {% srcset_image post.to_organization.images.first.image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}
           {% else %}
-            {% srcset_image settings.core.SiteSettings.default_organization_image width-720 format-{avif,webp,jpeg} loading="lazy" %}
+            {% srcset_image settings.core.SiteSettings.default_organization_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}
           {% endif %}
         </div>
       </a>
@@ -23,7 +23,7 @@
           <span class="blog-post__meta-icon">{% include "wagtailadmin/icons/calendar-alt.svg" %}</span>
           <span class="blog-post__meta-value">
             <a href="{{ post.url }}">
-              <time datetime="{{ post.first_published_at|date:'c' }}">{{ post.first_published_at|date:'M d, Y' }}</time>
+              <time datetime="{{ post.first_published_at|date:'c' }}">{{ post.first_published_at|date:'DATE_FORMAT' }}</time>
             </a>
           </span>
         </div>

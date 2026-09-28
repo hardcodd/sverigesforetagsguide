@@ -9,7 +9,7 @@
       <div class="comment__body">
         <div class="comment__info">
           <strong class="comment__user{% if request.user == node.user %} current{% endif %}{% if node.user.is_staff %} moderator-badge{% endif %}">{{ node.user.get_short_name|default:node.user }}</strong>
-          <time class="comment__created_at">{{ node.created_at|timesince }} {% trans 'ago' %}</time>
+          <time class="comment__created_at">{% blocktranslate with elapsed=node.created_at|timesince %}{{ elapsed }} ago{% endblocktranslate %}</time>
         </div>
         <div class="comment__content">{% trans 'Comment was deleted by moderator' %}</div>
       </div>

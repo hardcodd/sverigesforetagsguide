@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from wagtail.blocks import IntegerBlock, PageChooserBlock, StructBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 
 
 class BlogPostBlock(PageChooserBlock):
@@ -54,3 +55,12 @@ class PaginatedOrganizationsBlock(StructBlock):
         icon = "briefcase-solid"
         label = _("Paginated organizations")
         template = "catalog/blocks/paginated-organizations-block.html"
+
+
+class GalleryBlock(StructBlock):
+    gallery = SnippetChooserBlock("blog.BlogGallery", label=_("Gallery"))
+
+    class Meta:
+        icon = "image"
+        label = _("Gallery")
+        template = "blog/blocks/gallery-block.html"

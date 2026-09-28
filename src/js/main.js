@@ -14,6 +14,8 @@ import "./components/tabs";
 import "./components/organization-images";
 import "./components/search-images";
 import "./components/organization";
+import "./components/nearby-organizations";
+import "./components/organization-filters";
 import "./components/organization-item";
 import "./components/textarea";
 import "./components/images-upload-field";
@@ -25,6 +27,7 @@ import "./components/cookie-consent";
 import "./components/comments";
 import "./components/contact-tabs";
 import "./components/blog-post";
+import "./components/gallery";
 
 // Pages
 import "./map-page";

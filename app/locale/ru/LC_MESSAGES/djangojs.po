@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 08:58+0100\n"
+"POT-Creation-Date: 2026-08-14 18:55+0700\n"
 "PO-Revision-Date: 2025-11-30 08:59+0100\n"
 "Last-Translator: Alex Hardcodd <shubenkin.alexander@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,27 +65,27 @@ msgstr "не является изображением."
 msgid "is not a valid image type."
 msgstr "недопустимый тип изображения."
 
-#: src/js/components/organization.js:42
+#: src/js/components/organization.js:43
 msgid "Link copied!"
 msgstr "Ссылка скопирована!"
 
-#: src/js/components/organization.js:43
+#: src/js/components/organization.js:44
 msgid "Failed to copy the link!"
 msgstr "Не удалось скопировать ссылку!"
 
-#: src/js/components/organization.js:51
+#: src/js/components/organization.js:52
 msgid "Coordinates copied!"
 msgstr "Координаты скопированы!"
 
-#: src/js/components/organization.js:52
+#: src/js/components/organization.js:53
 msgid "Failed to copy coordinates!"
 msgstr "Ошибка при копировании координат!"
 
-#: src/js/components/organization.js:60
+#: src/js/components/organization.js:61
 msgid "Plus code copied!"
 msgstr "Plus code скопирован!"
 
-#: src/js/components/organization.js:61
+#: src/js/components/organization.js:62
 msgid "Failed to copy plus code!"
 msgstr "Ошибка при копировании plus code."
 
@@ -96,3 +96,142 @@ msgstr "Успешно"
 #: src/js/components/reviews.js:38
 msgid "Error"
 msgstr "Ошибка"
+
+#: src/static/madloba-export.js:4
+msgid "Request URL is missing."
+msgstr "Не указан URL запроса."
+
+#: src/static/madloba-export.js:24
+msgid "HTTP error"
+msgstr "Ошибка HTTP"
+
+#: src/static/madloba-export.js:43
+msgid "No exportable fields found."
+msgstr "Поля, доступные для экспорта, не найдены."
+
+#: src/static/madloba-export.js:91
+msgid "No pages found."
+msgstr "Страницы не найдены."
+
+#: src/static/madloba-export.js:156
+msgid "Export form elements were not found."
+msgstr "Не найдены элементы формы экспорта."
+
+#: src/static/madloba-export.js:167
+msgid "Export endpoint URLs were not provided."
+msgstr "Не указаны URL обработчиков экспорта."
+
+#: src/static/madloba-export.js:217 src/static/madloba-export.js:226
+msgid "Export failed."
+msgstr "Не удалось выполнить экспорт."
+
+#: src/static/madloba-export.js:238
+msgid "Choose page type first."
+msgstr "Сначала выберите тип страницы."
+
+#: src/static/madloba-export.js:243
+msgid "Loading fields..."
+msgstr "Загрузка полей..."
+
+#: src/static/madloba-export.js:256
+msgid "Could not load fields."
+msgstr "Не удалось загрузить поля."
+
+#: src/static/madloba-export.js:287
+msgid "Searching..."
+msgstr "Поиск..."
+
+#: src/static/madloba-export.js:299
+msgid "Search failed."
+msgstr "Не удалось выполнить поиск."
+
+#: src/static/madloba-export.js:310
+msgid "Choose a page type."
+msgstr "Выберите тип страницы."
+
+#: src/static/madloba-export.js:316
+msgid "Choose at least one field."
+msgstr "Выберите хотя бы одно поле."
+
+#: src/static/madloba-export.js:323
+msgid "Starting export..."
+msgstr "Запуск экспорта..."
+
+#: src/static/madloba-export.js:347
+msgid "Server did not return an export job ID."
+msgstr "Сервер не вернул идентификатор задачи экспорта."
+
+#: src/static/madloba-export.js:352
+msgid "Could not start export."
+msgstr "Не удалось запустить экспорт."
+
+#: src/static/madloba-import-comments.js:8
+#: src/static/madloba-import-reviews.js:8
+msgid "CSV import utilities are unavailable."
+msgstr "Инструменты импорта CSV недоступны."
+
+#: src/static/madloba-import-comments.js:19
+msgid "Comment import form controls are unavailable."
+msgstr "Элементы формы импорта комментариев недоступны."
+
+#: src/static/madloba-import-reviews.js:19
+msgid "Review import form controls are unavailable."
+msgstr "Элементы формы импорта отзывов недоступны."
+
+#: src/static/madloba-import-comments.js:23
+#: src/static/madloba-import-reviews.js:23
+msgid "CSV parser is unavailable."
+msgstr "Парсер CSV недоступен."
+
+#: src/static/madloba-import-comments.js:42
+#: src/static/madloba-import-reviews.js:42
+msgid "Imported!"
+msgstr "Импортировано!"
+
+#: src/static/madloba-import-comments.js:72
+#: src/static/madloba-import-reviews.js:72
+msgid "The server returned an incomplete import result."
+msgstr "Сервер вернул неполный результат импорта."
+
+#: src/static/madloba-import-comments.js:93
+#: src/static/madloba-import-reviews.js:93
+msgid "Import request failed."
+msgstr "Не удалось выполнить запрос импорта."
+
+#: src/static/madloba-import-comments.js:112
+#: src/static/madloba-import-reviews.js:112
+msgid "Import completed"
+msgstr "Импорт завершён"
+
+#: src/static/madloba-import-comments.js:113
+#: src/static/madloba-import-reviews.js:113
+msgid "Successful"
+msgstr "Успешно"
+
+#: src/static/madloba-import-comments.js:114
+#: src/static/madloba-import-reviews.js:114
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: src/static/madloba-import-comments.js:115
+#: src/static/madloba-import-reviews.js:115
+msgid "Errors"
+msgstr "Ошибки"
+
+#: src/static/madloba-import-comments.js:137
+#: src/static/madloba-import-reviews.js:135
+msgid "Missing required CSV fields"
+msgstr "Отсутствуют обязательные поля CSV"
+
+#: src/static/madloba-import-comments.js:162
+#: src/static/madloba-import-reviews.js:161
+msgid "Parsing error"
+msgstr "Ошибка разбора"
+
+#: src/static/madloba-admin.js
+msgid "No data to import"
+msgstr "Нет данных для импорта"
+
+#: src/static/madloba-admin.js
+msgid "Status"
+msgstr "Статус"

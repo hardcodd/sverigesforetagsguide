@@ -1,3 +1,8 @@
+from collections.abc import Mapping
+
+from django.template import Context
+
+from core.page_tree import PageTreeNode, build_page_tree
 from core.utils import paginate
 from ratings.models import RatingCategoryPage, RatingPage, RatingsIndexPage
 
@@ -7,27 +12,15 @@ def get_ratings_index_page_service(context):
     return RatingsIndexPage.objects.live().ancestor_of(page, inclusive=True).first()
 
 
-def _build_tree(pages, parent):
-    tree = []
-
-    for page in pages:
-        page.children = []
-
-        if page.is_child_of(parent):
-            tree.append(page)
-
-        children = page.get_children().type(RatingCategoryPage)
-        if children:
-            page.children = _build_tree(children, page)
-
-    return tree
-
-
-def get_ratings_categories_list_service(context):
+def get_ratings_categories_list_service(
+    context: Context | Mapping[str, object],
+) -> list[PageTreeNode]:
+    """Build rating navigation without recursively querying every category."""
     ratings_index_page = get_ratings_index_page_service(context)
+    if ratings_index_page is None:
+        return []
     categories = RatingCategoryPage.objects.live().descendant_of(ratings_index_page)
-
-    return _build_tree(categories, ratings_index_page)
+    return build_page_tree(categories, ratings_index_page)
 
 
 def get_paginated_ratings_posts_service(context, parent, count=16):

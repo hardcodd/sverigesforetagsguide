@@ -14,7 +14,7 @@
                 <img src="{{ thumb.url }}" alt="{{ item.image.alt|default:page.title }}">
               </div>
               <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ item.image.alt|default:page.title }}">
-                <div class="ratio">{% srcset_image item.image width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+                <div class="ratio">{% srcset_image item.image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
                 <div class="swiper-lazy-preloader"></div>
               </a>
             </div>
@@ -31,7 +31,7 @@
           </div>
           <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ item.image.alt|default:page.title }}">
             {% with settings.core.SiteSettings.default_organization_image as default_img %}
-              <div class="ratio">{% srcset_image default_img width-720 format-{avif,webp,jpeg} loading="lazy" %}</div>
+              <div class="ratio">{% srcset_image default_img fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
             {% endwith %}
             <div class="swiper-lazy-preloader"></div>
           </a>

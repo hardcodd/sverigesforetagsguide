@@ -4,7 +4,7 @@
   <div class="horizontal-rating">
     <div class="rating-info">
       <div class="rating-title">{{ self.caption }}</div>
-      <div class="rating-value">{{ self.rating }} {% trans "of" %} 10</div>
+      <div class="rating-value">{% blocktranslate with rating=self.rating %}{{ rating }} out of 10{% endblocktranslate %}</div>
     </div>
     <div class="rating-bar-container">
       <div class="rating-bar" style="width: {{ self.rating|percentage:10 }}%;"></div>

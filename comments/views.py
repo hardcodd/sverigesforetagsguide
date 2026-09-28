@@ -1,20 +1,35 @@
+import json
 import re
 
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponse
-from django.shortcuts import redirect, reverse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render, reverse
 from django.template.response import TemplateResponse
-from django.utils.html import format_html, strip_tags
-from django.utils.translation import get_language
+from django.urls import path
+from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_GET, require_POST
-from wagtail.admin.ui.tables import Column, UserColumn
+from wagtail.admin.menu import MenuItem
+from wagtail.admin.ui.tables import (
+    BooleanColumn,
+    DateColumn,
+    StatusTagColumn,
+    UserColumn,
+)
+from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
 from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.widgets.button import ListingButton
 
+from core.admin_columns import (
+    ContentObjectColumn,
+    RelatedContentIndexView,
+    TextPreviewColumn,
+    without_language_prefix,
+)
 from core.utils import is_ajax
 
 from . import models
@@ -25,8 +40,57 @@ from .models import (
     COMMENT_REJECTED,
     Comment,
 )
+from .services import CommentImportError, import_comment_row, import_comment_rows
 
 USER_MODEL = get_user_model()
+
+
+@permission_required("comments.add_comment", raise_exception=True)
+def import_comments(request):
+    return render(request, "comments/admin/import_comments.html", {})
+
+
+@require_POST
+@permission_required("comments.add_comment", raise_exception=True)
+def import_comment(request):
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return JsonResponse(
+            {"success": False, "code": "invalid_json", "message": _("Invalid JSON.")},
+            status=400,
+        )
+
+    try:
+        if isinstance(data, list):
+            results = import_comment_rows(data)
+            return JsonResponse(
+                {
+                    "success": True,
+                    "results": [
+                        {
+                            "success": result.success,
+                            "code": result.code,
+                            "message": result.message,
+                        }
+                        for result in results
+                    ],
+                }
+            )
+        import_comment_row(data)
+    except CommentImportError as error:
+        return JsonResponse(
+            {"success": False, "code": error.code, "message": str(error)},
+            status=error.status,
+        )
+
+    return JsonResponse(
+        {
+            "success": True,
+            "code": "imported",
+            "message": _("Comment created successfully."),
+        }
+    )
 
 
 @csrf_protect
@@ -182,118 +246,103 @@ def publish_comment(request, comment_id):
     return redirect(back_url)
 
 
-class ApproveColumn(Column):
-    def get_value(self, instance):
-        url_1 = ""
-        title_1 = ""
-        url_2 = ""
-        title_2 = ""
+class CommentIndexView(RelatedContentIndexView):
+    def get_list_more_buttons(self, instance):
+        buttons = super().get_list_more_buttons(instance)
+        if not self.request.user.has_perm("comments.can_edit"):
+            return buttons
 
+        actions = []
         if instance.status == COMMENT_ON_MODERATION:
-            url_1 = reverse("comments:publish_comment", args=[instance.id])
-            title_1 = _("Approve")
-            url_2 = reverse("comments:reject_comment", args=[instance.id])
-            title_2 = _("Reject")
+            actions = [
+                (_("Approve"), "comments:publish_comment", "success"),
+                (_("Reject"), "comments:reject_comment", "cross"),
+            ]
         elif instance.status == COMMENT_PUBLISHED:
-            url_1 = reverse("comments:reject_comment", args=[instance.id])
-            title_1 = _("Reject")
-            url_2 = reverse("comments:delete_comment", args=[instance.id])
-            title_2 = _("Delete")
+            actions = [
+                (_("Reject"), "comments:reject_comment", "cross"),
+                (_("Delete"), "comments:delete_comment", "bin"),
+            ]
         elif instance.status == COMMENT_REJECTED:
-            url_1 = reverse("comments:publish_comment", args=[instance.id])
-            title_1 = _("Approve")
-            url_2 = reverse("comments:delete_comment", args=[instance.id])
-            title_2 = _("Delete")
+            actions = [
+                (_("Approve"), "comments:publish_comment", "success"),
+                (_("Delete"), "comments:delete_comment", "bin"),
+            ]
         elif instance.status == COMMENT_DELETED:
-            url_1 = reverse("comments:publish_comment", args=[instance.id])
-            title_1 = _("Approve")
-            url_2 = reverse("comments:reject_comment", args=[instance.id])
-            title_2 = _("Reject")
+            actions = [
+                (_("Approve"), "comments:publish_comment", "success"),
+                (_("Reject"), "comments:reject_comment", "cross"),
+            ]
 
-        lang = get_language()
-
-        prefix = f"/{lang}" if lang else ""
-
-        # remove language prefix from URLs
-        url_1 = url_1[len(prefix) :] if url_1.startswith(prefix) else url_1
-        url_2 = url_2[len(prefix) :] if url_2.startswith(prefix) else url_2
-
-        return format_html(
-            '<a href="{}" class="button button-small button-secondary">{}</a> \
-            <a href="{}" class="button button-small no">{}</a>',
-            url_1,
-            title_1,
-            url_2,
-            title_2,
-        )
-
-
-class ContentObjectColumn(Column):
-    def get_value(self, instance):
-        if len(instance.content_object.__str__()) > 50:
-            title = instance.content_object.__str__()[:50] + " ..."
-        else:
-            title = instance.content_object.__str__()
-
-        lang = get_language()
-
-        prefix = f"/{lang}" if lang else ""
-
-        # remove language prefix from URL
-        url = instance.content_object.url
-        url = url[len(prefix) :] if url.startswith(prefix) else url
-
-        return format_html(
-            '<a href="{}" target="_blank">{}</a>',
-            url,
-            title,
-        )
-
-
-class StatusColumn(Column):
-    def get_value(self, instance):
-        if instance.status == COMMENT_PUBLISHED:
-            return format_html(
-                f"<span class='w-status w-status--primary'>{_('Published')}</span>"
+        for priority, (label, url_name, icon_name) in enumerate(actions, start=40):
+            buttons.append(
+                ListingButton(
+                    label,
+                    url=without_language_prefix(
+                        reverse(url_name, args=[instance.pk])
+                    ),
+                    icon_name=icon_name,
+                    priority=priority,
+                )
             )
-        elif instance.status == COMMENT_ON_MODERATION:
-            return format_html(
-                f"<span class='w-status w-status--warning'>{_('On Moderation')}</span>"
-            )
-        elif instance.status == COMMENT_REJECTED:
-            return format_html(
-                f"<span class='w-status w-status--danger'>{_('Rejected')}</span>"
-            )
-        elif instance.status == COMMENT_DELETED:
-            return format_html(
-                f"<span class='w-status w-status--secondary'>{_('Deleted')}</span>"
-            )
-        else:
-            return instance.status
-
-
-class ContentTypeColumn(Column):
-    def get_value(self, instance):
-        return f"{instance.content_type.app_label.title()}"
+        return buttons
 
 
 class CommentViewSet(ModelViewSet):
     model = Comment
-    menu_label = _("Comments")  # type: ignore
+    menu_label = _("All comments")  # type: ignore
     icon = "comment-add"
-    add_to_admin_menu = True
+    add_to_admin_menu = False
     copy_view_enabled = False
-    menu_order = 200
-    search_fields = ("user__username", "comment")
-    list_filter = ("status",)
+    index_view_class = CommentIndexView
+    ordering = "-created_at"
+    list_per_page = 50
+    search_fields = (
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+        "comment",
+        "ip_address",
+    )
+    list_filter = ("status", "pin", "content_type")
     list_display = [
         "id",
         UserColumn("user", label=_("User")),
-        StatusColumn("status"),
-        ApproveColumn(name=""),
-        ContentTypeColumn(name=_("App")),
-        ContentObjectColumn(name=_("Content Object")),
+        TextPreviewColumn("comment", label=_("Comment")),
+        StatusTagColumn(
+            "get_status_display",
+            label=_("Status"),
+            sort_key="status",
+            primary=lambda instance: instance.status == COMMENT_PUBLISHED,
+        ),
+        ContentObjectColumn(),
+        BooleanColumn("pin", label=_("Pinned"), sort_key="pin"),
+        DateColumn("created_at", label=_("Created at"), sort_key="created_at"),
     ]
 
 
 comments_viewset = CommentViewSet("comments_list")
+
+
+class CommentImportMenuItem(MenuItem):
+    def is_shown(self, request):
+        return request.user.has_perm("comments.add_comment")
+
+
+class CommentImportViewSet(ViewSet):
+    icon = "upload"
+    menu_label = _("Import Comments")
+    menu_item_class = CommentImportMenuItem
+
+    def get_urlpatterns(self):
+        return [path("", import_comments, name="index")]
+
+
+comment_import_viewset = CommentImportViewSet("comments_import")
+
+
+class CommentViewSetGroup(ViewSetGroup):
+    menu_label = _("Comments")
+    menu_icon = "comment"
+    menu_order = 200
+    items = (comments_viewset, comment_import_viewset)

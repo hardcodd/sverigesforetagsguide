@@ -1,0 +1,32 @@
+@use "../functions" as *;
+@use "../mixins/mixins" as *;
+
+.gallery-block {
+	--gutter-x: #{rem(10)};
+	--gutter-y: #{rem(10)};
+
+	&__item {
+		border-radius: var(--border-radius-sm);
+		overflow: hidden;
+		text-decoration: none;
+		box-shadow: var(--box-shadow-1);
+
+		@include transition;
+
+		@include hover {
+			box-shadow: var(--box-shadow-3);
+		}
+	}
+
+	&__more {
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: white;
+		font-size: em(24);
+		font-weight: bold;
+		cursor: pointer;
+		pointer-events: none;
+	}
+}

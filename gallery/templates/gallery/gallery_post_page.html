@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n wagtailcore_tags core gallery %}
+
+{% block body_class %}template-gallery-post-page{% endblock %}
+
+{% block content %}
+  <div class="container">
+		<article class="gallery-post gallery-post--detail">
+			<h1 class="page__title">{{ page.title|mark|safe }}</h1>
+			<hr>
+			{% if page.description %}
+				{{ page.description|richtext }}
+				<hr>
+			{% endif %}
+			{% get_gallery_images as images %}
+			{% if images %}
+				<div class="row v-gutters gallery-container">
+					{% for image in images %}
+						{% include "gallery/includes/image-item.html" %}
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			<div class="sr-only">
+				{% include "includes/pagination.html" with page_obj=images %}
+			</div>
+
+			{% if images.has_next %}
+				<div class="text-center">
+					<a href="{% url 'gallery:load_more_images' %}?page={{ images.next_page_number }}&page-id={{ page.pk }}" data-total-pages="{{ images.paginator.num_pages }}" class="btn btn--load-more">{% trans "Show more" %}</a>
+				</div>
+			{% endif %}
+		</article>
+  </div>
+{% endblock content %}

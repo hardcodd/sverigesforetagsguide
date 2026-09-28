@@ -1,8 +1,9 @@
-{% load wagtailcore_tags cache %}
+{% load wagtailcore_tags cache i18n %}
+{% get_current_language as fragment_language %}
 
 {% spaceless %}
   {% if place == "head" %}
-    {% cache 604800 external_code "header" %}
+    {% cache 604800 external_code "header" fragment_language %}
     {% with header_code=settings.core.ExternalCodeSettings.header_code %}
       {% for block in header_code %}
         {% include_block block %}
@@ -10,7 +11,7 @@
     {% endwith %}
   {% endcache %}
 {% elif place == "body" %}
-  {% cache 604800 external_code "body" %}
+  {% cache 604800 external_code "body" fragment_language %}
   {% with body_code=settings.core.ExternalCodeSettings.body_code %}
     {% for block in body_code %}
       {% include_block block %}
@@ -18,7 +19,7 @@
   {% endwith %}
 {% endcache %}
 {% elif place == "footer" %}
-{% cache 604800 external_code "footer" %}
+{% cache 604800 external_code "footer" fragment_language %}
 {% with footer_code=settings.core.ExternalCodeSettings.footer_code %}
   {% for block in footer_code %}
     {% include_block block %}

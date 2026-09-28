@@ -3,7 +3,7 @@
 <section class="section section--video">
   {{ self.embed }}
   {% wagtail_site as current_site %}
-  {% image settings.core.SiteSettings.logo width-120 as logo %}
+  {% image settings.core.SiteSettings.logo fill-120x28 as logo %}
   <script type="application/ld+json">
 		{
 			"@context": "https://schema.org",
@@ -11,7 +11,7 @@
 			"name": "{{ self.title }}",
 			"description": "{{ self.description }}",
 			{% if self.image %}
-			{% image self.image width-1200 as img %}
+			{% image self.image fill-1200x675 as img %}
 			"thumbnailUrl": [
 				"{{ img.url }}"
 			],

@@ -4,11 +4,12 @@ from pathlib import Path
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.templatetags.static import static
+from django.urls import path, reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from draftjs_exporter.dom import DOM
 from wagtail import hooks
+from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 from wagtail.admin.rich_text.editors.draftail.features import BlockFeature
 from wagtail.images import get_image_model
@@ -19,6 +20,9 @@ from wagtail.images.formats import (
 )
 from wagtail.snippets.models import register_snippet
 
+from core.export_views import export_pages
+from core.import_views import import_pages
+from core.staticfiles import versioned_static
 from core.views import FooterViewSet
 
 
@@ -104,12 +108,30 @@ register_image_format(
 
 @hooks.register("insert_global_admin_js")  # type: ignore
 def global_admin_js():
-    return format_html('<script src="{}"></script>', static("madloba-admin.js"))
+    return format_html(
+        '<script src="{}"></script>', versioned_static("madloba-admin.js")
+    )
+
+
+@hooks.register("insert_global_admin_js")  # type: ignore
+def import_admin_js():
+    return format_html(
+        '<script src="{}"></script>', versioned_static("madloba-import.js")
+    )
+
+
+@hooks.register("insert_global_admin_js")  # type: ignore
+def export_admin_js():
+    return format_html(
+        '<script src="{}"></script>', versioned_static("madloba-export.js")
+    )
 
 
 @hooks.register("insert_global_admin_css")  # type: ignore
 def global_admin_css():
-    return format_html('<link rel="stylesheet" href="{}">', static("madloba-admin.css"))
+    return format_html(
+        '<link rel="stylesheet" href="{}">', versioned_static("madloba-admin.css")
+    )
 
 
 register_snippet(FooterViewSet)
@@ -238,3 +260,31 @@ def register_code_block(features):
     )
 
     features.default_features.append(feature_name)
+
+
+@hooks.register("register_admin_urls")
+def register_import_export_pages():
+    return [
+        path("import-pages/", import_pages, name="import-pages"),
+        path("export-pages/", export_pages, name="export-pages"),
+    ]
+
+
+@hooks.register("register_admin_menu_item")
+def register_import_export_pages_menu_item():
+    submenu = Menu(
+        items=[
+            MenuItem(
+                _("Import pages"),
+                reverse("import-pages"),
+                icon_name="order-down",
+            ),
+            MenuItem(
+                _("Export pages"),
+                reverse("export-pages"),
+                icon_name="order-up",
+            ),
+        ]
+    )
+
+    return SubmenuMenuItem(_("Import / Export"), submenu, icon_name="resubmit")

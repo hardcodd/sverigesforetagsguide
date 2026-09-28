@@ -1,0 +1,14 @@
+{% load wagtailcore_tags wagtailimages_tags gallery %}
+
+<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+	<a href="{{ gallery.url }}" class="gallery-post">
+		{% get_first_gallery_image gallery as image %}
+		{% if image %}
+			{% srcset_image image.image format-{avif,webp,jpeg} fill-560x315 class="gallery-post__image" %}
+		{% endif %}
+		<div class="gallery-post__text">
+			<h2 class="gallery-post__title">{{ gallery.title }}</h2>
+			<div class="gallery-post__description">{{ gallery.specific.description|richtext|truncatechars_html:120 }}</div>
+		</div>
+	</a>
+</div>

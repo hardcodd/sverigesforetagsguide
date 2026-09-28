@@ -2,17 +2,27 @@ import random
 import re
 from datetime import time
 from functools import lru_cache
+from typing import TYPE_CHECKING
+from urllib.parse import urlsplit
 
 from django import template
 from django.conf import settings
+from django.core import signing
 from django.forms.renderers import get_template
+from django.http import HttpRequest
 from django.template.base import mark_safe
 from django.template.exceptions import TemplateDoesNotExist
+from django.utils.html import conditional_escape
 from slugify import slugify
 
 from core.jsonld import render_jsonld
+from core.maps import static_map_url
 from core.models import SiteSettings
+from core.pagination import page_url
 from core.utils import get_domain_name, truncate_string
+
+if TYPE_CHECKING:
+    from catalog.models import Organization
 
 register = template.Library()
 
@@ -131,27 +141,32 @@ def truncate(value: str, length: int):
 
 
 @register.filter()
-def set_page(value, page_number):
-    """Sets 'page' property to the pagination link"""
-
-    if "?page=" in value or "&page=" in value:
-        value = re.sub(r"page=[\d]+", f"page={page_number}", value)
-    elif re.search(r"\?[\w]+=", value):
-        value = f"{value}&page={page_number}"
-    else:
-        value = f"{value}?page={page_number}"
-    return value
+def set_page(value: str, page_number: int) -> str:
+    """Set a page link without losing filters; page one uses the base URL."""
+    return page_url(value, page_number)
 
 
 @register.filter()
-def remove_page(value):
-    """Removes 'page' property from the pagination link"""
+def remove_page(value: str) -> str:
+    """Remove only pagination, preserving filters and repeated query values."""
+    return page_url(value, None)
 
-    if "?page=" in value or "&page=" in value:
-        value = re.sub(r"[&?]page=[\d]+", "", value)
-    if value.startswith("/&"):
-        value = "/?" + value[2:]
-    return value
+
+@register.filter
+def pagination_canonical(value: str, request: HttpRequest) -> str:
+    """Add the page number to the existing canonical without other parameters."""
+    page_number = request.GET.get("page", "")
+    if (
+        not isinstance(page_number, str)
+        or not page_number.isascii()
+        or not page_number.isdecimal()
+    ):
+        return value
+    try:
+        number = int(page_number)
+    except ValueError:
+        return value
+    return page_url(value, number)
 
 
 @register.simple_tag()
@@ -172,46 +187,66 @@ def replace(value, arg):
 
 
 @register.filter()
-def social_network_icon(url: str):
-    """Return a social icon class based on the URL."""
+def social_network_icon(url: str) -> str:
+    """Render an icon for a known host, or an escaped domain for unknown links.
+
+    Match host boundaries rather than URL substrings so paths, query strings
+    and lookalike domains cannot select another service's icon.
+    """
     if not url:
         return ""
-
-    html_icon = ""
-
     try:
-        if "facebook.com" in url:
-            html_icon = get_template("icons/facebook.svg").render()
-        elif "instagram.com" in url:
-            html_icon = get_template("icons/instagram.svg").render()
-        elif "twitter.com" in url:
-            html_icon = get_template("icons/twitter.svg").render()
-        elif "x.com" in url:
-            html_icon = get_template("icons/x.svg").render()
-        elif "tripadvisor.com" in url:
-            html_icon = get_template("icons/tripadvisor.svg").render()
-        elif "youtube.com" in url:
-            html_icon = get_template("icons/youtube.svg").render()
-        elif "linkedin.com" in url:
-            html_icon = get_template("icons/linkedin.svg").render()
-        elif "tiktok.com" in url:
-            html_icon = get_template("icons/tiktok.svg").render()
-        elif "vk.com" in url:
-            html_icon = get_template("icons/vk.svg").render()
-        elif "pinterest.com" in url:
-            html_icon = get_template("icons/pinterest.svg").render()
-        elif "dzen.ru" in url:
-            html_icon = get_template("icons/dzen.svg").render()
-        elif "whatsapp.com" in url:
-            html_icon = get_template("icons/whatsapp.svg").render()
-        elif "t.me" in url:
-            html_icon = get_template("icons/telegram.svg").render()
-        else:
-            html_icon = get_domain_name(url)
-    except TemplateDoesNotExist:
-        html_icon = get_domain_name(url)
+        parsed = urlsplit(url if "://" in url or url.startswith("//") else "//" + url)
+        host = (parsed.hostname or "").lower().rstrip(".")
+    except ValueError:
+        return conditional_escape(url)
 
-    return mark_safe(html_icon)
+    icons = {
+        "facebook.com": "facebook",
+        "fb.com": "facebook",
+        "instagram.com": "instagram",
+        "twitter.com": "twitter",
+        "x.com": "x",
+        "tripadvisor.com": "tripadvisor",
+        "youtube.com": "youtube",
+        "youtu.be": "youtube",
+        "linkedin.com": "linkedin",
+        "tiktok.com": "tiktok",
+        "vk.com": "vk",
+        "vk.ru": "vk",
+        "pinterest.com": "pinterest",
+        "dzen.ru": "dzen",
+        "whatsapp.com": "whatsapp",
+        "wa.me": "whatsapp",
+        "viber.com": "viber",
+        "vb.me": "viber",
+        "t.me": "telegram",
+        "telegram.me": "telegram",
+        "maps.app.goo.gl": "google",
+        "maps.google.com": "google",
+        "yandex.ru": "yandex",
+        "yandex.com": "yandex",
+        "yandex.ge": "yandex",
+        "ya.cc": "yandex",
+    }
+    icon = next(
+        (
+            name
+            for domain, name in icons.items()
+            if host == domain or host.endswith("." + domain)
+        ),
+        None,
+    )
+    if host in {"google.com", "www.google.com", "goo.gl"} and parsed.path.startswith(
+        "/maps"
+    ):
+        icon = "google"
+    if icon:
+        try:
+            return mark_safe(get_template(f"icons/{icon}.svg").render())
+        except TemplateDoesNotExist:
+            pass
+    return conditional_escape(host or url)
 
 
 @register.filter()
@@ -358,3 +393,14 @@ def duration_format(value: time) -> str:
         duration += f"{seconds}S"
 
     return duration
+
+
+@register.simple_tag
+def get_static_map(page: "Organization") -> str:
+    """Resolve a preview URL without waiting for Google during page rendering."""
+    return static_map_url(page.pk, str(page.ll))
+
+
+@register.simple_tag(name="signing")
+def signing_page(value):
+    return signing.dumps(value)

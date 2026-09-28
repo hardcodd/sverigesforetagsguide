@@ -83,7 +83,8 @@
 			"catalog",
 			"blog",
 			"authors",
-			"ratings"
+			"ratings",
+			"gallery"
 		],
 		"copy": [
 			{

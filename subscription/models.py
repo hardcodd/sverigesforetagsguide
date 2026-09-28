@@ -5,6 +5,8 @@ from wagtail.admin.panels import FieldPanel
 
 
 class PremiumSubscription(models.Model):
+    objects: models.Manager["PremiumSubscription"] = models.Manager()
+
     class Level(models.IntegerChoices):
         COMPETITOR = 0, _("Competitor")
         BASIC = 1, _("Basic")

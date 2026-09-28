@@ -6,7 +6,23 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings.dev")
+    is_test_command = len(sys.argv) > 1 and sys.argv[1] == "test"
+    if is_test_command:
+        settings_options = [
+            option
+            for option in sys.argv[2:]
+            if option == "--settings" or option.startswith("--settings=")
+        ]
+        if settings_options:
+            raise SystemExit(
+                "The test command always uses app.settings.test; "
+                "remove the --settings option."
+            )
+        os.environ["DJANGO_SETTINGS_MODULE"] = "app.settings.test"
+        if "--keepdb" not in sys.argv:
+            sys.argv.append("--keepdb")
+    else:
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings.dev")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

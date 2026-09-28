@@ -1,0 +1,8 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if category.ratings_image and category.ratings_text %}
+  <aside class="category-ratings">
+    <div class="category-ratings__text">{{ category.ratings_text|richtext }}</div>
+    {% srcset_image category.ratings_image max-240x240 format-{avif,webp,png} loading="lazy" class="category-ratings__image" alt="" %}
+  </aside>
+{% endif %}

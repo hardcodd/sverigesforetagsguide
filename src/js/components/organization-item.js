@@ -2,24 +2,22 @@ import { setColorToElement, getColorFromImage } from "../utils";
 import Swiper from "swiper";
 import { Navigation, Mousewheel, Autoplay } from "swiper/modules";
 
+/** Apply card colors when their visible, lazy-loaded images become available. */
 (() => {
 	const organizationItems = document.querySelectorAll(".organization-item");
 
 	organizationItems.forEach((organization) => {
-		const image = organization.querySelector(".organization-item__thumb img");
-		if (!image) return;
+		const image = organization.querySelector(".ratio img");
+		if (!(image instanceof HTMLImageElement)) return;
 
+		/** @returns {void} */
 		function setOrganizationColor() {
-			// check if image is loaded
-			if (!image.complete) {
-				image.addEventListener("load", setOrganizationColor);
-				return;
-			}
-
-			setColorToElement(organization, getColorFromImage(image), 0.1, 0.2);
+			if (!image.naturalWidth) return;
+			setColorToElement(organization, getColorFromImage(image), 0.1);
 		}
 
-		setOrganizationColor();
+		if (image.complete) setOrganizationColor();
+		else image.addEventListener("load", setOrganizationColor, { once: true });
 	});
 })();
 

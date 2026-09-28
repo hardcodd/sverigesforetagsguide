@@ -16,13 +16,13 @@ $adaptive: true;
 	color: var(--color);
 	font-weight: 400;
 	font-size: var(--font-size);
-	font-family: var(--font-family);
+	font-family: var(--font-family), serif;
 	line-height: 1;
 	letter-spacing: 0.01em;
 	white-space: nowrap;
 	text-align: center;
 	text-transform: none;
-	text-decoration: none;
+	text-decoration: none !important;
 	vertical-align: center;
 
 	background: var(--background);
@@ -196,6 +196,20 @@ $adaptive: true;
 			@include xs {
 				--padding: #{em(12)} #{em(24)};
 				--font-size: #{em(16)};
+			}
+		}
+	}
+
+	&.loading {
+		pointer-events: none;
+		animation: loading 1s infinite linear;
+
+		@keyframes loading {
+			from {
+				opacity: 1;
+			}
+			to {
+				opacity: 0.5;
 			}
 		}
 	}

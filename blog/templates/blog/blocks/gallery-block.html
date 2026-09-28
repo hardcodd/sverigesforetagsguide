@@ -1,0 +1,22 @@
+{% load wagtailimages_tags cache i18n %}
+{% get_current_language as fragment_language %}
+
+{% cache 604800 blog-gallery-block self.gallery.id fragment_language %}
+{% spaceless %}
+<div class="gallery-block">
+	<div class="row v-gutters">
+	{% for item in self.gallery.images.all %}
+		{% if forloop.counter < 9 %}<div class="col-lg-3 col-6">{% endif %}
+			{% image item.image original format-webp as original_image %}
+			<a href="{{ original_image.url }}" data-fancybox="{{ self.gallery.title }}" class="ratio gallery-block__item{% if forloop.counter > 8 %} hidden{% endif %} ">
+				{% srcset_image item.image format-{avif,webp,jpeg} fill-560x315 loading="lazy" %}
+				{% if forloop.counter == 8 and self.gallery.images.count > 8 %}
+					<div class="gallery-block__more">+{{ self.gallery.images.count|add:"-8" }}</div>
+				{% endif %}
+			</a>
+		{% if forloop.counter < 9 %}</div>{% endif %}
+	{% endfor %}
+	</div>
+</div>
+{% endspaceless %}
+{% endcache %}

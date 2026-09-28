@@ -1,22 +1,22 @@
 import math
 
-from django.core.paginator import Paginator
+from core.pagination import paginate as paginate
 
 
 def is_ajax(request):
-    """Check if request is AJAX."""
+    """Check if the request is AJAX."""
     return request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
 
 def is_page(page) -> bool:
-    """Check if page is a Page model instance."""
+    """Check if a page is a Page model instance."""
     if not hasattr(page, "specific"):
         return False
     return True
 
 
 def is_catalog_city(page) -> bool:
-    """Check if page is a catalog.City model instance."""
+    """Check if the page is a catalog.City model instance."""
 
     # Check if page is a Page instance
     if not is_page(page):
@@ -34,7 +34,7 @@ def is_catalog_city(page) -> bool:
 
 
 def is_catalog_organization_type(page) -> bool:
-    """Check if page is a catalog.OrganizationType model instance."""
+    """Check if the page is a catalog.OrganizationType model instance."""
 
     # Check if page is a Page instance
     if not is_page(page):
@@ -64,13 +64,6 @@ def get_domain_name(url: str) -> str:
 
     parsed_url = urlparse(url)
     return parsed_url.netloc or parsed_url.path.split("/")[0] if parsed_url.path else ""
-
-
-def paginate(request, queryset, count=16):
-    paginator = Paginator(queryset, count)
-    page_number = request.GET.get("page", 1)
-    objects = paginator.get_page(page_number)
-    return objects
 
 
 def get_weekday_number(weekday: str) -> int:

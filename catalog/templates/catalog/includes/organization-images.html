@@ -1,10 +1,11 @@
-{% load cache %}
+{% load cache i18n %}
+{% get_current_language as fragment_language %}
 
 {% spaceless %}
   {% if request.is_preview %}
     {% include "catalog/includes/organization-images-template.html" %}
   {% else %}
-    {% cache 604800 organization_images page.pk %}
+    {% cache 604800 organization_images page.pk fragment_language %}
     {% include "catalog/includes/organization-images-template.html" %}
   {% endcache %}
 {% endif %}

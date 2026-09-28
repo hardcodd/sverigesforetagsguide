@@ -3,18 +3,18 @@
 {% load i18n %}
 
 {% block title %}
-  {{ page.title }} {% trans "on map" %}
+  {% blocktranslate with title=page.title %}{{ title }} on map{% endblocktranslate %}
 {% endblock %}
 
 {% block extrahead %}
-  <meta name="description" content="{{ page.seo_title }} {% trans 'on map' %}">
+  <meta name="description" content="{% blocktranslate with title=page.seo_title %}{{ title }} on map{% endblocktranslate %}">
 {% endblock extrahead %}
 
 {% block body_class %}template-organizations-map{% endblock %}
 
 {% block content %}
   <div class="container fluid">
-    <h1 class="page__title h2">{{ page.title }} {% trans "near me in" %} {{ page.get_parent.title }}</h1>
+    <h1 class="page__title h2">{% blocktranslate with title=page.title city=page.get_parent.title %}{{ title }} near me in {{ city }}{% endblocktranslate %}</h1>
   </div>
 
   <div class="map-page">
@@ -25,5 +25,6 @@
 {% endblock content %}
 
 {% block extra_js %}
-  <script async src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=marker&region=GE&callback=initMap"></script>
+  {% get_current_language as map_language %}
+  <script async src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&language={{ map_language }}&libraries=marker&region=GE&callback=initMap"></script>
 {% endblock extra_js %}

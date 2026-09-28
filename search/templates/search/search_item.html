@@ -1,15 +1,8 @@
-{% load wagtailcore_tags wagtailimages_tags core i18n %}
+{% load wagtailcore_tags %}
 
-{% spaceless %}
-  {% with result.specific as result %}
-    <div class="search-item">
-      <div class="search-item__content">
-        <h4 class="search-item__title">{{ result }}</h4>
-        {% if result.search_description %}<p class="search-item__description">{{ result.search_description|truncatechars:120 }}</p>{% endif %}
-        <a href="{% pageurl result %}" class="search-item__link">
-          <div class="sr-only">{% trans "Read more" %}</div>
-        </a>
-      </div>
-    </div>
-  {% endwith %}
-{% endspaceless %}
+<article class="search-item">
+  <div class="search-item__content">
+    <h2 class="search-item__title"><a href="{% pageurl result %}" class="search-item__link">{{ result }}</a></h2>
+    {% if result.search_description %}<p class="search-item__description">{{ result.search_description|truncatechars:160 }}</p>{% endif %}
+  </div>
+</article>

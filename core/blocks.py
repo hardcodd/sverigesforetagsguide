@@ -11,6 +11,7 @@ from wagtail.blocks import (
     StructBlock,
     StructValue,
     TimeBlock,
+    URLBlock,
 )
 from wagtail.blocks import TextBlock as WagtailTextBlock
 from wagtail.embeds.blocks import EmbedBlock
@@ -230,6 +231,18 @@ class BannerBlock(StructBlock):
 
     class Meta:
         template = "core/blocks/banner_block.html"
+        label = _("Banner")
+        icon = "info-circle"
+        value_class = LinkStructValue
+
+
+class InlineBannerBlock(BannerBlock):
+    """A banner that fits inside a page column without a nested container."""
+
+    url = URLBlock(max_length=2000, required=False, label=_("URL"))
+
+    class Meta:
+        template = "core/blocks/inline_banner_block.html"
         label = _("Banner")
         icon = "info-circle"
         value_class = LinkStructValue

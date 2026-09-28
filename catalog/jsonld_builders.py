@@ -3,12 +3,18 @@ from decimal import Decimal
 from typing import Any
 
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Avg, Count
 from django.utils.html import strip_tags
 from django.utils.timezone import localtime
 from wagtail.images.models import Image
 
 from core.jsonld import build_jsonld
-from reviews.models import Review, ReviewStatus
+from reviews.models import (
+    MAX_REVIEW_RATING,
+    MIN_REVIEW_RATING,
+    Review,
+    ReviewStatus,
+)
 
 from .models import Organization
 
@@ -82,6 +88,56 @@ def _safe_decimal(value: Any) -> str | None:
         return format(d.normalize(), "f")
     except Exception:
         return None
+
+
+def _build_reviews_data(
+    page: Organization,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]] | None]:
+    """Build aggregate and individual review data using valid ratings only."""
+    content_type = ContentType.objects.get_for_model(Organization)
+    reviews_qs = Review.objects.filter(
+        content_type=content_type,
+        object_id=page.id,
+        status=ReviewStatus.PUBLISHED,
+        rating__range=(MIN_REVIEW_RATING, MAX_REVIEW_RATING),
+    )
+
+    summary = reviews_qs.aggregate(
+        rating_value=Avg("rating"),
+        review_count=Count("id"),
+    )
+    review_count = summary["review_count"]
+
+    aggregate_rating = None
+    if review_count:
+        aggregate_rating = {
+            "@type": "AggregateRating",
+            "ratingValue": _safe_decimal(summary["rating_value"]),
+            "reviewCount": review_count,
+            "bestRating": MAX_REVIEW_RATING,
+            "worstRating": MIN_REVIEW_RATING,
+        }
+
+    reviews_json: list[dict[str, Any]] = []
+    for review in reviews_qs.order_by("-go_live_at", "-created_at")[:5]:
+        reviews_json.append(
+            {
+                "@type": "Review",
+                "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": str(review.rating),
+                    "bestRating": MAX_REVIEW_RATING,
+                    "worstRating": MIN_REVIEW_RATING,
+                },
+                "reviewBody": review.comment,
+                "datePublished": localtime(
+                    review.go_live_at or review.created_at
+                ).isoformat(),
+                "author": {"@type": "Person", "name": str(review.user)},
+            }
+        )
+
+    return aggregate_rating, reviews_json or None
 
 
 def _parse_ll(ll: str) -> tuple[str | None, str | None]:
@@ -229,49 +285,8 @@ def _(page: Organization, request):
     if not page.temporarily_closed:
         opening_hours_spec = _opening_hours_spec_from_stream(page.working_hours)
 
-    # Reviews / AggregateRating (Google expects consistency and real reviews)
-    ct = ContentType.objects.get_for_model(Organization)
-    reviews_qs = Review.objects.filter(
-        content_type=ct,
-        object_id=page.id,
-        status=ReviewStatus.PUBLISHED,
-    )
-
-    review_count = reviews_qs.count()
-    rating_value = _safe_decimal(page.avg_rating)
-
-    aggregate_rating = None
-    if review_count > 0 and rating_value:
-        aggregate_rating = {
-            "@type": "AggregateRating",
-            "ratingValue": rating_value,
-            "reviewCount": review_count,  # Google commonly uses reviewCount
-            "bestRating": "5",
-            "worstRating": "1",
-        }
-
-    reviews_json = None
-    if review_count > 0:
-        items = []
-        for r in reviews_qs.order_by("-go_live_at", "-created_at")[:5]:
-            items.append(
-                {
-                    "@type": "Review",
-                    "reviewRating": {
-                        "@type": "Rating",
-                        "ratingValue": str(r.rating),
-                        "bestRating": "5",
-                        "worstRating": "1",
-                    },
-                    "reviewBody": r.comment,
-                    "datePublished": localtime(
-                        r.go_live_at or r.created_at
-                    ).isoformat(),
-                    "author": {"@type": "Person", "name": str(r.user)},
-                }
-            )
-        if items:
-            reviews_json = items
+    # Reviews are nested in LocalBusiness, so Google does not require itemReviewed.
+    aggregate_rating, reviews_json = _build_reviews_data(page)
 
     # Description must be plain text for best compatibility
     description = (page.search_description or "") or ""

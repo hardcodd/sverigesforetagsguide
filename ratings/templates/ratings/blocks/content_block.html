@@ -8,7 +8,7 @@
         {% for item in self.images %}
           <div class="swiper-slide">
             {% image item original format-webp as img_hd %}
-            <a href="{{ img_hd.url }}" data-fancybox="rating-block-{{ counter }}" data-caption="{{ item.title }}" class="rating-gallery__item ratio">{% srcset_image item original format-{avif,webp} width-720 loading="lazy" %}</a>
+            <a href="{{ img_hd.url }}" data-fancybox="rating-block-{{ counter }}" data-caption="{{ item.title }}" class="rating-gallery__item ratio">{% srcset_image item original format-{avif,webp} fill-720x405 loading="lazy" %}</a>
           </div>
         {% endfor %}
       </div>

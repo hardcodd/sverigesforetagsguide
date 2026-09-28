@@ -27,8 +27,9 @@
 
     {% if page %}
       <!-- canonical -->
-      <link rel="canonical" href="{% fullpageurl page %}">
-      <meta property="og:url" content="{% fullpageurl page %}" />
+      {% fullpageurl page as canonical_url %}
+      <link rel="canonical" href="{{ canonical_url|pagination_canonical:request }}">
+      {% include "includes/open_graph.html" %}
     {% endif %}
 
     {% block extrahead %}{% endblock %}
@@ -68,7 +69,7 @@
 			<div class="support-link__text">{% trans "Help" %}</div>
 		</a>
 
-    {% if request.user.is_staff or request.user.is_superuser %}<div class="check-links-btn">Check links</div>{% endif %}
+    {% if request.user.is_staff or request.user.is_superuser %}<div class="check-links-btn">{% trans "Check links" %}</div>{% endif %}
 
     {# Global javascript #}
     {% if "localhost" in request.build_absolute_uri or "127.0.0.1" in request.build_absolute_uri %}

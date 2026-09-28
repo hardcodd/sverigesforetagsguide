@@ -2,6 +2,7 @@
 @use "tabs";
 @use "breadcrumbs";
 @use "banners";
+@use "promotion-banner";
 @use "buttons";
 @use "accordion";
 @use "logo";
@@ -30,3 +31,5 @@
 @use "comments";
 @use "search-item";
 @use "check-links";
+@use "gallery";
+@use "blog-gallery";

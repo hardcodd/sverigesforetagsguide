@@ -1,0 +1,15 @@
+{% load wagtailcore_tags wagtailimages_tags gallery %}
+
+<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+	<a href="{{ category.url }}" class="gallery-category-item">
+		{% if category.specific.image %}
+			{% srcset_image category.specific.image format-{avif,webp,jpeg} fill-560x315 class="gallery-category-item__image" %}
+		{% endif %}
+		<div class="gallery-category-item__text">
+			<h2 class="gallery-category-item__title">{{ category.title }}</h2>
+			<div class="gallery-category-item__description">
+				<p>{{ category.specific.description|striptags|truncatechars:120 }}</p>
+			</div>
+		</div>
+	</a>
+</div>

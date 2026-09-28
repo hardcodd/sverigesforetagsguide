@@ -1,19 +1,21 @@
 from django.urls import path
 
+from .nearby_views import nearby_organizations
 from .views import (
     get_organizations_data,
-    import_organization,
     organizations,
     search_cities,
-    update_organization,
 )
 
 app_name = "catalog"
 urlpatterns = [
+    path(
+        "organizations/<int:organization_id>/nearby/",
+        nearby_organizations,
+        name="nearby_organizations",
+    ),
     path("search-cities/", search_cities, name="search_cities"),
     path("organizations/", organizations, name="organizations"),
-    path("import-organization/", import_organization, name="import_organization"),
-    path("update-organization/", update_organization, name="update_organization"),
     path(
         "get-organizations-data/", get_organizations_data, name="get_organizations_data"
     ),

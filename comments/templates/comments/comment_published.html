@@ -11,7 +11,7 @@
     <div class="comment__body">
       <div class="comment__info">
         <strong class="comment__user{% if request.user == node.user %} current{% endif %}{% if node.user.is_staff %} moderator-badge{% endif %}">{{ node.user.get_short_name|default:node.user }}</strong>
-        <time class="comment__created_at">{{ node.created_at|date:'F, d l' }}</time>
+        <time class="comment__created_at">{{ node.created_at|date:'DATE_FORMAT' }}</time>
       </div>
       <div class="comment__content">
         {{ node.comment|striptags|regex_replace:'\n|<br>'|richtext }}

@@ -1,0 +1,8 @@
+{% load wagtailimages_tags %}
+
+<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+	{% image image.image original as original_image %}
+	<a href="{{ original_image.url }}" data-fancybox="gallery" data-caption="{{ original_image.alt }}" class="gallery-post__item">
+		{% srcset_image image.image format-{avif,webp,jpeg} fill-560x315 class="gallery-post__image" %}
+	</a>
+</div>

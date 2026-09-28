@@ -2,7 +2,7 @@
 
 {% load i18n wagtailcore_tags wagtailimages_tags core home %}
 
-{% block title %}Page not found{% endblock %}
+{% block title %}{% trans "Page not found" %}{% endblock %}
 
 {% block body_class %}template-404{% endblock %}
 
@@ -15,7 +15,7 @@
           <h1 class="nf-banner__title">{{ settings.core.NotFoundPageSettings.title }}</h1>
           <p class="nf-banner__description">{{ settings.core.NotFoundPageSettings.description }}</p>
         </div>
-        {% srcset_image settings.core.NotFoundPageSettings.image width-400 format-{avif,webp} loading="lazy" class="nf-banner__image" %}
+        {% srcset_image settings.core.NotFoundPageSettings.image fill-400x371 format-{avif,webp} loading="lazy" class="nf-banner__image" %}
       </div>
 
       {% if page.cards %}

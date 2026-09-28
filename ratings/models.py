@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Page
@@ -12,8 +13,9 @@ class RatingsIndexPage(Panels, Page):
     subpage_types = ["ratings.RatingCategoryPage"]
     max_count = 1
 
-    class Meta:
-        verbose_name = "Overviews Index Page"
+    class Meta(Page.Meta):
+        verbose_name = _("Overviews index page")
+        verbose_name_plural = _("Overviews index pages")
 
 
 class RatingCategoryPage(Panels, Page):
@@ -26,8 +28,9 @@ class RatingCategoryPage(Panels, Page):
         "ratings.RatingCategoryPage",
     ]
 
-    class Meta:
-        verbose_name = "Overviews Category Page"
+    class Meta(Page.Meta):
+        verbose_name = _("Overviews category page")
+        verbose_name_plural = _("Overviews category pages")
 
 
 class RatingPage(Panels, Page):
@@ -62,5 +65,6 @@ class RatingPage(Panels, Page):
         "author",
     ]
 
-    class Meta:
-        verbose_name = "Overviews Post Page"
+    class Meta(Page.Meta):
+        verbose_name = _("Overviews post page")
+        verbose_name_plural = _("Overviews post pages")
