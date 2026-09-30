@@ -21,7 +21,7 @@ msgstr ""
 
 #: app/templates/base.html:68
 msgid "Help"
-msgstr ""
+msgstr "Ohje"
 
 #: app/templates/includes/add-organization-button.html:3
 msgid "Add new organization"
@@ -41,7 +41,7 @@ msgstr "Kaupunkihaku"
 
 #: app/templates/includes/cookie_consent.html:3
 msgid "Cookie notice"
-msgstr ""
+msgstr "Evästeilmoitus"
 
 #: app/templates/includes/cookie_consent.html:6
 msgid ""
@@ -465,7 +465,7 @@ msgstr ""
 #: catalog/templates/catalog/organization_page.html:51 core/blocks.py:138
 #: core/blocks.py:149 core/blocks.py:208 core/blocks.py:287
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #: catalog/models.py:319 catalog/templates/catalog/organization_page.html:112
 msgid "Address"
@@ -637,11 +637,11 @@ msgstr "Avoinna %(time)s asti"
 
 #: catalog/services.py:313
 msgid "Open"
-msgstr ""
+msgstr "Avoinna"
 
 #: catalog/services.py:317
 msgid "Unknown"
-msgstr ""
+msgstr "Ei tiedossa"
 
 #: catalog/templates/catalog/admin/import_example.html:10
 #: catalog/templates/catalog/admin/update_example.html:10
@@ -674,7 +674,7 @@ msgstr "Rakennuksessa"
 
 #: catalog/templates/catalog/organization_page.html:63
 msgid "QnA"
-msgstr ""
+msgstr "Kysymyksiä ja vastauksia"
 
 #: catalog/templates/catalog/organization_page.html:79
 msgid "Call"
@@ -826,7 +826,7 @@ msgstr ""
 #: comments/views.py:201 comments/views.py:206 reviews/views.py:59
 #: reviews/views.py:64
 msgid "Delete"
-msgstr ""
+msgstr "Poista"
 
 #: comments/button.py:46
 #, python-format
@@ -835,7 +835,7 @@ msgstr ""
 
 #: comments/forms.py:18
 msgid "Add comment ..."
-msgstr ""
+msgstr "Lisää kommentti..."
 
 #: comments/models.py:23 comments/views.py:257 reviews/models.py:18
 #: reviews/views.py:25
@@ -1387,10 +1387,9 @@ msgid "No"
 msgstr ""
 
 #: gallery/templates/gallery/gallery_post_page.html:30
-#, fuzzy
 #| msgid "Show"
 msgid "Show more"
-msgstr "Show"
+msgstr "Näytä lisää"
 
 #: home/models.py:21
 msgid "Main image for the home page."
@@ -1481,10 +1480,9 @@ msgid "click to upload"
 msgstr "napsauta ladataksesi"
 
 #: reviews/templates/reviews/reviews-list.html:13
-#, fuzzy
 #| msgid "Show"
 msgid "Show more reviews"
-msgstr "Show"
+msgstr "Näytä lisää arvosteluja"
 
 #: reviews/templates/reviews/reviews.html:8
 msgid "Be the first to leave a review"
@@ -1492,11 +1490,11 @@ msgstr "Ole ensimmäinen, joka jättää arvostelun"
 
 #: reviews/views.py:154
 msgid "Invalid content type."
-msgstr ""
+msgstr "Virheellinen sisältötyyppi."
 
 #: reviews/views.py:167
 msgid "You have already submitted a review for this item."
-msgstr ""
+msgstr "Olet jo lähettänyt arvostelun tästä kohteesta."
 
 #: reviews/views.py:187
 #, python-format
@@ -1578,3 +1576,337 @@ msgstr ""
 
 #~ msgid "Find out all the benefits of premium placement in our catalog."
 #~ msgstr "Tutustu kaikkiin premium-sijoittelun etuihin luettelossamme."
+
+#: app/templates/404.html:5
+msgid "Page not found"
+msgstr "Sivua ei löytynyt"
+
+#: app/templates/500.html:7 app/templates/500.html:11
+#: core/tests/test_template_i18n.py:193
+msgid "Internal server error"
+msgstr "Sisäinen palvelinvirhe"
+
+#: app/templates/500.html:13
+msgid "Sorry, there seems to be an error. Please try again soon."
+msgstr "Pahoittelut, tapahtui virhe. Yritä pian uudelleen."
+
+#: app/templates/includes/stars-rating.html:3
+#: core/tests/test_template_i18n.py:222 core/tests/test_template_i18n.py:315
+#, python-format
+msgid "Rating: %(rating)s out of 5"
+msgstr "Arvosana: %(rating)s/5"
+
+#: blog/templates/blog/index_page.html:15
+#, python-format
+msgid "[[By author]]: %(author_name)s"
+msgstr "Kirjoittajan mukaan: %(author_name)s"
+
+#: blog/templates/blog/index_page.html:19
+#, python-format
+msgid "[[By tag]]: %(tag_name)s"
+msgstr "Tunnisteen mukaan: %(tag_name)s"
+
+#: catalog/listing.py:24
+msgid "Name or address"
+msgstr "Nimi tai osoite"
+
+#: catalog/listing.py:25
+msgid "Search in this category"
+msgstr "Hae tästä kategoriasta"
+
+#: catalog/listing.py:29
+msgid "Sort by"
+msgstr "Lajittele"
+
+#: catalog/listing.py:31
+msgid "Recommended order"
+msgstr "Suositeltu järjestys"
+
+#: catalog/listing.py:32
+msgid "Highest rating"
+msgstr "Paras arvosana"
+
+#: catalog/listing.py:33
+msgid "Newest first"
+msgstr "Uusimmat ensin"
+
+#: catalog/listing.py:34
+msgid "Name: A to Z"
+msgstr "Nimi: A–Ö"
+
+#: catalog/listing.py:39 catalog/listing.py:264
+msgid "Minimum rating"
+msgstr "Vähimmäisarvosana"
+
+#: catalog/listing.py:40
+msgid "Any rating"
+msgstr "Mikä tahansa arvosana"
+
+#: catalog/listing.py:42
+msgid "Language spoken"
+msgstr "Puhutut kielet"
+
+#: catalog/listing.py:43
+msgid "Verified by Madloba"
+msgstr "Madloban vahvistama"
+
+#: catalog/listing.py:44
+msgid "Hide temporarily closed"
+msgstr "Piilota väliaikaisesti suljetut"
+
+#: catalog/listing.py:49 catalog/listing.py:50
+#: catalog/templates/catalog/includes/organization-filters.html:56
+msgid "All conditions"
+msgstr "Kaikki ehdot"
+
+#: catalog/listing.py:51
+#: catalog/templates/catalog/includes/organization-filters.html:57
+msgid "At least one"
+msgstr "Vähintään yksi"
+
+#: catalog/listing.py:65
+msgid "Any language"
+msgstr "Mikä tahansa kieli"
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:5
+msgid "Similar places nearby"
+msgstr "Samankaltaisia paikkoja lähellä"
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:6
+msgid ""
+"Places in the same category within 5 km. Distances are approximate and "
+"measured in a straight line."
+msgstr ""
+"Saman kategorian paikkoja 5 km:n säteellä. Etäisyydet ovat suuntaa antavia "
+"ja linnuntietä mitattuja."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "Loading nearby places…"
+msgstr "Ladataan lähellä olevia paikkoja…"
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "Could not load nearby places. Please try again."
+msgstr "Lähellä olevia paikkoja ei voitu ladata. Yritä uudelleen."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "More nearby places loaded."
+msgstr "Lisää lähellä olevia paikkoja ladattiin."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "All nearby places have been shown."
+msgstr "Kaikki lähellä olevat paikat on näytetty."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "Show more nearby places"
+msgstr "Näytä lisää lähellä olevia paikkoja"
+
+#: catalog/templates/catalog/includes/organization-filters.html:5
+msgid "Find your place"
+msgstr "Löydä etsimäsi paikka"
+
+#: catalog/templates/catalog/includes/organization-filters.html:6
+#, python-format
+msgid "Found: %(count)s of %(total)s"
+msgstr "Löytyi: %(count)s / %(total)s"
+
+#: catalog/templates/catalog/includes/organization-filters.html:10
+msgid "Filters and sorting"
+msgstr "Suodattimet ja lajittelu"
+
+#: catalog/templates/catalog/includes/organization-filters.html:50
+msgid "Services and features"
+msgstr "Palvelut ja ominaisuudet"
+
+#: catalog/templates/catalog/includes/organization-filters.html:54
+msgid "How to match services and features"
+msgstr "Miten palvelut ja ominaisuudet yhdistetään"
+
+#: catalog/templates/catalog/includes/organization-filters.html:60
+msgid ""
+"At least one feature from every selected group is required. Counts include "
+"selections in other groups."
+msgstr ""
+"Jokaisesta valitusta ryhmästä vaaditaan vähintään yksi ominaisuus. Määrissä "
+"huomioidaan myös muiden ryhmien valinnat."
+
+#: catalog/templates/catalog/includes/organization-filters.html:61
+msgid ""
+"Any selected feature is enough. Each number counts places with that feature;"
+" a place may match several features."
+msgstr ""
+"Mikä tahansa valittu ominaisuus riittää. Kukin luku kertoo kyseisen "
+"ominaisuuden paikkojen määrän; paikka voi täyttää useita valintoja."
+
+#: catalog/templates/catalog/includes/organization-filters.html:62
+msgid ""
+"Search, rating and other filters apply in both modes. The button shows the "
+"total number of matching places."
+msgstr ""
+"Haku, arvosana ja muut suodattimet ovat käytössä molemmissa tiloissa. "
+"Painike näyttää sopivien paikkojen kokonaismäärän."
+
+#: catalog/templates/catalog/includes/organization-filters.html:86
+msgid ""
+"Some filters are invalid or no longer available. Reset the filters and try "
+"again."
+msgstr ""
+"Jotkin suodattimet ovat virheellisiä tai eivät ole enää käytettävissä. "
+"Nollaa suodattimet ja yritä uudelleen."
+
+#: catalog/templates/catalog/includes/organization-filters.html:89
+msgid "Show places"
+msgstr "Näytä paikat"
+
+#: catalog/templates/catalog/includes/organization-filters.html:91
+msgid "Reset filters"
+msgstr "Nollaa suodattimet"
+
+#: catalog/templates/catalog/includes/organization-filters.html:94
+msgid "Updating counts…"
+msgstr "Päivitetään määriä…"
+
+#: catalog/templates/catalog/includes/organization-filters.html:94
+msgid "Counts could not be updated. Use Show places to apply your filters."
+msgstr ""
+"Määriä ei voitu päivittää. Käytä Näytä paikat -painiketta suodattimien "
+"käyttöön."
+
+#: catalog/templates/catalog/includes/organization-filters.html:94
+msgid "Matching places:"
+msgstr "Sopivat paikat:"
+
+#: catalog/templates/catalog/includes/organization-filters.html:97
+msgid "Applied filters"
+msgstr "Käytössä olevat suodattimet"
+
+#: catalog/templates/catalog/includes/organization-filters.html:99
+#, python-format
+msgid "Remove filter: %(label)s"
+msgstr "Poista suodatin: %(label)s"
+
+#: catalog/templates/catalog/includes/organization-filters.html:108
+msgid "No matching places"
+msgstr "Sopivia paikkoja ei löytynyt"
+
+#: catalog/templates/catalog/includes/organization-filters.html:109
+msgid "Try another name, lower the rating or remove a filter."
+msgstr "Kokeile toista nimeä, alenna arvosanarajaa tai poista suodatin."
+
+#: catalog/templates/catalog/includes/organization-map.html:7
+#: core/tests/test_template_i18n.py:291
+msgid "Location map"
+msgstr "Sijaintikartta"
+
+#: catalog/templates/catalog/includes/premium_banner.html:5
+msgid "Do you want to increase the number of clients by 5 times?"
+msgstr "Haluatko viisinkertaistaa asiakasmääräsi?"
+
+#: catalog/templates/catalog/includes/premium_banner.html:6
+msgid ""
+"Choose premium placement on Madloba and attract customers who are currently "
+"leaving for your competitors."
+msgstr ""
+"Valitse Madloban premium-näkyvyys ja houkuttele asiakkaita, jotka nyt "
+"valitsevat kilpailijasi."
+
+#: catalog/templates/catalog/includes/premium_banner.html:7
+msgid "I want"
+msgstr "Haluan"
+
+#: catalog/templates/catalog/organization_page.html:288
+#: catalog/templates/catalog/organization_type_map.html:6
+#: catalog/templates/catalog/organization_type_map.html:10
+#, python-format
+msgid "%(title)s on map"
+msgstr "%(title)s kartalla"
+
+#: catalog/templates/catalog/organization_page.html:300
+msgid "See more offers"
+msgstr "Katso lisää tarjouksia"
+
+#: catalog/templates/catalog/organization_type_map.html:17
+#, python-format
+msgid "%(title)s near me in %(city)s"
+msgstr "%(title)s lähelläni kaupungissa %(city)s"
+
+#: catalog/templates/catalog/organizations.html:21
+#, python-format
+msgid "[[By address]]: %(address)s"
+msgstr "Osoitteen mukaan: %(address)s"
+
+#: comments/templates/comments/comment_deleted.html:12
+#: comments/templates/comments/comment_on_moderation.html:12
+#: comments/templates/comments/comment_rejected.html:12
+#, python-format
+msgid "%(elapsed)s ago"
+msgstr "%(elapsed)s sitten"
+
+#: ratings/templates/ratings/blocks/rating_block.html:7
+#, python-format
+msgid "%(rating)s out of 10"
+msgstr "%(rating)s/10"
+
+#: reviews/views.py:159
+msgid "Rating must be between 1 and 5."
+msgstr "Arvosanan on oltava 1–5."
+
+#: search/templates/search/search.html:5
+#: search/templates/search/search.html:11 search/tests.py:204
+msgid "Search"
+msgstr "Hae"
+
+#: search/templates/search/search.html:13
+msgid "Search the site"
+msgstr "Hae sivustolta"
+
+#: search/templates/search/search.html:14
+msgid "Search query"
+msgstr "Hakusana"
+
+#: search/templates/search/search.html:17
+msgid "Name, place or keyword"
+msgstr "Nimi, paikka tai hakusana"
+
+#: search/templates/search/search.html:19
+msgid "Find"
+msgstr "Etsi"
+
+#: search/templates/search/search.html:25 search/tests.py:210
+msgid "Results found:"
+msgstr "Hakutuloksia:"
+
+#: search/templates/search/search.html:26 search/tests.py:214
+#, python-format
+msgid "Showing %(start)s–%(end)s"
+msgstr "Näytetään %(start)s–%(end)s"
+
+#: search/templates/search/search.html:42 search/tests.py:237
+msgid "Check the spelling or try fewer, more general words."
+msgstr "Tarkista oikeinkirjoitus tai kokeile vähemmän, yleisempiä sanoja."
+
+#: search/templates/search/search.html:44 search/tests.py:229
+msgid "What would you like to find?"
+msgstr "Mitä haluaisit löytää?"
+
+#: search/templates/search/search.html:45
+msgid "Enter an organization, place or topic in the search field above."
+msgstr "Kirjoita organisaatio, paikka tai aihe yllä olevaan hakukenttään."
+
+#: reviews/views.py:203
+#, python-format
+msgid "Error saving review: %(error)s"
+msgstr "Arvostelun tallennus epäonnistui: %(error)s"
+
+#: catalog/nearby.py:62
+msgid "Less than 50 m"
+msgstr "Alle 50 m"
+
+#: catalog/nearby.py:64
+#, python-format
+msgid "About %(distance)s m"
+msgstr "Noin %(distance)s m"
+
+#: catalog/nearby.py:67
+#, python-format
+msgid "About %(distance)s km"
+msgstr "Noin %(distance)s km"

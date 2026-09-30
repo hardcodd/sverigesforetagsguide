@@ -4,6 +4,7 @@ from typing import Any
 
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Avg, Count
+from django.http import HttpRequest
 from django.utils.html import strip_tags
 from django.utils.timezone import localtime
 from wagtail.images.models import Image
@@ -17,6 +18,7 @@ from reviews.models import (
 )
 
 from .models import Organization
+from .organization_images import get_organization_fallback
 
 
 def _image_abs_url(request, image: Image, spec: str) -> str | None:
@@ -31,10 +33,10 @@ def _image_abs_url(request, image: Image, spec: str) -> str | None:
             return None
 
 
-def _get_org_images(page, request) -> list[str] | None:
+def _get_org_images(page: Organization, request: HttpRequest) -> list[str] | None:
     """
     Returns up to 10 absolute image URLs (best for LocalBusiness.image).
-    Uses page.images; if empty, uses settings.core.SiteSettings.default_organization_image.
+    Uses page.images, then category placeholders, category cover, and site default.
     """
     urls: list[str] = []
 
@@ -58,8 +60,9 @@ def _get_org_images(page, request) -> list[str] | None:
         except Exception:
             default_img = None
 
-        if default_img:
-            url = _image_abs_url(request, default_img, "width-1200")
+        selected_img = get_organization_fallback(page, default_img, request)
+        if selected_img:
+            url = _image_abs_url(request, selected_img, "width-1200")
             if url:
                 urls.append(url)
 

@@ -54,14 +54,26 @@ def faq_jsonld(value: StructValue, page_url: str = "") -> str:
 
 
 @register.simple_tag
-def social_image(page: Page, fallback: Image | None = None) -> Image | None:
+def social_image(
+    page: Page,
+    fallback: Image | None = None,
+    request: HttpRequest | None = None,
+    organization_default: Image | None = None,
+) -> Image | None:
     """Choose a raster page image or logo that can produce a JPEG preview.
 
     Wagtail/Willow cannot rasterize SVGs. Skip them and omit the preview image
     when no raster candidate exists, without changing the site's visible logo.
     """
+    own_image = getattr(page, "get_image", None)
+    if not own_image:
+        from catalog.models import Organization
+        from catalog.organization_images import get_organization_fallback
+
+        if isinstance(page, Organization):
+            own_image = get_organization_fallback(page, organization_default, request)
     candidates: tuple[Image | None, ...] = (
-        getattr(page, "get_image", None),
+        own_image,
         getattr(page, "image", None),
         fallback,
     )
@@ -69,6 +81,19 @@ def social_image(page: Page, fallback: Image | None = None) -> Image | None:
         if isinstance(candidate, Image) and not candidate.is_svg():
             return candidate
     return None
+
+
+@register.simple_tag
+def social_image_alt(
+    page: Page, image: Image, request: HttpRequest | None = None
+) -> str:
+    """Use descriptive alt text for organization fallbacks."""
+    from catalog.models import Organization
+    from catalog.organization_images import get_organization_fallback_alt
+
+    if isinstance(page, Organization) and image != page.get_image:
+        return get_organization_fallback_alt(page, image, request)
+    return str(image.title)
 
 
 @register.simple_tag

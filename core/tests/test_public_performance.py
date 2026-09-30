@@ -233,9 +233,8 @@ class PublicQueryTests(TestCase):
 
     def test_saving_organization_invalidates_current_card_cache_in_all_languages(self):
         keys = [
-            make_template_fragment_key(
-                "organization_item_i18n_v2", [self.organization.pk, lang]
-            )
+            make_template_fragment_key(key, [self.organization.pk, lang])
+            for key in ("organization_item_i18n_v2", "organization_item_i18n_v4")
             for lang in ("ru", "en", "ka")
         ]
         for key in keys:

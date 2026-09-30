@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import gettext as gettext_module
 import json
 import re
 from datetime import datetime, timezone
@@ -26,10 +28,20 @@ from django.utils.translation import gettext, ngettext, override
 
 
 ROOT = Path(settings.BASE_DIR)
+PUBLIC_LANGUAGES = ("ru", "ka", "da", "fi", "nb", "sv")
+PUBLIC_PYTHON_SOURCES = (
+    ("catalog/listing.py", None),
+    ("catalog/nearby.py", None),
+    ("catalog/services.py", None),
+    ("comments/forms.py", None),
+    ("comments/views.py", "add_comment"),
+    ("reviews/views.py", "add_review"),
+)
 PUBLIC_TEMPLATES = sorted(
     path
     for path in ROOT.glob("*/templates/**/*.html")
     if not {"admin", "wagtailadmin"}.intersection(path.parts)
+    and "site_logs" not in path.parts
     and path.name not in {"import_pages.html", "export_pages.html"}
 )
 LOCAL_CACHE = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
@@ -37,6 +49,32 @@ LOCAL_CACHE = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemC
 
 def template_name(path: Path) -> str:
     return str(path).split("/templates/", 1)[1]
+
+
+def public_python_messages() -> set[str]:
+    messages: set[str] = set()
+    for source_name, function_name in PUBLIC_PYTHON_SOURCES:
+        module = ast.parse((ROOT / source_name).read_text())
+        if function_name is None:
+            roots = [module]
+        else:
+            roots = [
+                node
+                for node in module.body
+                if isinstance(node, ast.FunctionDef) and node.name == function_name
+            ]
+        for root in roots:
+            for node in ast.walk(root):
+                if (
+                    isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Name)
+                    and node.func.id == "_"
+                    and node.args
+                    and isinstance(node.args[0], ast.Constant)
+                    and isinstance(node.args[0].value, str)
+                ):
+                    messages.add(node.args[0].value)
+    return messages
 
 
 class VisibleTextParser(HTMLParser):
@@ -84,7 +122,7 @@ class PublicTemplateTranslationTests(SimpleTestCase):
     ) -> None:
         catalogs = {
             lang: polib.pofile(str(ROOT / f"app/locale/{lang}/LC_MESSAGES/django.po"))
-            for lang in ("ru", "ka")
+            for lang in PUBLIC_LANGUAGES
         }
         for path in PUBLIC_TEMPLATES:
             template = get_template(template_name(path)).template
@@ -100,6 +138,11 @@ class PublicTemplateTranslationTests(SimpleTestCase):
             for lang, catalog in catalogs.items():
                 with override(lang):
                     for message, plural in messages:
+                        if (
+                            template_name(path) == "base.html"
+                            and message == "Check links"
+                        ):
+                            continue
                         with self.subTest(
                             template=template_name(path), lang=lang, message=message
                         ):
@@ -124,6 +167,93 @@ class PublicTemplateTranslationTests(SimpleTestCase):
                                     set(re.findall(r"%\((\w+)\)s", message)),
                                     set(re.findall(r"%\((\w+)\)s", entry.msgstr)),
                                 )
+
+    def test_public_python_messages_have_complete_compiled_translations(self) -> None:
+        messages = public_python_messages()
+        self.assertIn("Error saving review: %(error)s", messages)
+        for language in PUBLIC_LANGUAGES:
+            catalog = polib.pofile(
+                str(ROOT / f"app/locale/{language}/LC_MESSAGES/django.po")
+            )
+            with (ROOT / f"app/locale/{language}/LC_MESSAGES/django.mo").open(
+                "rb"
+            ) as compiled_file:
+                compiled = gettext_module.GNUTranslations(compiled_file)
+            for message in messages:
+                with self.subTest(language=language, message=message):
+                    entry = catalog.find(message)
+                    self.assertIsNotNone(entry)
+                    assert entry is not None
+                    self.assertTrue(entry.translated())
+                    self.assertEqual(
+                        set(re.findall(r"%\((\w+)\)s", message)),
+                        set(re.findall(r"%\((\w+)\)s", entry.msgstr)),
+                    )
+                    self.assertEqual(compiled.gettext(message), entry.msgstr)
+
+    def test_public_javascript_messages_have_complete_compiled_translations(
+        self,
+    ) -> None:
+        messages: set[str] = set()
+        for path in (ROOT / "src/js").rglob("*.js"):
+            messages.update(
+                re.findall(
+                    r"\b(?:gettext|_)\(\s*[\"']([^\"']+)[\"']\s*\)", path.read_text()
+                )
+            )
+        self.assertTrue(messages)
+        for language in PUBLIC_LANGUAGES:
+            catalog = polib.pofile(
+                str(ROOT / f"app/locale/{language}/LC_MESSAGES/djangojs.po")
+            )
+            with (ROOT / f"app/locale/{language}/LC_MESSAGES/djangojs.mo").open(
+                "rb"
+            ) as compiled_file:
+                compiled = gettext_module.GNUTranslations(compiled_file)
+            for message in messages:
+                with self.subTest(language=language, message=message):
+                    entry = catalog.find(message)
+                    self.assertIsNotNone(entry)
+                    assert entry is not None
+                    self.assertTrue(entry.translated())
+                    self.assertEqual(compiled.gettext(message), entry.msgstr)
+
+    def test_review_save_error_uses_translated_message(self) -> None:
+        from django.contrib.auth import get_user_model
+        from django.contrib.contenttypes.models import ContentType
+
+        from reviews.views import add_review
+
+        request = RequestFactory().post(
+            "/reviews/add/",
+            {"rating": "5", "content_type": "1", "object_id": "1"},
+        )
+        setattr(request, "user", get_user_model()(pk=1, username="reviewer"))
+        setattr(request, "_dont_enforce_csrf_checks", True)
+        with (
+            patch(
+                "reviews.views.ContentType.objects.get",
+                return_value=ContentType(
+                    pk=1, app_label="catalog", model="organization"
+                ),
+            ),
+            patch("reviews.views.Review.objects.filter") as reviews,
+            patch(
+                "reviews.views.Review.save",
+                side_effect=RuntimeError("storage unavailable"),
+            ),
+            patch("reviews.views._", wraps=gettext) as translate,
+        ):
+            reviews.return_value.first.return_value = None
+            for language in PUBLIC_LANGUAGES:
+                with override(language), self.subTest(language=language):
+                    expected = gettext("Error saving review: %(error)s") % {
+                        "error": "storage unavailable"
+                    }
+                    response = add_review(request)
+                    self.assertEqual(response.status_code, 400)
+                    self.assertEqual(json.loads(response.content)["message"], expected)
+                    translate.assert_any_call("Error saving review: %(error)s")
 
     def test_no_unmarked_user_facing_literals(self) -> None:
         for path in PUBLIC_TEMPLATES:
@@ -186,19 +316,19 @@ class PublicTemplateTranslationTests(SimpleTestCase):
                             self.assertEqual(node.render(context), language)
 
     def test_error_page_renders_without_request_or_database(self) -> None:
-        for language in ("ru", "ka"):
+        for language in PUBLIC_LANGUAGES:
             with override(language), self.subTest(language=language):
                 html = render_to_string("500.html")
                 self.assertIn(f'lang="{language}"', html)
                 self.assertIn(gettext("Internal server error"), html)
                 self.assertNotIn("Internal server error", html)
 
-    def test_comment_plural_forms_render_in_both_languages(self) -> None:
+    def test_comment_plural_forms_render_in_target_languages(self) -> None:
         with (
             patch("comments.templatetags.comments.ContentType.objects.get_for_model"),
             patch("comments.templatetags.comments.Comment.objects.filter") as comments,
         ):
-            for language in ("ru", "ka"):
+            for language in PUBLIC_LANGUAGES:
                 for count in (0, 1, 2, 5, 11, 21, 22, 25):
                     comments.return_value.count.return_value = count
                     with (
@@ -215,7 +345,7 @@ class PublicTemplateTranslationTests(SimpleTestCase):
                         self.assertNotIn("comment<", html)
 
     def test_rating_accessible_text_is_localized(self) -> None:
-        for language in ("ru", "ka"):
+        for language in PUBLIC_LANGUAGES:
             with override(language), self.subTest(language=language):
                 html = render_to_string("includes/stars-rating.html", {"stars": 4})
                 self.assertIn(

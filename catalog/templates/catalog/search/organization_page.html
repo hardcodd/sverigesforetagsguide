@@ -1,11 +1,19 @@
-{% load wagtailcore_tags wagtailimages_tags i18n %}
+{% load wagtailcore_tags wagtailimages_tags i18n catalog %}
 
 <article class="search-item{% if result.temporarily_closed %} search-item--closed{% endif %}">
-  {% with result.search_images.0.image|default:settings.core.SiteSettings.default_organization_image as card_image %}
-    {% if card_image %}
+  {% with result.search_images.0.image as own_image %}
+    {% if own_image %}
       <div class="search-item__image">
-        <div class="ratio">{% srcset_image card_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
+        <div class="ratio">{% srcset_image own_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
       </div>
+    {% else %}
+      {% organization_fallback result settings.core.SiteSettings.default_organization_image as fallback_image %}
+      {% if fallback_image %}
+        {% organization_fallback_alt result fallback_image as fallback_alt %}
+        <div class="search-item__image">
+          <div class="ratio">{% srcset_image fallback_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" alt=fallback_alt %}</div>
+        </div>
+      {% endif %}
     {% endif %}
   {% endwith %}
   <div class="search-item__content">

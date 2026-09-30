@@ -679,7 +679,7 @@ msgstr "Открыто до %(time)s"
 
 #: catalog/services.py:348
 msgid "Open"
-msgstr ""
+msgstr "Открыто"
 
 #: catalog/services.py:352 catalog/views.py:803 catalog/views.py:804
 #: catalog/views.py:805
@@ -883,7 +883,7 @@ msgstr ""
 
 #: comments/forms.py:18
 msgid "Add comment ..."
-msgstr ""
+msgstr "Добавить комментарий..."
 
 #: comments/models.py:23 comments/views.py:257
 #: core/templates/core/export_pages.html:120 reviews/models.py:18
@@ -1037,13 +1037,12 @@ msgstr[3] "%(counter)s комментариев"
 #: comments/views.py:46 comments/views.py:52 comments/views.py:57
 #: comments/views.py:79
 msgid "Hacker?"
-msgstr ""
+msgstr "Некорректный запрос."
 
 #: comments/views.py:68
-#, fuzzy
 #| msgid "Comment text"
 msgid "Comment is too short!"
-msgstr "Текст комментария"
+msgstr "Комментарий слишком короткий!"
 
 #: comments/views.py:194 comments/views.py:204 comments/views.py:209
 #: reviews/views.py:52 reviews/views.py:62 reviews/views.py:67
@@ -1879,7 +1878,7 @@ msgstr "Недопустимый тип контента."
 
 #: reviews/views.py:167
 msgid "You have already submitted a review for this item."
-msgstr ""
+msgstr "Ты уже оставил отзыв об этом объекте."
 
 #: reviews/views.py:187
 #, python-format
@@ -2452,3 +2451,12 @@ msgstr "Не удалось обновить цифры. Нажми «Показ
 #: catalog/templates/catalog/includes/organization-filters.html
 msgid "Matching places:"
 msgstr "Подходящих мест:"
+
+#: reviews/views.py:159
+msgid "Rating must be between 1 and 5."
+msgstr "Оценка должна быть от 1 до 5."
+
+#: reviews/views.py:203
+#, python-format
+msgid "Error saving review: %(error)s"
+msgstr "Ошибка при сохранении отзыва: %(error)s"

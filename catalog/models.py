@@ -7,8 +7,7 @@ from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.db import models
 from django.db.models import F
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponseGone, JsonResponse
 from django.utils.translation import gettext_lazy as _
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
@@ -191,23 +190,9 @@ class OrganizationType(RoutablePageMixin, Panels, Page):
     ]
 
     @route(r"^map/$")
-    def map_view(self, request, *args, **kwargs):
-        """Map view of the organization type."""
-        organizations = (
-            Organization.objects.live()
-            .filter(show_on_map=True)
-            .descendant_of(self)
-            .distinct()
-        )
-
-        return render(
-            request,
-            "catalog/organization_type_map.html",
-            {
-                "page": self,
-                "organizations": organizations,
-            },
-        )
+    def map_view(self, request: HttpRequest) -> HttpResponseGone:
+        """Mark the retired category-wide map URL as permanently gone."""
+        return HttpResponseGone()
 
     @property
     def get_image(self):
@@ -551,7 +536,13 @@ class Organization(Page):
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         """Invalidate card fragments while forwarding Wagtail's save options."""
-        keys = ["organization", "organization_images", "organization_item_i18n_v2"]
+        keys = [
+            "organization",
+            "organization_images",
+            "organization_images_v3",
+            "organization_item_i18n_v2",
+            "organization_item_i18n_v4",
+        ]
         languages = getattr(settings, "LANGUAGES", ["en"])
 
         for key in keys:

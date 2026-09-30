@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from ast import literal_eval
+from pathlib import Path
 
 from dotenv import load_dotenv
 from wagtail.embeds.oembed_providers import youtube
@@ -82,6 +83,7 @@ INSTALLED_APPS = [
     "ratings",
     "gallery",
     "search",
+    "site_logs.apps.SiteLogsConfig",
 ]
 
 MIDDLEWARE = [
@@ -232,6 +234,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = os.environ.get("WAGTAIL_SITE_NAME", "Madloba")
+WAGTAILAPI_LIMIT_MAX = 100
 
 # Search
 # https://docs.wagtail.org/en/stable/topics/search/backends.html
@@ -397,29 +400,49 @@ ROSETTA_LANGUAGES = [
 ]
 
 
+# Application logs
+
+_SITE_LOG_DIR_VALUE = Path(os.environ.get("SITE_LOG_DIR", Path(BASE_DIR) / "logs"))
+SITE_LOG_DIR = (
+    _SITE_LOG_DIR_VALUE
+    if _SITE_LOG_DIR_VALUE.is_absolute()
+    else Path(BASE_DIR) / _SITE_LOG_DIR_VALUE
+)
+SITE_LOG_ROTATION_MB = int(os.environ.get("SITE_LOG_ROTATION_MB", "50"))
+SITE_LOG_WARNING_RETENTION_DAYS = int(
+    os.environ.get("SITE_LOG_WARNING_RETENTION_DAYS", "30")
+)
+SITE_LOG_ERROR_RETENTION_DAYS = int(
+    os.environ.get("SITE_LOG_ERROR_RETENTION_DAYS", "90")
+)
+SITE_LOG_CONSOLE_LEVEL = os.environ.get("SITE_LOG_CONSOLE_LEVEL", "WARNING")
+SITE_LOG_VIEW_RECORD_LIMIT = 200
+SITE_LOG_VIEW_FILE_LIMIT = 16
+SITE_LOG_VIEW_BYTES_PER_FILE = 256 * 1024
+SITE_LOG_DOWNLOAD_FILE_LIMIT = 50
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            "datefmt": "%d/%b/%Y %H:%M:%S",
-        },
-        "simple": {"format": "%(levelname)s %(message)s"},
-    },
     "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "errors.log",
-            "formatter": "verbose",
+        "loguru": {
+            "class": "site_logs.logging.InterceptHandler",
         },
+    },
+    "root": {
+        "handlers": ["loguru"],
+        "level": "WARNING",
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
-            "propagate": True,
-            "level": "ERROR",
+            "handlers": ["loguru"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.server": {
+            "handlers": ["loguru"],
+            "level": "WARNING",
+            "propagate": False,
         },
     },
 }

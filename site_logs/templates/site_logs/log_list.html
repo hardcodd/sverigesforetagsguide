@@ -1,0 +1,65 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}{% translate "Application logs" %}{% endblock %}
+
+{% block content %}
+    {% translate "Application logs" as page_title %}
+    {% include "wagtailadmin/shared/header.html" with title=page_title icon="warning" only %}
+
+    <div class="nice-padding">
+        <div class="w-mb-5">
+            <a class="button{% if selected_level != 'errors' %} button-secondary{% endif %}" href="{% url 'site_logs' %}?level=errors">
+                {% translate "Errors" %}
+            </a>
+            <a class="button{% if selected_level != 'warnings' %} button-secondary{% endif %}" href="{% url 'site_logs' %}?level=warnings">
+                {% translate "Warnings" %}
+            </a>
+            <a class="button button-secondary" href="?level={{ selected_level }}">
+                {% translate "Refresh" %}
+            </a>
+        </div>
+
+        <p class="help-block help-info">
+            {% blocktranslate %}Recent log records shown: {{ record_count }}. Worker files read: {{ files_read }}.{% endblocktranslate %}
+            {% blocktranslate %}At most {{ record_limit }} records are read on demand; logs are not stored in the database.{% endblocktranslate %}
+            {% blocktranslate %}Updated at {{ updated_at }}.{% endblocktranslate %}
+        </p>
+
+        {% if log_text %}
+            <textarea class="w-field__input" rows="32" readonly spellcheck="false" aria-label="{% translate 'Application log records' %}">{{ log_text }}</textarea>
+        {% else %}
+            <p>{% translate "No log records were found." %}</p>
+        {% endif %}
+
+        <h2>{% translate "Log files" %}</h2>
+        {% if downloadable_files %}
+            <table class="listing">
+                <thead>
+                    <tr>
+                        <th>{% translate "File" %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in downloadable_files %}
+                        <tr>
+                            <td style="overflow-wrap: anywhere;">
+                                <strong>{{ file.name }}</strong><br>
+                                {% translate "Size" %}: {{ file.size|filesizeformat }}.<br>
+                                {% translate "Modified" %}: {{ file.modified_at }}.
+                            </td>
+                            <td>
+                                <a class="button button-small button-secondary" href="{% url 'site_logs_download' file.name %}">
+                                    {% translate "Download" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{% translate "No log files are available for download." %}</p>
+        {% endif %}
+    </div>
+{% endblock %}

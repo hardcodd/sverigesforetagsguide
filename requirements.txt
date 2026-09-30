@@ -50,6 +50,7 @@ jedi-language-server==0.45.1
 jsbeautifier==1.15.4
 json5==0.12.0
 laces==0.1.2
+loguru==0.7.3
 lsprotocol==2023.0.1
 matplotlib-inline==0.1.7
 mccabe==0.7.0

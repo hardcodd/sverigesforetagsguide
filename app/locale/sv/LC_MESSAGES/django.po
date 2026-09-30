@@ -21,7 +21,7 @@ msgstr ""
 
 #: app/templates/base.html:68
 msgid "Help"
-msgstr ""
+msgstr "Hjälp"
 
 #: app/templates/includes/add-organization-button.html:3
 msgid "Add new organization"
@@ -674,7 +674,7 @@ msgstr "I byggnaden"
 
 #: catalog/templates/catalog/organization_page.html:63
 msgid "QnA"
-msgstr ""
+msgstr "Frågor och svar"
 
 #: catalog/templates/catalog/organization_page.html:79
 msgid "Call"
@@ -724,11 +724,11 @@ msgstr "Koordinater och Plus-kod"
 
 #: catalog/templates/catalog/organization_page.html:197
 msgid "Copy coords"
-msgstr ""
+msgstr "Kopiera koordinater"
 
 #: catalog/templates/catalog/organization_page.html:210
 msgid "Copy plus code"
-msgstr ""
+msgstr "Kopiera pluskod"
 
 #: catalog/templates/catalog/organization_page.html:225
 msgid "They speak languages"
@@ -835,7 +835,7 @@ msgstr ""
 
 #: comments/forms.py:18
 msgid "Add comment ..."
-msgstr ""
+msgstr "Lägg till kommentar..."
 
 #: comments/models.py:23 comments/views.py:257 reviews/models.py:18
 #: reviews/views.py:25
@@ -1389,10 +1389,9 @@ msgid "No"
 msgstr ""
 
 #: gallery/templates/gallery/gallery_post_page.html:30
-#, fuzzy
 #| msgid "Show"
 msgid "Show more"
-msgstr "Visa"
+msgstr "Visa mer"
 
 #: home/models.py:21
 msgid "Main image for the home page."
@@ -1483,10 +1482,9 @@ msgid "click to upload"
 msgstr "klicka för att ladda upp"
 
 #: reviews/templates/reviews/reviews-list.html:13
-#, fuzzy
 #| msgid "Show"
 msgid "Show more reviews"
-msgstr "Visa"
+msgstr "Visa fler recensioner"
 
 #: reviews/templates/reviews/reviews.html:8
 msgid "Be the first to leave a review"
@@ -1494,11 +1492,11 @@ msgstr "Bli först med att lämna en recension"
 
 #: reviews/views.py:154
 msgid "Invalid content type."
-msgstr ""
+msgstr "Ogiltig innehållstyp."
 
 #: reviews/views.py:167
 msgid "You have already submitted a review for this item."
-msgstr ""
+msgstr "Du har redan skickat in en recension av det här objektet."
 
 #: reviews/views.py:187
 #, python-format
@@ -1511,12 +1509,14 @@ msgstr "Endast .jpg- och .jpeg-filer är tillåtna."
 
 #: reviews/views.py:200
 msgid "File size must be less than 2MB."
-msgstr ""
+msgstr "Filstorleken måste vara mindre än 2 MB."
 
 #: reviews/views.py:218
 msgid ""
 "Review submitted successfully. It will be published after admin approval."
 msgstr ""
+"Recensionen har skickats in. Den publiceras efter att en administratör har "
+"godkänt den."
 
 #: reviews/wagtail_hooks.py:29
 #, fuzzy
@@ -1578,3 +1578,336 @@ msgstr "Prenumerationer"
 
 #~ msgid "Find out all the benefits of premium placement in our catalog."
 #~ msgstr "Ta reda på alla fördelar med premiumplacering i vår katalog."
+
+#: app/templates/404.html:5
+msgid "Page not found"
+msgstr "Sidan hittades inte"
+
+#: app/templates/500.html:7 app/templates/500.html:11
+#: core/tests/test_template_i18n.py:193
+msgid "Internal server error"
+msgstr "Internt serverfel"
+
+#: app/templates/500.html:13
+msgid "Sorry, there seems to be an error. Please try again soon."
+msgstr "Tyvärr uppstod ett fel. Försök igen om en stund."
+
+#: app/templates/includes/stars-rating.html:3
+#: core/tests/test_template_i18n.py:222 core/tests/test_template_i18n.py:315
+#, python-format
+msgid "Rating: %(rating)s out of 5"
+msgstr "Betyg: %(rating)s av 5"
+
+#: blog/templates/blog/index_page.html:15
+#, python-format
+msgid "[[By author]]: %(author_name)s"
+msgstr "Av författare: %(author_name)s"
+
+#: blog/templates/blog/index_page.html:19
+#, python-format
+msgid "[[By tag]]: %(tag_name)s"
+msgstr "Efter tagg: %(tag_name)s"
+
+#: catalog/listing.py:24
+msgid "Name or address"
+msgstr "Namn eller adress"
+
+#: catalog/listing.py:25
+msgid "Search in this category"
+msgstr "Sök i den här kategorin"
+
+#: catalog/listing.py:29
+msgid "Sort by"
+msgstr "Sortera efter"
+
+#: catalog/listing.py:31
+msgid "Recommended order"
+msgstr "Rekommenderad ordning"
+
+#: catalog/listing.py:32
+msgid "Highest rating"
+msgstr "Högst betyg"
+
+#: catalog/listing.py:33
+msgid "Newest first"
+msgstr "Nyaste först"
+
+#: catalog/listing.py:34
+msgid "Name: A to Z"
+msgstr "Namn: A till Ö"
+
+#: catalog/listing.py:39 catalog/listing.py:264
+msgid "Minimum rating"
+msgstr "Lägsta betyg"
+
+#: catalog/listing.py:40
+msgid "Any rating"
+msgstr "Alla betyg"
+
+#: catalog/listing.py:42
+msgid "Language spoken"
+msgstr "Språk som talas"
+
+#: catalog/listing.py:43
+msgid "Verified by Madloba"
+msgstr "Verifierad av Madloba"
+
+#: catalog/listing.py:44
+msgid "Hide temporarily closed"
+msgstr "Dölj tillfälligt stängda platser"
+
+#: catalog/listing.py:49 catalog/listing.py:50
+#: catalog/templates/catalog/includes/organization-filters.html:56
+msgid "All conditions"
+msgstr "Alla villkor"
+
+#: catalog/listing.py:51
+#: catalog/templates/catalog/includes/organization-filters.html:57
+msgid "At least one"
+msgstr "Minst ett"
+
+#: catalog/listing.py:65
+msgid "Any language"
+msgstr "Alla språk"
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:5
+msgid "Similar places nearby"
+msgstr "Liknande platser i närheten"
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:6
+msgid ""
+"Places in the same category within 5 km. Distances are approximate and "
+"measured in a straight line."
+msgstr ""
+"Platser i samma kategori inom 5 km. Avstånden är ungefärliga och mäts "
+"fågelvägen."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "Loading nearby places…"
+msgstr "Läser in platser i närheten…"
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "Could not load nearby places. Please try again."
+msgstr "Det gick inte att läsa in platser i närheten. Försök igen."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "More nearby places loaded."
+msgstr "Fler platser i närheten har lästs in."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "All nearby places have been shown."
+msgstr "Alla platser i närheten har visats."
+
+#: catalog/templates/catalog/includes/nearby-organizations.html:12
+msgid "Show more nearby places"
+msgstr "Visa fler platser i närheten"
+
+#: catalog/templates/catalog/includes/organization-filters.html:5
+msgid "Find your place"
+msgstr "Hitta din plats"
+
+#: catalog/templates/catalog/includes/organization-filters.html:6
+#, python-format
+msgid "Found: %(count)s of %(total)s"
+msgstr "Hittade: %(count)s av %(total)s"
+
+#: catalog/templates/catalog/includes/organization-filters.html:10
+msgid "Filters and sorting"
+msgstr "Filter och sortering"
+
+#: catalog/templates/catalog/includes/organization-filters.html:50
+msgid "Services and features"
+msgstr "Tjänster och egenskaper"
+
+#: catalog/templates/catalog/includes/organization-filters.html:54
+msgid "How to match services and features"
+msgstr "Så kombineras tjänster och egenskaper"
+
+#: catalog/templates/catalog/includes/organization-filters.html:60
+msgid ""
+"At least one feature from every selected group is required. Counts include "
+"selections in other groups."
+msgstr ""
+"Minst en egenskap från varje vald grupp krävs. Antalen tar även hänsyn till "
+"val i andra grupper."
+
+#: catalog/templates/catalog/includes/organization-filters.html:61
+msgid ""
+"Any selected feature is enough. Each number counts places with that feature;"
+" a place may match several features."
+msgstr ""
+"Det räcker med en vald egenskap. Varje antal visar platser med den "
+"egenskapen; en plats kan matcha flera val."
+
+#: catalog/templates/catalog/includes/organization-filters.html:62
+msgid ""
+"Search, rating and other filters apply in both modes. The button shows the "
+"total number of matching places."
+msgstr ""
+"Sökning, betyg och andra filter gäller i båda lägena. Knappen visar det "
+"totala antalet träffar."
+
+#: catalog/templates/catalog/includes/organization-filters.html:86
+msgid ""
+"Some filters are invalid or no longer available. Reset the filters and try "
+"again."
+msgstr ""
+"Vissa filter är ogiltiga eller inte längre tillgängliga. Återställ filtren "
+"och försök igen."
+
+#: catalog/templates/catalog/includes/organization-filters.html:89
+msgid "Show places"
+msgstr "Visa platser"
+
+#: catalog/templates/catalog/includes/organization-filters.html:91
+msgid "Reset filters"
+msgstr "Återställ filter"
+
+#: catalog/templates/catalog/includes/organization-filters.html:94
+msgid "Updating counts…"
+msgstr "Uppdaterar antal…"
+
+#: catalog/templates/catalog/includes/organization-filters.html:94
+msgid "Counts could not be updated. Use Show places to apply your filters."
+msgstr ""
+"Antalen kunde inte uppdateras. Använd Visa platser för att tillämpa filtren."
+
+#: catalog/templates/catalog/includes/organization-filters.html:94
+msgid "Matching places:"
+msgstr "Matchande platser:"
+
+#: catalog/templates/catalog/includes/organization-filters.html:97
+msgid "Applied filters"
+msgstr "Aktiva filter"
+
+#: catalog/templates/catalog/includes/organization-filters.html:99
+#, python-format
+msgid "Remove filter: %(label)s"
+msgstr "Ta bort filter: %(label)s"
+
+#: catalog/templates/catalog/includes/organization-filters.html:108
+msgid "No matching places"
+msgstr "Inga matchande platser"
+
+#: catalog/templates/catalog/includes/organization-filters.html:109
+msgid "Try another name, lower the rating or remove a filter."
+msgstr "Prova ett annat namn, sänk betygsgränsen eller ta bort ett filter."
+
+#: catalog/templates/catalog/includes/organization-map.html:7
+#: core/tests/test_template_i18n.py:291
+msgid "Location map"
+msgstr "Platskarta"
+
+#: catalog/templates/catalog/includes/premium_banner.html:5
+msgid "Do you want to increase the number of clients by 5 times?"
+msgstr "Vill du femdubbla antalet kunder?"
+
+#: catalog/templates/catalog/includes/premium_banner.html:6
+msgid ""
+"Choose premium placement on Madloba and attract customers who are currently "
+"leaving for your competitors."
+msgstr ""
+"Välj premiumplacering på Madloba och locka kunder som annars väljer dina "
+"konkurrenter."
+
+#: catalog/templates/catalog/includes/premium_banner.html:7
+msgid "I want"
+msgstr "Jag vill"
+
+#: catalog/templates/catalog/organization_page.html:288
+#: catalog/templates/catalog/organization_type_map.html:6
+#: catalog/templates/catalog/organization_type_map.html:10
+#, python-format
+msgid "%(title)s on map"
+msgstr "%(title)s på kartan"
+
+#: catalog/templates/catalog/organization_page.html:300
+msgid "See more offers"
+msgstr "Se fler erbjudanden"
+
+#: catalog/templates/catalog/organization_type_map.html:17
+#, python-format
+msgid "%(title)s near me in %(city)s"
+msgstr "%(title)s nära mig i %(city)s"
+
+#: catalog/templates/catalog/organizations.html:21
+#, python-format
+msgid "[[By address]]: %(address)s"
+msgstr "Efter adress: %(address)s"
+
+#: comments/templates/comments/comment_deleted.html:12
+#: comments/templates/comments/comment_on_moderation.html:12
+#: comments/templates/comments/comment_rejected.html:12
+#, python-format
+msgid "%(elapsed)s ago"
+msgstr "för %(elapsed)s sedan"
+
+#: ratings/templates/ratings/blocks/rating_block.html:7
+#, python-format
+msgid "%(rating)s out of 10"
+msgstr "%(rating)s av 10"
+
+#: reviews/views.py:159
+msgid "Rating must be between 1 and 5."
+msgstr "Betyget måste vara mellan 1 och 5."
+
+#: search/templates/search/search.html:5
+#: search/templates/search/search.html:11 search/tests.py:204
+msgid "Search"
+msgstr "Sök"
+
+#: search/templates/search/search.html:13
+msgid "Search the site"
+msgstr "Sök på webbplatsen"
+
+#: search/templates/search/search.html:14
+msgid "Search query"
+msgstr "Sökfråga"
+
+#: search/templates/search/search.html:17
+msgid "Name, place or keyword"
+msgstr "Namn, plats eller sökord"
+
+#: search/templates/search/search.html:19
+msgid "Find"
+msgstr "Sök"
+
+#: search/templates/search/search.html:25 search/tests.py:210
+msgid "Results found:"
+msgstr "Antal träffar:"
+
+#: search/templates/search/search.html:26 search/tests.py:214
+#, python-format
+msgid "Showing %(start)s–%(end)s"
+msgstr "Visar %(start)s–%(end)s"
+
+#: search/templates/search/search.html:42 search/tests.py:237
+msgid "Check the spelling or try fewer, more general words."
+msgstr "Kontrollera stavningen eller prova färre, mer allmänna ord."
+
+#: search/templates/search/search.html:44 search/tests.py:229
+msgid "What would you like to find?"
+msgstr "Vad vill du hitta?"
+
+#: search/templates/search/search.html:45
+msgid "Enter an organization, place or topic in the search field above."
+msgstr "Ange en organisation, plats eller ett ämne i sökfältet ovan."
+
+#: reviews/views.py:203
+#, python-format
+msgid "Error saving review: %(error)s"
+msgstr "Fel när recensionen sparades: %(error)s"
+
+#: catalog/nearby.py:62
+msgid "Less than 50 m"
+msgstr "Mindre än 50 m"
+
+#: catalog/nearby.py:64
+#, python-format
+msgid "About %(distance)s m"
+msgstr "Cirka %(distance)s m"
+
+#: catalog/nearby.py:67
+#, python-format
+msgid "About %(distance)s km"
+msgstr "Cirka %(distance)s km"

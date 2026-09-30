@@ -5,11 +5,12 @@
 <meta property="og:url" content="{{ canonical_url }}" />
 {% if page.search_description %}<meta property="og:description" content="{{ page.search_description }}" />{% endif %}
 {% if current_site.site_name %}<meta property="og:site_name" content="{{ current_site.site_name }}" />{% endif %}
-{% social_image page settings.core.SiteSettings.logo as share_image %}
+{% social_image page settings.core.SiteSettings.logo request settings.core.SiteSettings.default_organization_image as share_image %}
 {% if share_image %}
   {% image share_image max-1200x630 format-jpeg as share_rendition %}
   <meta property="og:image" content="{% absolute_media_url request share_rendition.url %}" />
   <meta property="og:image:width" content="{{ share_rendition.width }}" />
   <meta property="og:image:height" content="{{ share_rendition.height }}" />
-  <meta property="og:image:alt" content="{{ share_image.title }}" />
+  {% social_image_alt page share_image request as share_image_alt %}
+  <meta property="og:image:alt" content="{{ share_image_alt }}" />
 {% endif %}

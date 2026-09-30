@@ -20,10 +20,17 @@ from wagtail.images.formats import (
 )
 from wagtail.snippets.models import register_snippet
 
+from core.admin_pages_api import AdminPagesAPIViewSet
 from core.export_views import export_pages
 from core.import_views import import_pages
 from core.staticfiles import versioned_static
 from core.views import FooterViewSet
+
+
+@hooks.register("construct_admin_api")
+def register_admin_pages_api(router) -> None:
+    """Extend the page listing served by the existing admin-only API."""
+    router.register_endpoint("pages", AdminPagesAPIViewSet)
 
 
 @hooks.register("register_icons")  # type: ignore

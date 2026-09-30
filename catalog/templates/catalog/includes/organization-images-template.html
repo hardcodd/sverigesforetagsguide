@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags catalog %}
 
 {% spaceless %}
   <div class="swiper organization__images">
@@ -23,19 +23,22 @@
           {% endif %}
         {% endfor %}
       {% else %}
-        {% image settings.core.SiteSettings.default_organization_image original as img %}
-        {% image settings.core.SiteSettings.default_organization_image max-165x165 as thumb %}
-        <div class="swiper-slide">
-          <div class="swiper-slide-thumb">
-            <img src="{{ thumb.url }}" alt="{{ item.image.alt|default:page.title }}">
+        {% organization_fallback page settings.core.SiteSettings.default_organization_image as fallback_image %}
+        {% if fallback_image %}
+          {% organization_fallback_alt page fallback_image as fallback_alt %}
+          {% image fallback_image original as img %}
+          {% image fallback_image original format-webp as img_webp %}
+          {% image fallback_image max-165x165 as thumb %}
+          <div class="swiper-slide">
+            <div class="swiper-slide-thumb">
+              <img src="{{ thumb.url }}" alt="{{ fallback_alt }}">
+            </div>
+            <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ fallback_alt }}">
+              <div class="ratio">{% srcset_image fallback_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" alt=fallback_alt %}</div>
+              <div class="swiper-lazy-preloader"></div>
+            </a>
           </div>
-          <a data-src="{{ img.url }}" data-srcset="{{ img_webp.url }}" data-fancybox="organization-{{ page.pk }}-images" data-caption="{{ item.image.alt|default:page.title }}">
-            {% with settings.core.SiteSettings.default_organization_image as default_img %}
-              <div class="ratio">{% srcset_image default_img fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
-            {% endwith %}
-            <div class="swiper-lazy-preloader"></div>
-          </a>
-        </div>
+        {% endif %}
       {% endif %}
     </div>
     <div class="swiper-pagination"></div>

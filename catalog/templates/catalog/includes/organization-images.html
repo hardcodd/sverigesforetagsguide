@@ -5,7 +5,7 @@
   {% if request.is_preview %}
     {% include "catalog/includes/organization-images-template.html" %}
   {% else %}
-    {% cache 604800 organization_images page.pk fragment_language %}
+    {% cache 604800 organization_images_v3 page.pk fragment_language %}
     {% include "catalog/includes/organization-images-template.html" %}
   {% endcache %}
 {% endif %}

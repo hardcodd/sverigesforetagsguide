@@ -1,20 +1,27 @@
 import multiprocessing as mp
 import os
+import re
+import stat
+import tempfile
+from argparse import ArgumentParser
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Iterable, Optional
+from datetime import datetime, timezone as datetime_timezone
+from pathlib import Path
+from typing import Any, Iterable, Iterator, Optional, TextIO
 from xml.sax.saxutils import escape
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import close_old_connections
-from django.utils import timezone, translation
+from django.utils import translation
 
 # --------------------
 # НАСТРОЙКИ
 # --------------------
 
 LIMIT = 10_000
+SITEMAP_FILENAME = re.compile(r"sitemap-([1-9][0-9]*)\.xml\Z")
 
 SITEMAP_ROOT = os.path.join(
     settings.BASE_DIR,
@@ -63,6 +70,55 @@ def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
+@contextmanager
+def atomic_xml_file(path: str) -> Iterator[TextIO]:
+    """Replace an XML file only after its complete contents are written."""
+    temporary_path: str | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=os.path.dirname(path),
+            prefix=f".{os.path.basename(path)}-",
+            suffix=".tmp",
+            delete=False,
+        ) as output:
+            temporary_path = output.name
+            yield output
+        try:
+            mode = stat.S_IMODE(os.stat(path).st_mode)
+        except FileNotFoundError:
+            mode = 0o644
+        os.chmod(temporary_path, mode)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path and os.path.exists(temporary_path):
+            os.unlink(temporary_path)
+
+
+def sitemap_files(directory: Path) -> list[Path]:
+    """Return the generated section files in numeric order, without symlinks."""
+    if not directory.is_dir():
+        return []
+    return sorted(
+        (
+            path
+            for path in directory.iterdir()
+            if SITEMAP_FILENAME.fullmatch(path.name)
+            and path.is_file()
+            and not path.is_symlink()
+        ),
+        key=lambda path: int(path.stem.removeprefix("sitemap-")),
+    )
+
+
+def remove_stale_files(directory: Path, current_files: set[str]) -> None:
+    """Remove numbered files no longer produced by a completed section run."""
+    for path in sitemap_files(directory):
+        if path.name not in current_files:
+            path.unlink()
+
+
 def safe_full_url(page) -> Optional[str]:
     try:
         return page.full_url
@@ -97,7 +153,7 @@ def _write_urlset_file(
     filename = f"sitemap-{file_index}.xml"
     filepath = os.path.join(out_dir, filename)
 
-    with open(filepath, "w", encoding="utf-8") as f:
+    with atomic_xml_file(filepath) as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         f.write(
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
@@ -185,11 +241,12 @@ def _run_job(args: tuple[Job, str, list[str], int]) -> list[str]:
     base_qs = model.objects.live().exclude(depth=1).order_by("id")
 
     total = base_qs.count()
+    out_dir = os.path.join(sitemap_root, job.lang, job.sitemap_name)
     if not total:
+        remove_stale_files(Path(out_dir), set())
         close_old_connections()
         return []
 
-    out_dir = os.path.join(sitemap_root, job.lang, job.sitemap_name)
     ensure_dir(out_dir)
 
     index_entries: list[str] = []
@@ -229,6 +286,9 @@ def _run_job(args: tuple[Job, str, list[str], int]) -> list[str]:
                 f"{base_url}/sitemaps/{job.lang}/{job.sitemap_name}/{filename}"
             )
 
+    remove_stale_files(
+        Path(out_dir), {entry.rsplit("/", 1)[-1] for entry in index_entries}
+    )
     close_old_connections()
     return index_entries
 
@@ -244,7 +304,7 @@ class Command(BaseCommand):
         "(URL с языковым префиксом, hreflang). Поддерживает ускорение через multiprocessing."
     )
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument(
             "--lang",
             action="append",
@@ -258,22 +318,31 @@ class Command(BaseCommand):
             help="Генерировать только указанные sitemap (ключ из SITEMAP_PAGE_TYPES). Можно указывать несколько раз.",
         )
         parser.add_argument(
+            "--exclude",
+            action="append",
+            dest="exclude",
+            help="Skip a sitemap section by its SITEMAP_PAGE_TYPES key. Repeat as needed.",
+        )
+        parser.add_argument(
             "--processes",
             type=int,
             default=1,
             help="Количество процессов для параллельной генерации (1 = без параллели).",
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args: object, **options: Any) -> None:
         ensure_dir(SITEMAP_ROOT)
 
         requested_langs = options.get("langs") or None
         requested_only = options.get("only") or None
+        excluded = set(options.get("exclude") or [])
         processes = int(options.get("processes") or 1)
         if processes < 1:
             processes = 1
 
-        langs = [l for l in LANGUAGES if (not requested_langs or l in requested_langs)]
+        langs = [
+            lang for lang in LANGUAGES if not requested_langs or lang in requested_langs
+        ]
         if not langs:
             self.stdout.write(self.style.WARNING("ℹ️ Не найдено языков для генерации."))
             return
@@ -281,6 +350,8 @@ class Command(BaseCommand):
         sitemap_items = list(SITEMAP_PAGE_TYPES.items())
         if requested_only:
             sitemap_items = [(k, v) for k, v in sitemap_items if k in requested_only]
+        if excluded:
+            sitemap_items = [(k, v) for k, v in sitemap_items if k not in excluded]
         if not sitemap_items:
             self.stdout.write(self.style.WARNING("ℹ️ Не найдено sitemap для генерации."))
             return
@@ -297,15 +368,11 @@ class Command(BaseCommand):
             for lang in langs
         ]
 
-        sitemap_index_entries: list[str] = []
-
         if processes == 1 or len(jobs) == 1:
             # Последовательно
             for job in jobs:
                 self.stdout.write(f"→ {job.sitemap_name} [{job.lang}]")
-                sitemap_index_entries.extend(
-                    _run_job((job, SITEMAP_ROOT, LANGUAGES, LIMIT))
-                )
+                _run_job((job, SITEMAP_ROOT, LANGUAGES, LIMIT))
         else:
             # Параллельно (spawn-safe на macOS/Windows)
             ctx = mp.get_context("spawn")
@@ -313,29 +380,46 @@ class Command(BaseCommand):
 
             with ctx.Pool(processes=processes) as pool:
                 # Важно: imap_unordered возвращает результаты не по порядку — это нормально
-                for entries in pool.imap_unordered(_run_job, work, chunksize=1):
-                    sitemap_index_entries.extend(entries)
+                for _ in pool.imap_unordered(_run_job, work, chunksize=1):
+                    pass
 
+        from wagtail.models import Site
+
+        base_url = Site.objects.get(is_default_site=True).root_url.rstrip("/")
+        sitemap_index_entries = self.collect_index_entries(base_url)
+        self.write_index(sitemap_index_entries)
         if sitemap_index_entries:
-            self.write_index(sitemap_index_entries)
             self.stdout.write(self.style.SUCCESS("✅ Sitemap успешно сгенерированы"))
         else:
             self.stdout.write(self.style.WARNING("ℹ️ Нет данных для генерации sitemap."))
 
-    def write_index(self, entries: list[str]) -> None:
-        index_path = os.path.join(SITEMAP_ROOT, "sitemap.xml")
-        now = timezone.now().strftime("%Y-%m-%d")
+    def collect_index_entries(self, base_url: str) -> list[tuple[str, str]]:
+        """Build the index from all existing generated sections, including skipped ones."""
+        entries: list[tuple[str, str]] = []
+        for section in SITEMAP_PAGE_TYPES:
+            for lang in LANGUAGES:
+                directory = Path(SITEMAP_ROOT, lang, section)
+                for path in sitemap_files(directory):
+                    modified = datetime.fromtimestamp(
+                        path.stat().st_mtime, tz=datetime_timezone.utc
+                    ).date()
+                    loc = f"{base_url}/sitemaps/{lang}/{section}/{path.name}"
+                    entries.append((loc, modified.isoformat()))
+        return entries
 
-        with open(index_path, "w", encoding="utf-8") as f:
-            f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-            f.write(
+    def write_index(self, entries: list[tuple[str, str]]) -> None:
+        """Replace the index only after every selected section finished successfully."""
+        index_path = os.path.join(SITEMAP_ROOT, "sitemap.xml")
+        with atomic_xml_file(index_path) as output:
+            output.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            output.write(
                 '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             )
 
-            for loc in entries:
-                f.write("  <sitemap>\n")
-                f.write(f"    <loc>{xml_text(loc)}</loc>\n")
-                f.write(f"    <lastmod>{now}</lastmod>\n")
-                f.write("  </sitemap>\n")
+            for loc, lastmod in entries:
+                output.write("  <sitemap>\n")
+                output.write(f"    <loc>{xml_text(loc)}</loc>\n")
+                output.write(f"    <lastmod>{lastmod}</lastmod>\n")
+                output.write("  </sitemap>\n")
 
-            f.write("</sitemapindex>\n")
+            output.write("</sitemapindex>\n")

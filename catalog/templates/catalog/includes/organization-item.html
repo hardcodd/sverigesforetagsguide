@@ -1,9 +1,9 @@
-{% load i18n wagtailimages_tags core cache reviews %}
+{% load i18n wagtailimages_tags core cache reviews catalog %}
 
 {% get_current_language as current_lang %}
 
 {% spaceless %}
-	{% cache 604800 organization_item_i18n_v2 organization.pk current_lang %}
+	{% cache 604800 organization_item_i18n_v4 organization.pk current_lang %}
 		{% with organization.specific as o %}
 			<article id="organization-{{ o.pk }}"{% if o.temporarily_closed %} class="temporarily-closed"{% endif %}>
 				<a class="organization-item{% if o.premium_subscription %} {{ o.premium_subscription.classname }}{% endif %}" href="{{ o.url }}">
@@ -18,11 +18,11 @@
 							{% if img %}
 								<div class="ratio">{% srcset_image img.image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
 							{% else %}
-								{% with settings.core.SiteSettings.default_organization_image as default_image %}
-									{% if default_image %}
-										<div class="ratio">{% srcset_image default_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" %}</div>
-									{% endif %}
-								{% endwith %}
+								{% organization_fallback o settings.core.SiteSettings.default_organization_image as fallback_image %}
+								{% if fallback_image %}
+									{% organization_fallback_alt o fallback_image as fallback_alt %}
+									<div class="ratio">{% srcset_image fallback_image fill-720x405 format-{avif,webp,jpeg} loading="lazy" alt=fallback_alt %}</div>
+								{% endif %}
 							{% endif %}
 						{% endwith %}
 					</div>

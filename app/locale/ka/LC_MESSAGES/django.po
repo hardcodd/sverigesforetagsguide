@@ -623,7 +623,7 @@ msgstr "დღესასწაული"
 
 #: catalog/services.py:87 catalog/services.py:89 core/blocks.py:70
 msgid "Until the last client"
-msgstr ""
+msgstr "ბოლო კლიენტამდე"
 
 #: catalog/services.py:294 catalog/services.py:316
 msgid "Closed"
@@ -631,7 +631,7 @@ msgstr "დახურულია"
 
 #: catalog/services.py:306
 msgid "Open until the last client"
-msgstr ""
+msgstr "ღიაა ბოლო კლიენტამდე"
 
 #: catalog/services.py:310
 #, python-format
@@ -971,11 +971,11 @@ msgstr[1] "%(counter)s კომენტარი"
 #: comments/views.py:46 comments/views.py:52 comments/views.py:57
 #: comments/views.py:79
 msgid "Hacker?"
-msgstr ""
+msgstr "არასწორი მოთხოვნა."
 
 #: comments/views.py:68
 msgid "Comment is too short!"
-msgstr ""
+msgstr "კომენტარი ძალიან მოკლეა!"
 
 #: comments/views.py:194 comments/views.py:204 comments/views.py:209
 #: reviews/views.py:52 reviews/views.py:62 reviews/views.py:67
@@ -1500,11 +1500,11 @@ msgstr "იყავით პირველი, ვინც დატოვ�
 
 #: reviews/views.py:154
 msgid "Invalid content type."
-msgstr ""
+msgstr "შიგთავსის ტიპი არასწორია."
 
 #: reviews/views.py:167
 msgid "You have already submitted a review for this item."
-msgstr ""
+msgstr "ამ ობიექტის შესახებ შეფასება უკვე გაგზავნილი გაქვს."
 
 #: reviews/views.py:187
 #, python-format
@@ -1513,16 +1513,18 @@ msgstr ""
 
 #: reviews/views.py:195
 msgid "Only .jpg and .jpeg files are allowed."
-msgstr ""
+msgstr "დაშვებულია მხოლოდ .jpg და .jpeg ფაილები."
 
 #: reviews/views.py:200
 msgid "File size must be less than 2MB."
-msgstr ""
+msgstr "ფაილის ზომა 2 მბ-ზე ნაკლები უნდა იყოს."
 
 #: reviews/views.py:218
 msgid ""
 "Review submitted successfully. It will be published after admin approval."
 msgstr ""
+"შეფასება წარმატებით გაიგზავნა. ის გამოქვეყნდება ადმინისტრატორის დამტკიცების "
+"შემდეგ."
 
 #: reviews/wagtail_hooks.py:29
 #, fuzzy
@@ -1961,3 +1963,12 @@ msgstr "რაოდენობების განახლება ვე�
 #: catalog/templates/catalog/includes/organization-filters.html
 msgid "Matching places:"
 msgstr "შესაბამისი ადგილები:"
+
+#: reviews/views.py:159
+msgid "Rating must be between 1 and 5."
+msgstr "შეფასება უნდა იყოს 1-დან 5-მდე."
+
+#: reviews/views.py:203
+#, python-format
+msgid "Error saving review: %(error)s"
+msgstr "შეფასების შენახვის შეცდომა: %(error)s"

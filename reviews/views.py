@@ -142,10 +142,11 @@ class ReviewViewSetGroup(ViewSetGroup):
 @csrf_protect
 @require_POST
 @login_required
-def add_review(request):
+def add_review(request: HttpRequest) -> JsonResponse:
     if not request.method == "POST" and not is_ajax(request):
         raise Http404
 
+    user = getattr(request, "user")
     images = request.FILES.getlist("images")
     comment = request.POST.get("comment")
     try:
@@ -172,7 +173,7 @@ def add_review(request):
 
     # Check if the user has already submitted a review for this object
     existing_review = Review.objects.filter(
-        user=request.user,
+        user=user,
         content_type=content_type,
         object_id=object_id,
     ).first()
@@ -184,12 +185,12 @@ def add_review(request):
         )
 
     try:
-        if request.user.is_superuser or request.user.is_staff:
+        if user.is_superuser or user.is_staff:
             status = ReviewStatus.PUBLISHED
         else:
             status = ReviewStatus.MODERATION
         review = Review(
-            user=request.user,
+            user=user,
             content_type=content_type,
             object_id=object_id,
             rating=rating,
@@ -199,7 +200,7 @@ def add_review(request):
         review.save()
     except Exception as e:
         return JsonResponse(
-            {"message": _("Error saving review: %s" % str(e))},
+            {"message": _("Error saving review: %(error)s") % {"error": str(e)}},
             status=400,
         )
 
@@ -216,9 +217,9 @@ def add_review(request):
                     status=400,
                 )
             wagtail_image = Image(
-                title=f"[REVIEW] {request.user.username} - {review.content_object.title}",
+                title=f"[REVIEW] {user.username} - {review.content_object.title}",
                 file=image,
-                uploaded_by_user=request.user,
+                uploaded_by_user=user,
             )
             wagtail_image.save()
             review_image = ReviewImage(
