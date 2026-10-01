@@ -7,8 +7,7 @@ from django.conf import settings
 from django.core.exceptions import FieldDoesNotExist
 from django.db.models import Model
 from django.db.models.options import Options
-from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import FileResponse, Http404, HttpRequest, HttpResponse, JsonResponse
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -39,34 +38,30 @@ def robots_txt(request):
 SITEMAP_ROOT = os.path.join(settings.BASE_DIR, "app", "templates", "sitemaps")
 
 
-def sitemap_index(request):
-    """
-    Главный sitemap-index
-    """
-    template_path = os.path.join(SITEMAP_ROOT, "sitemap.xml")
-    if not os.path.exists(template_path):
-        raise Http404("Sitemap index not found")
-    return render(request, "sitemaps/sitemap.xml", content_type="application/xml")
+def _sitemap_response(path: str) -> FileResponse:
+    """Stream the current XML file, bypassing Django's cached template loader."""
+    try:
+        sitemap_file = open(path, "rb")
+    except FileNotFoundError as exc:
+        raise Http404("Sitemap not found") from exc
+    return FileResponse(sitemap_file, content_type="application/xml")
 
 
-def sitemap_section(request, lang, section, num):
-    """
-    Отдельные sitemap-файлы для типа страниц и языка
-    """
+def sitemap_index(request: HttpRequest) -> FileResponse:
+    """Serve the current sitemap index from disk."""
+    return _sitemap_response(os.path.join(SITEMAP_ROOT, "sitemap.xml"))
+
+
+def sitemap_section(
+    request: HttpRequest, lang: str, section: str, num: str
+) -> FileResponse:
+    """Serve one generated sitemap section file from disk."""
     if lang not in dict(settings.LANGUAGES):
         raise Http404(f"Unknown language: {lang}")
 
-    # строим путь к файлу
-    template_path = os.path.join(SITEMAP_ROOT, lang, section, f"sitemap-{num}.xml")
-
-    if not os.path.exists(template_path):
-        raise Http404(f"Sitemap not found: {lang}/{section}/sitemap-{num}.xml")
-
-    # путь относительно templates/ — чтобы render нашёл
-    template_relative = os.path.relpath(
-        template_path, os.path.join(settings.BASE_DIR, "app", "templates")
+    return _sitemap_response(
+        os.path.join(SITEMAP_ROOT, lang, section, f"sitemap-{num}.xml")
     )
-    return render(request, template_relative, content_type="application/xml")
 
 
 def get_page_model(page_type: str) -> type[Page]:

@@ -1,6 +1,7 @@
 import multiprocessing as mp
 import os
 import re
+import shutil
 import stat
 import tempfile
 from argparse import ArgumentParser
@@ -9,10 +10,11 @@ from dataclasses import dataclass
 from datetime import datetime, timezone as datetime_timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Optional, TextIO
+from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
 from django.conf import settings
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.db import close_old_connections
 from django.utils import translation
 
@@ -21,6 +23,7 @@ from django.utils import translation
 # --------------------
 
 LIMIT = 10_000
+MAX_UNCONFIRMED_SHRINK = 0.10
 SITEMAP_FILENAME = re.compile(r"sitemap-([1-9][0-9]*)\.xml\Z")
 
 SITEMAP_ROOT = os.path.join(
@@ -119,11 +122,60 @@ def remove_stale_files(directory: Path, current_files: set[str]) -> None:
             path.unlink()
 
 
-def safe_full_url(page) -> Optional[str]:
+def page_full_url(page: Any, *, lang: str, section: str) -> Optional[str]:
+    """Resolve a page URL, reporting failures that must abort regeneration."""
     try:
         return page.full_url
+    except Exception as exc:
+        raise CommandError(
+            f"Cannot resolve URL for {section} page "
+            f"{getattr(page, 'pk', getattr(page, 'id', '?'))} [{lang}]: {exc}"
+        ) from exc
+
+
+def count_section_urls(directory: Path) -> int:
+    """Count published URLs without loading large sitemap files into memory."""
+    count = 0
+    for path in sitemap_files(directory):
+        try:
+            for _, element in ElementTree.iterparse(path, events=("end",)):
+                if element.tag.rsplit("}", 1)[-1] == "url":
+                    count += 1
+                element.clear()
+        except ElementTree.ParseError as exc:
+            raise CommandError(f"Invalid existing sitemap {path}: {exc}") from exc
+    return count
+
+
+def publish_section(staged_dir: Path, out_dir: Path, backup_dir: Path) -> None:
+    """Publish a complete section and restore old files if publishing fails."""
+    old_files = sitemap_files(out_dir)
+    new_files = sitemap_files(staged_dir)
+    old_names = {path.name for path in old_files}
+    new_names = {path.name for path in new_files}
+    backup_dir.mkdir()
+    for path in old_files:
+        backup_path = backup_dir / path.name
+        try:
+            os.link(path, backup_path)
+        except OSError:
+            shutil.copy2(path, backup_path)
+
+    ensure_dir(str(out_dir))
+    try:
+        for path in new_files:
+            old_path = out_dir / path.name
+            if path.name in old_names:
+                os.chmod(path, stat.S_IMODE(old_path.stat().st_mode))
+            os.replace(path, old_path)
+        remove_stale_files(out_dir, new_names)
     except Exception:
-        return None
+        for path in sitemap_files(out_dir):
+            if path.name not in old_names:
+                path.unlink()
+        for path in old_files:
+            os.replace(backup_dir / path.name, path)
+        raise
 
 
 def xml_text(value: str) -> str:
@@ -135,6 +187,7 @@ class Job:
     sitemap_name: str
     model_path: str
     lang: str
+    allow_large_shrink: bool = False
 
 
 def _write_urlset_file(
@@ -145,6 +198,7 @@ def _write_urlset_file(
     file_index: int,
     default_lang: str,
     languages: list[str],
+    section: str | None = None,
 ) -> str:
     """
     Пишет urlset сразу в файл (потоково) и возвращает filename.
@@ -152,6 +206,7 @@ def _write_urlset_file(
     """
     filename = f"sitemap-{file_index}.xml"
     filepath = os.path.join(out_dir, filename)
+    section_name = section or os.path.basename(out_dir)
 
     with atomic_xml_file(filepath) as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -162,9 +217,12 @@ def _write_urlset_file(
 
         for page in pages:
             # loc считаем в активном языке (lang) без лишних переключений
-            loc_url = safe_full_url(page)
+            loc_url = page_full_url(page, lang=lang, section=section_name)
             if not loc_url:
-                continue
+                raise CommandError(
+                    f"Missing URL for {section_name} page "
+                    f"{getattr(page, 'pk', getattr(page, 'id', '?'))} [{lang}]"
+                )
 
             urls_by_lang: dict[str, Optional[str]] = {lang: loc_url}
 
@@ -173,12 +231,16 @@ def _write_urlset_file(
                 if hreflang == lang:
                     continue
                 with activate_language(hreflang):
-                    urls_by_lang[hreflang] = safe_full_url(page)
+                    urls_by_lang[hreflang] = page_full_url(
+                        page, lang=hreflang, section=section_name
+                    )
 
             # x-default -> default_lang
             if default_lang not in urls_by_lang:
                 with activate_language(default_lang):
-                    urls_by_lang[default_lang] = safe_full_url(page)
+                    urls_by_lang[default_lang] = page_full_url(
+                        page, lang=default_lang, section=section_name
+                    )
 
             f.write("  <url>\n")
             f.write(f"    <loc>{xml_text(loc_url)}</loc>\n")
@@ -241,55 +303,76 @@ def _run_job(args: tuple[Job, str, list[str], int]) -> list[str]:
     base_qs = model.objects.live().exclude(depth=1).order_by("id")
 
     total = base_qs.count()
-    out_dir = os.path.join(sitemap_root, job.lang, job.sitemap_name)
-    if not total:
-        remove_stale_files(Path(out_dir), set())
-        close_old_connections()
-        return []
-
-    ensure_dir(out_dir)
-
+    out_dir = Path(sitemap_root, job.lang, job.sitemap_name)
+    previous_count = count_section_urls(out_dir)
     index_entries: list[str] = []
-    file_index = 1
-    pages_buffer: list = []
+    processed_count = 0
 
-    with activate_language(job.lang):
-        page_iter = base_qs.iterator(chunk_size=min(limit, 5000))
+    try:
+        with tempfile.TemporaryDirectory(
+            dir=sitemap_root, prefix=f".{job.lang}-{job.sitemap_name}-"
+        ) as temporary_root:
+            staged_dir = Path(temporary_root, "staged")
+            staged_dir.mkdir()
+            backup_dir = Path(temporary_root, "backup")
+            file_index = 1
+            pages_buffer: list[Any] = []
 
-        for page in page_iter:
-            pages_buffer.append(page)
-            if len(pages_buffer) >= limit:
-                filename = _write_urlset_file(
-                    pages=pages_buffer,
-                    lang=job.lang,
-                    out_dir=out_dir,
-                    file_index=file_index,
-                    default_lang=default_lang,
-                    languages=languages,
+            with activate_language(job.lang):
+                page_iter = base_qs.iterator(chunk_size=min(limit, 5000))
+                for page in page_iter:
+                    processed_count += 1
+                    pages_buffer.append(page)
+                    if len(pages_buffer) >= limit:
+                        filename = _write_urlset_file(
+                            pages=pages_buffer,
+                            lang=job.lang,
+                            out_dir=str(staged_dir),
+                            file_index=file_index,
+                            default_lang=default_lang,
+                            languages=languages,
+                            section=job.sitemap_name,
+                        )
+                        index_entries.append(
+                            f"{base_url}/sitemaps/{job.lang}/{job.sitemap_name}/{filename}"
+                        )
+                        file_index += 1
+                        pages_buffer.clear()
+
+                if pages_buffer:
+                    filename = _write_urlset_file(
+                        pages=pages_buffer,
+                        lang=job.lang,
+                        out_dir=str(staged_dir),
+                        file_index=file_index,
+                        default_lang=default_lang,
+                        languages=languages,
+                        section=job.sitemap_name,
+                    )
+                    index_entries.append(
+                        f"{base_url}/sitemaps/{job.lang}/{job.sitemap_name}/{filename}"
+                    )
+
+            if processed_count != total:
+                raise CommandError(
+                    f"{job.sitemap_name} [{job.lang}]: selected {total} pages, "
+                    f"processed {processed_count}; existing sitemap was preserved"
                 )
-                index_entries.append(
-                    f"{base_url}/sitemaps/{job.lang}/{job.sitemap_name}/{filename}"
+            if (
+                previous_count
+                and processed_count < previous_count * (1 - MAX_UNCONFIRMED_SHRINK)
+                and not job.allow_large_shrink
+            ):
+                raise CommandError(
+                    f"{job.sitemap_name} [{job.lang}]: existing sitemap has "
+                    f"{previous_count} URLs, new selection has {processed_count}; "
+                    "use --allow-large-shrink only after verifying the reduction"
                 )
-                file_index += 1
-                pages_buffer.clear()
 
-        if pages_buffer:
-            filename = _write_urlset_file(
-                pages=pages_buffer,
-                lang=job.lang,
-                out_dir=out_dir,
-                file_index=file_index,
-                default_lang=default_lang,
-                languages=languages,
-            )
-            index_entries.append(
-                f"{base_url}/sitemaps/{job.lang}/{job.sitemap_name}/{filename}"
-            )
+            publish_section(staged_dir, out_dir, backup_dir)
+    finally:
+        close_old_connections()
 
-    remove_stale_files(
-        Path(out_dir), {entry.rsplit("/", 1)[-1] for entry in index_entries}
-    )
-    close_old_connections()
     return index_entries
 
 
@@ -329,6 +412,11 @@ class Command(BaseCommand):
             default=1,
             help="Количество процессов для параллельной генерации (1 = без параллели).",
         )
+        parser.add_argument(
+            "--allow-large-shrink",
+            action="store_true",
+            help="Allow a section to lose more than 10%% of its existing URLs.",
+        )
 
     def handle(self, *args: object, **options: Any) -> None:
         ensure_dir(SITEMAP_ROOT)
@@ -363,7 +451,12 @@ class Command(BaseCommand):
 
         # Собираем задания (lang x sitemap_name)
         jobs = [
-            Job(sitemap_name=k, model_path=v, lang=lang)
+            Job(
+                sitemap_name=k,
+                model_path=v,
+                lang=lang,
+                allow_large_shrink=bool(options.get("allow_large_shrink")),
+            )
             for k, v in sitemap_items
             for lang in langs
         ]

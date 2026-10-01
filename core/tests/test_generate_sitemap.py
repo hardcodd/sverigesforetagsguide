@@ -8,14 +8,21 @@ from unittest.mock import patch
 from xml.etree import ElementTree
 
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.test import SimpleTestCase
 
 from core.management.commands import generate_sitemap
 
 
 class FakePages:
-    def __init__(self, urls: list[str]) -> None:
-        self.urls = urls
+    def __init__(
+        self, urls: list[str] | None = None, pages: list[object] | None = None
+    ) -> None:
+        self.pages = (
+            pages
+            if pages is not None
+            else [SimpleNamespace(full_url=url) for url in (urls or [])]
+        )
 
     def live(self) -> "FakePages":
         return self
@@ -27,10 +34,18 @@ class FakePages:
         return self
 
     def count(self) -> int:
-        return len(self.urls)
+        return len(self.pages)
 
     def iterator(self, *, chunk_size: int):
-        yield from (SimpleNamespace(full_url=url) for url in self.urls)
+        yield from self.pages
+
+
+class UnresolvablePage:
+    id = 42
+
+    @property
+    def full_url(self) -> str:
+        raise OSError("cache unavailable")
 
 
 class GenerateSitemapTests(SimpleTestCase):
@@ -165,6 +180,131 @@ class GenerateSitemapTests(SimpleTestCase):
             output.write("<urlset></urlset>")
 
         self.assertEqual(stat.S_IMODE(previous.stat().st_mode), 0o640)
+
+    def test_unresolvable_page_preserves_all_files_in_multifile_section(self) -> None:
+        first = self.write_section("blog_posts", 1)
+        second = self.write_section("blog_posts", 2)
+        pages = FakePages(
+            pages=[
+                SimpleNamespace(id=1, full_url="https://example.com/en/one/"),
+                SimpleNamespace(id=2, full_url="https://example.com/en/two/"),
+                UnresolvablePage(),
+            ]
+        )
+        with patch(
+            "django.apps.apps.get_model", return_value=SimpleNamespace(objects=pages)
+        ):
+            with self.assertRaisesRegex(CommandError, "42"):
+                generate_sitemap._run_job(
+                    (
+                        generate_sitemap.Job("blog_posts", "blog.BlogPostPage", "en"),
+                        str(self.root),
+                        ["en"],
+                        2,
+                    )
+                )
+
+        self.assertEqual(first.read_text(encoding="utf-8"), "<urlset />")
+        self.assertEqual(second.read_text(encoding="utf-8"), "<urlset />")
+
+    def test_missing_primary_url_preserves_previous_map(self) -> None:
+        previous = self.write_section("blog_posts")
+        pages = FakePages(pages=[SimpleNamespace(id=8, full_url=None)])
+        with patch(
+            "django.apps.apps.get_model", return_value=SimpleNamespace(objects=pages)
+        ):
+            with self.assertRaisesRegex(CommandError, "8"):
+                generate_sitemap._run_job(
+                    (
+                        generate_sitemap.Job("blog_posts", "blog.BlogPostPage", "en"),
+                        str(self.root),
+                        ["en"],
+                        2,
+                    )
+                )
+
+        self.assertEqual(previous.read_text(encoding="utf-8"), "<urlset />")
+
+    def test_large_shrink_requires_explicit_override(self) -> None:
+        previous = self.write_section("blog_posts")
+        previous.write_text(
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            + "<url><loc>https://example.com/old/</loc></url>" * 20
+            + "</urlset>",
+            encoding="utf-8",
+        )
+        original = previous.read_bytes()
+        pages = FakePages(["https://example.com/en/one/"])
+        with patch(
+            "django.apps.apps.get_model", return_value=SimpleNamespace(objects=pages)
+        ):
+            with self.assertRaisesRegex(CommandError, "20.*1"):
+                generate_sitemap._run_job(
+                    (
+                        generate_sitemap.Job("blog_posts", "blog.BlogPostPage", "en"),
+                        str(self.root),
+                        ["en"],
+                        2,
+                    )
+                )
+            self.assertEqual(previous.read_bytes(), original)
+
+            generate_sitemap._run_job(
+                (
+                    generate_sitemap.Job(
+                        "blog_posts",
+                        "blog.BlogPostPage",
+                        "en",
+                        allow_large_shrink=True,
+                    ),
+                    str(self.root),
+                    ["en"],
+                    2,
+                )
+            )
+
+        self.assertEqual(previous.read_text(encoding="utf-8").count("<url>"), 1)
+
+    def test_failed_publication_restores_multifile_section(self) -> None:
+        first = self.write_section("blog_posts", 1)
+        second = self.write_section("blog_posts", 2)
+        pages = FakePages(
+            [
+                "https://example.com/en/one/",
+                "https://example.com/en/two/",
+                "https://example.com/en/three/",
+            ]
+        )
+        original_replace = os.replace
+
+        def replace(source: str, destination: str) -> None:
+            source_path = Path(source)
+            if (
+                source_path.parent.name == "staged"
+                and source_path.name == "sitemap-2.xml"
+            ):
+                raise OSError("publication failed")
+            original_replace(source, destination)
+
+        with (
+            patch(
+                "django.apps.apps.get_model",
+                return_value=SimpleNamespace(objects=pages),
+            ),
+            patch.object(generate_sitemap.os, "replace", side_effect=replace),
+        ):
+            with self.assertRaisesRegex(OSError, "publication failed"):
+                generate_sitemap._run_job(
+                    (
+                        generate_sitemap.Job("blog_posts", "blog.BlogPostPage", "en"),
+                        str(self.root),
+                        ["en"],
+                        2,
+                    )
+                )
+
+        self.assertEqual(first.read_text(encoding="utf-8"), "<urlset />")
+        self.assertEqual(second.read_text(encoding="utf-8"), "<urlset />")
 
     def test_exclude_option_skips_organizations(self) -> None:
         with (
